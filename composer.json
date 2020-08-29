@@ -1,0 +1,16 @@
+{
+    "name": "thibaut/disneymovies",
+    "description": "Petite app sur les films Disney",
+    "authors": [
+        {
+            "name": "Thibaut Van Callemont",
+            "email": "vancallemont.thibaut@gmail.com"
+        }
+    ],
+    "autoload":{
+        "psr-4":{
+            "Database\\":"Database/"
+        }
+    },
+    "require": {}
+}

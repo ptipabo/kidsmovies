@@ -1,3 +1,11 @@
+<?php
+
+require 'vendor/autoload.php';
+
+use Database\ServerConnection;
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,11 +15,30 @@
 </head>
 <body>
     <h1><a href="./index.php">Disney Movies</a></h1>
-    <h2>Cars</h2>
-    <p>2006</p>
-    <img src="./img/Cars 1.jpg" />
+    <?php
+        $db = new ServerConnection('localhost', 'root', '', 'disneymovies');
+        $req = $db->getConnection()->query('SELECT * FROM movies WHERE movies.movie_id="'.$_GET['id'].'"');
+        $movie = $req->fetchAll();
+    ?>
+    <h2><?= $movie[0]->movie_title ?></h2>
+    <p>Année de sortie : <?= $movie[0]->movie_date ?> - Durée du film : <?= $movie[0]->movie_length ?> minutes</p>
+    <img src="./img/<?= $movie[0]->movie_img ?>" />
     <div class="movieCharacters">
-        <div class="character">
+        <?php
+
+        $db = new ServerConnection('localhost', 'root', '', 'disneymovies');
+        $req = $db->getConnection()->query('SELECT * FROM characters WHERE characters.char_movie="'.$_GET['id'].'"');
+        $characters = $req->fetchAll();
+
+        foreach($characters as $character){
+            echo '<div class="character">';
+                echo '<img class="charImg" src="./img/characters/'.$character->char_img.'" />';
+                echo '<h3 class="charName">'.$character->char_name.'</h3>';
+                echo '<p class="charDesc">'.$character->char_desc.'</p>';
+            echo '</div>';
+        }
+        ?>
+        <!--<div class="character">
             <img src="./img/characters/Flash_McQueen.jpg" />
             <h3>Flash McQueen</h3>
             <p>Flash McQueen est un champion de Nascar, il se considère comme un "instrument de précision et un bolide aérodynamique".</p>
@@ -20,7 +47,7 @@
             <img src="./img/characters/Flash_McQueen.jpg" />
             <h3>Martin</h3>
             <p>Martin est le meilleur ami de Flash McQueen.</p>
-        </div>
+        </div>-->
     </div>
 
 </body>
