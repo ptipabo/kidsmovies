@@ -2,6 +2,8 @@
 
 require 'vendor/autoload.php';
 
+define('TITLE', 'Kids Movies');
+
 use Database\ServerConnection;
 
 ?>
@@ -11,12 +13,12 @@ use Database\ServerConnection;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disney Movies</title>
+    <title><?= TITLE ?></title>
 </head>
 <body>
-    <h1><a href="./index.php">Disney Movies</a></h1>
+    <h1><a href="./index.php"><?= TITLE ?></a></h1>
     <?php
-        $db = new ServerConnection('localhost', 'root', '', 'disneymovies');
+        $db = new ServerConnection('localhost', 'root', '', 'kidsmovies');
         $req = $db->getConnection()->query('SELECT * FROM movies WHERE movies.movie_id="'.$_GET['id'].'"');
         $movie = $req->fetchAll();
     ?>
@@ -26,7 +28,7 @@ use Database\ServerConnection;
     <div class="movieCharacters">
         <?php
 
-        $db = new ServerConnection('localhost', 'root', '', 'disneymovies');
+        $db = new ServerConnection('localhost', 'root', '', 'kidsmovies');
         $req = $db->getConnection()->query('SELECT * FROM characters WHERE characters.char_movie="'.$_GET['id'].'"');
         $characters = $req->fetchAll();
 
