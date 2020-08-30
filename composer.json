@@ -9,6 +9,8 @@
     ],
     "autoload":{
         "psr-4":{
+            "Routes\\":"routes/",
+            "App\\":"app/",
             "Database\\":"Database/"
         }
     },

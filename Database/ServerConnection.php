@@ -23,12 +23,16 @@ class ServerConnection {
         if($this->dbname !== null){
             return $this->pdo ?? $this->pdo = new PDO("mysql:dbname={$this->dbname};host={$this->host}",$this->username,$this->password, array(
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ));
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET CHARACTER SET UTF8'
+            ));
         }
         else{
             return $this->pdo ?? $this->pdo = new PDO("mysql:host={$this->host}",$this->username,$this->password, array(
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ));
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET CHARACTER SET UTF8'
+            ));
         }
     }
 
