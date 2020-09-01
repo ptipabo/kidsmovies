@@ -27,6 +27,10 @@ class ViewController extends Controller{
         $stmtB->execute([$id]);
         $characters = $stmtB->fetchAll();
 
-        $this->view('content.movie', compact('movie', 'characters'));
+        $stmtC = $this->db->getConnection()->prepare('SELECT * FROM songs WHERE song_movie=?');
+        $stmtC->execute([$id]);
+        $songs = $stmtC->fetchAll();
+
+        $this->view('content.movie', compact('movie', 'characters', 'songs'));
     }
 }

@@ -7,7 +7,9 @@
         <link rel="stylesheet" href="<?= SCRIPTS.'css'.DIRECTORY_SEPARATOR.'style.css' ?>"/>
     </head>
     <body>
-    <h1><a href="<?= dirname(SCRIPTS) ?>"><?= TITLE ?></a></h1>
+        <header>
+            <h1><a title="<?= TITLE ?>" href="<?= dirname(SCRIPTS) ?>"><?= TITLE ?></a></h1>
+        </header>
         <?= $content ?>
     </body>
 </html>
