@@ -17,7 +17,7 @@ $router = new Router($_GET['url']);
 
 //On crée toutes les routes de l'application
 $router->setGetRoute('/', 'App\Controllers\ViewController@home');
-$router->setGetRoute('/movie/:id', 'App\Controllers\ViewController@movie');
+$router->setGetRoute('/:id', 'App\Controllers\ViewController@movie');
 
 $router->urlCheck();
 
