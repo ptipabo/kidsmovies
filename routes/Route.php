@@ -35,7 +35,7 @@ class Route{
         //D'abord on sépare le controleur à utiliser et sa méthode
         $view = explode('@', $this->view);
         //On crée notre controleur
-        $controller = new $view[0](new ServerConnection('localhost', 'root', '', 'kidsmovies'));
+        $controller = new $view[0](new ServerConnection(DB_HOST, DB_USER, DB_PWD, DB_NAME));
         $method = $view[1];
 
         //On enclenche la méthode du controleur

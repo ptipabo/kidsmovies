@@ -9,6 +9,13 @@
     <body>
         <header>
             <h1><a title="<?= TITLE ?>" href="<?= dirname(SCRIPTS) ?>"><?= TITLE ?></a></h1>
+            <label for="sortBy">Trier par : </label>
+            <select name="sortBy">
+                <option>Ordre alphabétique</option>
+                <option>Date de sortie</option>
+                <option>Suites</option>
+                <option>Durée</option>
+            </select>
         </header>
         <?= $content ?>
     </body>

@@ -11,6 +11,10 @@ use App\Controllers\Controller;
 define('TITLE', 'Kids Movies');
 define('VIEWS', dirname(__DIR__).DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR);
 define('SCRIPTS', dirname($_SERVER['SCRIPT_NAME']) . DIRECTORY_SEPARATOR);
+define('DB_HOST', '127.0.0.1');
+define('DB_USER', 'root');
+define('DB_PWD', '');
+define('DB_NAME', 'kidsmovies');
 
 //On crée notre routeur en lui indiquant l'url actuelle
 $router = new Router($_GET['url']);

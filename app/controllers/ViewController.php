@@ -2,38 +2,34 @@
 
 namespace App\Controllers;
 
+use App\Models\Song;
+use App\Models\Movie;
+use App\Models\Character;
+
 class ViewController extends Controller{
 
     //Permet d'afficher la page Home de l'application
     public function home(){
 
-        $stmt = $this->db->getConnection()->query('SELECT * FROM movies ORDER BY movie_title ASC');
-        $movies = $stmt->fetchAll();
+        $movie = new Movie($this->getDB(), 'movie_title');
+        $movies = $movie->all();
 
         $this->view('content.home', compact('movies'));
     }
 
     //Permet d'afficher la page Movie de l'application en lui passant l'id du film à afficher
-    public function movie(string $movieTitle){
+    public function movie(string $movieUrl){
 
-        $movieName = str_replace('-', ' ', $movieTitle);
-
-        //prepare() permet simplement d'éviter les injections sql
-        $stmtA = $this->db->getConnection()->prepare('SELECT * FROM movies WHERE movie_title=?');
-        //On indique ensuite au statement qu'il doit remplacer le "?" par la variable $id
-        $stmtA->execute([$movieName]);
-        //Ensuite on enclenche et on récupère toutes les données dans l'objet $movie
-        $movie = $stmtA->fetch();
+        $movie = new Movie($this->getDB());
+        $movie = $movie->findByUrl($movieUrl);
 
         $movieId = $movie->movie_id;
 
-        $stmtB = $this->db->getConnection()->prepare('SELECT * FROM characters WHERE char_movie=?');
-        $stmtB->execute([$movieId]);
-        $characters = $stmtB->fetchAll();
+        $characters = new Character($this->getDB(), 'char_name');
+        $characters = $characters->findByMovie($movieId);
 
-        $stmtC = $this->db->getConnection()->prepare('SELECT * FROM songs WHERE song_movie=?');
-        $stmtC->execute([$movieId]);
-        $songs = $stmtC->fetchAll();
+        $songs = new Song($this->getDB(), 'song_title');
+        $songs = $songs->findByMovie($movieId);
 
         $this->view('content.movie', compact('movie', 'characters', 'songs'));
     }
