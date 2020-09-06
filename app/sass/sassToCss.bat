@@ -1,1 +1,1 @@
-sass --watch app/sass/style.scss public/css/style.css
+sass --watch style.scss ../../public/css/style.css

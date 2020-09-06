@@ -7,7 +7,7 @@ require '../vendor/autoload.php';
 use Routes\Router;
 use App\Controllers\Controller;
 
-//On définit le titre de notre application dans une constante
+//On définit quelques constantes importantes (Titre de l'application, répertoire des vues, répertoire des scripts et identifiants de la base de données)
 define('TITLE', 'Kids Movies');
 define('VIEWS', dirname(__DIR__).DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR);
 define('SCRIPTS', dirname($_SERVER['SCRIPT_NAME']) . DIRECTORY_SEPARATOR);
@@ -21,7 +21,9 @@ $router = new Router($_GET['url']);
 
 //On crée toutes les routes de l'application
 $router->setGetRoute('/', 'App\Controllers\ViewController@home');
-$router->setGetRoute('/:id', 'App\Controllers\ViewController@movie');
+$router->setGetRoute('/music', 'App\Controllers\ViewController@music');
+$router->setGetRoute('/characters', 'App\Controllers\ViewController@characters');
+$router->setGetRoute('/:movieUrl', 'App\Controllers\ViewController@movie');
 
 $router->urlCheck();
 

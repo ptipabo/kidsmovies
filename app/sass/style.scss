@@ -1,7 +1,18 @@
 $darkColor:rgb(100,100,100);
 $mediumColor:rgb(170,170,170);
+$medLightColor:rgb(200,200,200);
 $lightColor:rgb(240,240,240);
 $testColor:rgba(255,0,0,0.5);
+
+@function fitHeight(){
+    $newHeight: (100vw/16)*9;
+    @return $newHeight;
+}
+
+@function fitWidth(){
+    $newWidth: (100vh/9)*16;
+    @return $newWidth;
+}
 
 *{
     margin:0px;
@@ -9,35 +20,109 @@ $testColor:rgba(255,0,0,0.5);
     text-decoration:none;
     list-style:none;
     font-family: Arial, sans-serif;
+    color:$darkColor;
 }
 
 header{
-    width:100%;
     background-color:$lightColor;
-    padding-top:20px;
-    padding-bottom:20px;
+    padding:20px 40px 20px 40px;
+    display:flex;
+}
 
-    h1{
-        padding-left:40px;
-        
-        a{
-            color:$darkColor;
-            transition-duration: 300ms;
+nav{
+    display:flex;
+    flex-flow:row wrap;
     
-            &:hover{
-                transition-duration: 300ms;
-                color:rgb(150,150,150);
-            }
+    a{
+        color:white;
+        transition-duration: 300ms;
+        background-color:$mediumColor;
+        border-radius: 3px;
+        padding:10px;
+
+        &:hover{
+            transition-duration: 300ms;
+            background-color:rgb(100,200,255);
         }
     }
 }
 
-.moviesList{
-    background-color:rgb(200,200,200);
+@media screen and (max-width: 370px) {//Petits smartphones
+    nav{
+        flex-flow:column nowrap;
+        margin-top:20px;
+
+        a{
+            margin-bottom:10px;
+            text-align:center;
+        }
+    }
+}
+
+@media screen and (max-width: 640px) {//Tous smartphones et petites tablettes
+    header{
+        flex-flow:column wrap;
+        align-items:center;
+    }
+
+    h1{
+        width:100%;
+        text-align:center;
+    }
+}
+
+@media screen and (min-width:371px) and (max-width: 640px) {//Smartphones larges et petites tablettes
+    nav{
+        justify-content:center;
+        margin-top:20px;
+
+        a{
+            margin:0 5px 10px 5px;
+        }
+    }
+}
+
+@media screen and (min-width: 641px) {//Grandes tablettes ou PC
+    header{
+        flex-flow:row wrap;
+        justify-content:space-between;
+        align-items:center;
+    }
+    
+    h1{
+        margin:0 40px 0 40px;
+    }
+
+    nav{
+        a{
+            margin:0 5px 0 5px;
+        }
+    }
+}
+
+.pageHeader{
+    display:flex;
+    flex-flow:column wrap;
+    align-items:center;
+    padding-top:20px;
+
+    h2{
+        padding-bottom: 20px;
+        font-size:24pt;
+    }
+
+    .sortBy{
+        padding-bottom:20px;
+    }
+}
+
+.mainContent{
+    background-color:$medLightColor;
     width:100%;
     display:flex;
     flex-flow:row wrap;
     justify-content:space-around;
+    padding-top:15px;
 
     .movie{
         position:relative;
@@ -78,14 +163,47 @@ header{
     }
 }
 
+.listElement{
+    margin:10px 15px 15px 15px;
+    padding:15px;
+    text-align: center;
+    border-radius:10px;
+
+    .elementMovie{
+        text-align: left;
+        color:$mediumColor;
+        font-size:12pt;
+    }
+
+    .elementTitle{
+        color:$darkColor;
+        font-size:16pt;
+        margin-bottom:10px;
+    }
+
+    .elementImg{
+        border-radius:10px;
+        width:180px;
+
+        &:hover{
+            cursor:pointer;
+        }
+    }
+
+    &:hover{
+        background-color: $lightColor;
+    }
+}
+
 .movieHeader{
     display:flex;
     flex-flow:row wrap;
     justify-content: center;
+    align-items: flex-start;
 
     .moviePageImg{
         width:15%;
-        min-width:100px;
+        min-width:150px;
         padding:10px;
         margin:15px 0 15px 0;
         border: 1px solid rgb(100,100,100);
@@ -93,70 +211,95 @@ header{
     
     .moviePageInfo{
         padding:10px;
-        margin:15px 0 15px 0;
+        margin:0 0 15px 15px;
 
         h2{
             padding:0 10px 0 10px;
             font-size:24pt;
         }
 
-        ul{
-            li{
-                margin-top:5px;
-                padding-left:10px;
+        .movieDetails{
+            background-color:$mediumColor;
+            padding:10px 20px 20px 20px;
+            margin-top:10px;
+            border-radius:10px;
+
+            ul{
+                li{
+                    margin-top:5px;
+                    padding-left:10px;
+                    color:white;
+                    
+                    a{
+                        color:white;
+
+                        &:hover{
+                            color:$darkColor;
+                        }
+                    }
+                }
+            }
+
+            h3{
+                margin:15px 0 15px 0;
+                color:white;
             }
         }
     }
 }
 
 .movieContent{
-    margin:10px 0 10px 0;
+    background-color:$medLightColor;
 
     h2{
         padding:15px 15px 15px 30px;
         font-size:22pt;
-        background-color: rgb(200,200,200);
+        background-color: $mediumColor;
         color:white;
     }
 
-    .characters{
-        display:flex;
-        flex-flow:row wrap;
-        margin:10px 15px 0 15px;
-        padding:15px;
-    
-        .charImg{
-            width:15%;
-            min-width:240px;
-            border-radius:15px;
-            margin:0 10px 10px 0;
-        }
+    .movieSection{
         
-        .charInfo{
-            background-color:$lightColor;
-            min-width:240px;
-            padding:20px;
-            margin-bottom:10px;
-            border-radius:0 20px 20px 0;
-    
-            .charDesc{
-                margin-top:10px;
-            }
-        }
-    }
-    
-    .songs{
+        //width:100%;
         display:flex;
         flex-flow:row wrap;
-        justify-content: space-around;
-    
-        .song{
-            margin:10px 15px 0 15px;
-            padding:15px;
-    
-            .songTitle{
-                margin-bottom:10px;
-            }
-        }
+        justify-content:space-around;
+        //padding-top:15px;
     }
+}
+
+#videoPlayer{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background-color:rgba(0,0,0,0.9);
+    top:0;
+    text-align:center;
+
+    img{
+        z-index:9999;
+        position:fixed;
+        width:20px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
+
+@media screen and (orientation: landscape){
+    #videoPlayed{
+        height:100%;
+        width:fitWidth();
+    }
+}
+
+@media screen and (orientation: portrait){
+    #videoPlayed{
+        width:100%;
+        height:fitHeight();
+    }
+}
+
+.hidden{
+    display:none;
+    z-index:-9999;
 }

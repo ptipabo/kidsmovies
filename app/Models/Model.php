@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use PDO;
 use Database\ServerConnection;
 
 abstract class Model{
@@ -29,6 +30,8 @@ abstract class Model{
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table}");
         }
 
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_class($this), [$this->db]);
+        
         return $stmt->fetchAll();
     }
 
