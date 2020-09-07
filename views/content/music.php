@@ -24,7 +24,6 @@
             <img class="elementImg" title="<?= $song->song_title ?>" src="https://img.youtube.com/vi/<?= $videoId[4] ?>/1.jpg" onclick="play('<?= $song->song_video ?>')" />
         </div>
         <div id="videoPlayer" class="hidden" onclick="closePlayer()">
-            <img src="./img/close.png" />
             <iframe id="videoPlayed" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     <?php endforeach ?>

@@ -111,3 +111,41 @@ function closePlayer(){
     divVideo.removeAttribute('style')
     iframe.setAttribute('src', '')
 }
+
+function openInfo(charInfo){    
+    const divChar = document.getElementById('charInfo')
+    const charImg = document.getElementById('charImg')
+    const charName = document.getElementById('charName')
+    const charMovie = document.getElementById('charMovie')
+    const charDesc = document.getElementById('charDesc')
+
+    charImg.setAttribute('src', './img/characters/'+charInfo.charImg)
+    charImg.setAttribute('alt', charInfo.charName)
+    charName.innerHTML = charInfo.charName
+    charMovie.innerHTML = 'Film : '+charInfo.charMovie
+    charDesc.innerHTML = charInfo.charDesc
+    
+    charList = document.getElementsByClassName('charactersList')
+    charList[0].classList.add('infoOpened')
+
+    divChar.setAttribute('style','z-index:9998')
+    divChar.removeAttribute('class')
+
+    location.href = "#charInfo";
+}
+
+function closeInfo(){
+    const divChar = document.getElementById('charInfo')
+
+    charList = document.getElementsByClassName('charactersList')
+    charList[0].classList.remove('infoOpened')
+
+    divChar.classList.add('hidden')
+    divChar.removeAttribute('style')
+
+    charImg.setAttribute('src', '')
+    charImg.removeAttribute('alt')
+    charName.innerHTML = ''
+    charMovie.innerHTML = ''
+    charDesc.innerHTML = ''
+}
