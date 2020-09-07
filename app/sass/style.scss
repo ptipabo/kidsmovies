@@ -19,6 +19,7 @@ $testColor:rgba(255,0,0,0.5);
     padding:0px;
     text-decoration:none;
     list-style:none;
+    font-size:12pt;
     font-family: Arial, sans-serif;
     color:$darkColor;
 }
@@ -43,6 +44,18 @@ nav{
         &:hover{
             transition-duration: 300ms;
             background-color:rgb(100,200,255);
+        }
+    }
+}
+
+h1{
+    a{
+        transition-duration: 300ms;
+        font-size:200%;
+
+        &:hover{
+            transition-duration: 300ms;
+            color:$medLightColor;
         }
     }
 }
@@ -118,7 +131,6 @@ nav{
 
 .mainContent{
     background-color:$medLightColor;
-    width:100%;
     display:flex;
     flex-flow:row wrap;
     justify-content:space-around;
@@ -161,6 +173,19 @@ nav{
             text-indent: -9999px;
         }
     }
+}
+
+.charactersList{
+    background-color:$medLightColor;
+    display:flex;
+    flex-flow:row wrap;
+    justify-content:space-evenly;
+    padding-top:15px;
+    width:100%;
+}
+
+.infoOpened{
+    width:50%;
 }
 
 .listElement{
@@ -259,12 +284,67 @@ nav{
     }
 
     .movieSection{
-        
-        //width:100%;
         display:flex;
         flex-flow:row wrap;
-        justify-content:space-around;
-        //padding-top:15px;
+        justify-content:space-evenly;
+    }
+}
+
+#charInfo{
+    background-color: $darkColor;
+    width:40%;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:3px;
+    text-align:center;
+    position:relative;
+
+    #closeInfo{
+        position:absolute;
+        top:20px;
+        right:20px;
+
+        &:hover{
+            cursor:pointer;
+            filter: brightness(200%);
+        }
+    }
+
+    #charImg{
+        width:270px;
+        margin-left:auto;
+        margin-right:auto;
+        border-radius:10px;
+    }
+
+    h3, h4, p{
+        text-align:left;
+        color:white;
+    }
+
+    h3{
+        font-size:150%;
+        margin:10px 0 10px 0;
+    }
+
+    h4{
+        font-size:120%;
+        margin-bottom:10px;
+    }
+}
+
+@media screen and (max-width:670px){
+    #charInfo{
+        width:80%;
+        order:1;
+
+        #charImg{
+            width:100%;
+        }
+    }
+
+    .infoOpened{
+        order:2;
     }
 }
 

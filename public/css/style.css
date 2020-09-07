@@ -3,6 +3,7 @@
   padding: 0px;
   text-decoration: none;
   list-style: none;
+  font-size: 12pt;
   font-family: Arial, sans-serif;
   color: #646464;
 }
@@ -27,6 +28,15 @@ nav a {
 nav a:hover {
   transition-duration: 300ms;
   background-color: #64c8ff;
+}
+
+h1 a {
+  transition-duration: 300ms;
+  font-size: 200%;
+}
+h1 a:hover {
+  transition-duration: 300ms;
+  color: #c8c8c8;
 }
 
 @media screen and (max-width: 370px) {
@@ -90,7 +100,6 @@ nav a:hover {
 
 .mainContent {
   background-color: #c8c8c8;
-  width: 100%;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
@@ -128,6 +137,19 @@ nav a:hover {
   top: 0;
   overflow: hidden;
   text-indent: -9999px;
+}
+
+.charactersList {
+  background-color: #c8c8c8;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  padding-top: 15px;
+  width: 100%;
+}
+
+.infoOpened {
+  width: 50%;
 }
 
 .listElement {
@@ -212,9 +234,59 @@ nav a:hover {
 .movieContent .movieSection {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
+#charInfo {
+  background-color: #646464;
+  width: 40%;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 3px;
+  text-align: center;
+  position: relative;
+}
+#charInfo #closeInfo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+#charInfo #closeInfo:hover {
+  cursor: pointer;
+  filter: brightness(200%);
+}
+#charInfo #charImg {
+  width: 270px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+}
+#charInfo h3, #charInfo h4, #charInfo p {
+  text-align: left;
+  color: white;
+}
+#charInfo h3 {
+  font-size: 150%;
+  margin: 10px 0 10px 0;
+}
+#charInfo h4 {
+  font-size: 120%;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 670px) {
+  #charInfo {
+    width: 80%;
+    order: 1;
+  }
+  #charInfo #charImg {
+    width: 100%;
+  }
+
+  .infoOpened {
+    order: 2;
+  }
+}
 #videoPlayer {
   position: fixed;
   width: 100%;

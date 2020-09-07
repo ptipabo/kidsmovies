@@ -45,12 +45,21 @@
     <?php if(!empty($params['characters'])): ?>
         <h2>Personnages</h2>
         <div class="movieSection">
-        <?php foreach($params['characters'] as $character): ?>
-            <div class="listElement">
-                <h3 class="elementTitle"><?= $character->char_name ?></h3>
-                <img class="elementImg" title="<?= $character->char_name ?>" src="./img/characters/<?= $character->char_img ?>" />
+            <div class="charactersList">
+            <?php foreach($params['characters'] as $character): ?>
+                <div class="listElement">
+                    <h3 class="elementTitle"><?= $character->char_name ?></h3>
+                    <img class="elementImg" title="<?= $character->char_name ?>" src="./img/characters/<?= $character->char_img ?>" />
+                </div>
+            <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
+            <div id="charInfo" class="hidden">
+                <img id="closeInfo" src="./img/close.png" title="Fermer" onclick="closeInfo()" />
+                <img id="charImg" />
+                <h3 id="charName"></h3>
+                <h4 id="charMovie"></h4>
+                <p id="charDesc"></p>
+            </div>
         </div>
     <?php endif; ?>
 </section>
