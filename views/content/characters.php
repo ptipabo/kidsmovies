@@ -2,7 +2,7 @@
     <h2>Personnages</h2>
 </div>
 
-<div class="mainContent">   
+<div id="mainContent">   
     <div class="charactersList">
         <?php
         $i=0;

@@ -80,11 +80,14 @@ class ViewController extends Controller{
                 }
             }
             
+            $videoId = explode('/', $songs[$i]->song_video);
+
             $jsonConstruct .= '{
                 "songId":'.$songs[$i]->song_id.',
                 "songMovie":"'.$songMovie.'",
-                "movieTitle":"'.$songs[$i]->song_title.'",
-                "movieVideo":'.$songs[$i]->song_video.'
+                "songTitle":"'.$songs[$i]->song_title.'",
+                "songVideo":"'.$songs[$i]->song_video.'",
+                "videoId":"'.$videoId[4].'"
             }';
 
             if($i+1 === count($songs)){

@@ -26,6 +26,23 @@ class DomElement{
     }
 }
 
+function addElement(tagName = null, tagParams = [], paramsValues = []){
+    if(tagName === null){
+        console.log("addElement() => ERROR : tagName is not defined !")
+    }else{
+        let newElement = document.createElement(tagName)
+        if(tagParams.length === paramsValues.length){
+            for(y=0;y<tagParams.length;y++){
+                newElement.setAttribute(tagParams[y], paramsValues[y])
+            }
+        }else{
+            console.log("addElement() => ERROR : the number of parameters doesn't match the number of parameters values !")
+        }
+
+        return newElement;
+    }
+}
+
 //Permet d'afficher une liste de films, reçoit simplement en paramètres une liste de films
 function showMovies(moviesList){
     for(i=0;i<moviesList.length;i++){
@@ -33,24 +50,17 @@ function showMovies(moviesList){
         movieDiv.setAttribute('class', 'movie')//On lui dit qu'il est un film
         document.getElementById('mainContent').appendChild(movieDiv)//On l'ajoute dans la page
         
-        movieLink = document.createElement('a')
-        movieLink.setAttribute('class', 'movieLink')
-        movieLink.setAttribute('title', moviesList[i].movieTitle)
-        movieLink.setAttribute('href', moviesList[i].movieURL)
+        movieLink = addElement('a', ['class', 'title', 'href'], ['movieLink', moviesList[i].movieTitle, moviesList[i].movieURL])
         movieDiv.appendChild(movieLink)
 
-        movieImg = document.createElement('img')
-        movieImg.setAttribute('class', 'moviePicture')
-        movieImg.setAttribute('src', './img/'+moviesList[i].movieImg)
+        movieImg = addElement('img', ['class', 'src'], ['moviePicture', './img/'+moviesList[i].movieImg])
         movieDiv.appendChild(movieImg)
 
-        movieTitle = document.createElement('h3')
-        movieTitle.setAttribute('class', 'movieTitle')
+        movieTitle = addElement('h3', ['class'], ['movieTitle'])
         movieTitle.innerHTML = moviesList[i].movieTitle
         movieDiv.appendChild(movieTitle)
 
-        movieDate = document.createElement('p')
-        movieDate.setAttribute('class', 'movieDate')
+        movieDate = addElement('p', ['class'], ['movieDate'])
         movieDate.innerHTML = moviesList[i].movieDate
         movieDiv.appendChild(movieDate)
     }
@@ -82,6 +92,28 @@ function orderBy(moviesList, orderType){
         return listCopy
     }else{
         return moviesList
+    }
+}
+
+function showSongs(musicList = null){
+    if(musicList === null){
+        console.log("showSongs() => ERROR : musicList is not defined !")
+    }
+    else{
+        for(i=0;i<musicList.length;i++){
+            let songDiv = document.createElement('div')//On crée une nouvelle chanson
+            songDiv.setAttribute('class', 'listElement')//On lui dit qu'il est une chanson
+            document.getElementById('mainContent').appendChild(songDiv)//On l'ajoute dans la page
+            
+            //h3(elementTitle) -> span(elementMovie)
+            let songTitle = addElement('h3', ['class'], ['elementTitle'])
+            songTitle.innerHTML = '<span class="elementMovie">'+musicList[i].songMovie+'</span>'+'<br />'+musicList[i].songTitle
+            songDiv.appendChild(songTitle)
+
+            //img(elementImg,title,src,onclick)
+            let songImg = addElement('img',['class','title','src','onclick'],['elementImg', musicList[i].songTitle, 'https://img.youtube.com/vi/'+musicList[i].videoId+'/1.jpg', 'play("'+musicList[i].songVideo+'")'])
+            songDiv.appendChild(songImg)
+        }
     }
 }
 
