@@ -12,22 +12,31 @@ class ViewController extends Controller{
     public function home(){
 
         //On récupère la liste de tous les films triés par titre
-        $movieByTitle = new Movie($this->getDB(), 'movie_title');
-        $movieByTitle = $movieByTitle->all();
+        $movies = new Movie($this->getDB(), 'movie_title');
+        $movies = $movies->all();
+        
+        //On crée un fichier Json via PHP d'après le résultat de la requête
+        $jsonConstruct = '[';
+        for($i=0;$i < count($movies);$i++){
+            $jsonConstruct .= '{
+                "movieId":'.$movies[$i]->movie_id.',
+                "movieImg":"'.$movies[$i]->movie_img.'",
+                "movieTitle":"'.$movies[$i]->movie_title.'",
+                "movieSuite":'.$movies[$i]->movie_suite.',
+                "movieDate":'.$movies[$i]->movie_date.',
+                "movieLength":'.$movies[$i]->movie_length.',
+                "movieURL":"'.$movies[$i]->movie_url.'"
+            }';
 
-        //On récupère la liste de tous les films triés par date
-        $movieByDate = new Movie($this->getDB(), 'movie_date');
-        $movieByDate = $movieByDate->all();
-
-        //On récupère la liste de tous les films triés par série de films
-        $movieBySuite = new Movie($this->getDB(), 'movie_suite');
-        $movieBySuite = $movieBySuite->all();
-
-        //On récupère la liste de tous les films triés par série de films
-        $movieByLength = new Movie($this->getDB(), 'movie_length');
-        $movieByLength = $movieByLength->all();
-
-        $this->view('content.home', compact('movieByTitle','movieByDate','movieBySuite','movieByLength'));
+            if($i+1 === count($movies)){
+                $jsonConstruct .= ']';
+            }
+            else{
+                $jsonConstruct .= ',';
+            }
+        }
+        $movies = $jsonConstruct;
+        $this->view('content.home', compact('movies'));
     }
 
     //Permet d'afficher la page Movie de l'application en lui passant le titre (préformaté dans la base de données) du film à afficher
@@ -61,7 +70,33 @@ class ViewController extends Controller{
         $movies = new Movie($this->getDB());
         $movies = $movies->all();
 
-        $this->view('content.music', compact('songs', 'movies'));
+        //On crée un fichier Json via PHP d'après le résultat de la requête
+        $jsonConstruct = '[';
+        for($i=0;$i < count($songs);$i++){
+            
+            foreach($movies as $movie){
+                if($movie->movie_id === $songs[$i]->song_movie){
+                    $songMovie = $movie->movie_title;
+                }
+            }
+            
+            $jsonConstruct .= '{
+                "songId":'.$songs[$i]->song_id.',
+                "songMovie":"'.$songMovie.'",
+                "movieTitle":"'.$songs[$i]->song_title.'",
+                "movieVideo":'.$songs[$i]->song_video.'
+            }';
+
+            if($i+1 === count($songs)){
+                $jsonConstruct .= ']';
+            }
+            else{
+                $jsonConstruct .= ',';
+            }
+        }
+        $songs = $jsonConstruct;
+
+        $this->view('content.music', compact('songs'));
     }
 
     //Permet d'afficher la page Music de l'application

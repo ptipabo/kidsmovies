@@ -1,58 +1,25 @@
+<script>
+    moviesList = <?= $params['movies'] ?>
+</script>
+
 <div class="pageHeader">
     <h2>Films</h2>
     <div class="sortBy">
         <label for="sortBy">Trier par : </label>
-        <select name="sortBy" onchange="orderBy(this.value)">
-            <option value="movieByTitle">Ordre alphabétique</option>
-            <option value="movieByDate">Date de sortie</option>
-            <option value="movieBySuite">Suites</option>
-            <option value="movieByLength">Durée</option>
+        <select name="sortBy" onchange="showMovies(orderBy(moviesList, this.value))">
+            <option value="title">Ordre alphabétique</option>
+            <option value="date">Date de sortie</option>
+            <option value="suite">Suites</option>
+            <option value="length">Durée</option>
         </select>
     </div>
+    <!--<form class="searchField" method="post" action="./">
+        <input type="text" id="filterValue" value="" />
+        <input type="submit" />
+    </form>-->
 </div>
-
-<div class="mainContent" id="movieByTitle">
-    <?php foreach($params['movieByTitle'] as $movie): ?>
-        <div class="movie">
-            <a class="movieLink" title="<?= $movie->movie_title ?>" href="./<?= $movie->movie_url ?>">.</a>
-            <img class="moviePicture" src="./img/<?= $movie->movie_img ?>" />
-            <h2 class="movieTitle"><?= $movie->movie_title ?></h2>
-            <p class="movieDate"><?= $movie->movie_date ?></p>
-        </div>
-    <?php endforeach ?>
+<div id="mainContent">
 </div>
-
-<div class="mainContent hidden" id="movieByDate">
-    <?php foreach($params['movieByDate'] as $movie): ?>
-        <div class="movie">
-            <a class="movieLink" title="<?= $movie->movie_title ?>" href="./<?= $movie->movie_url ?>">.</a>
-            <img class="moviePicture" src="./img/<?= $movie->movie_img ?>" />
-            <h2 class="movieTitle"><?= $movie->movie_title ?></h2>
-            <p class="movieDate"><?= $movie->movie_date ?></p>
-        </div>
-    <?php endforeach ?>
-</div>
-
-<div class="mainContent hidden" id="movieBySuite">
-
-    <?php foreach($params['movieBySuite'] as $movie): ?>
-        <div class="movie">
-            <a class="movieLink" title="<?= $movie->movie_title ?>" href="./<?= $movie->movie_url ?>">.</a>
-            <img class="moviePicture" src="./img/<?= $movie->movie_img ?>" />
-            <h2 class="movieTitle"><?= $movie->movie_title ?></h2>
-            <p class="movieDate"><?= $movie->movie_date ?></p>
-        </div>
-    <?php endforeach ?>
-</div>
-
-<div class="mainContent hidden" id="movieByLength">
-
-    <?php foreach($params['movieByLength'] as $movie): ?>
-        <div class="movie">
-            <a class="movieLink" title="<?= $movie->movie_title ?>" href="./<?= $movie->movie_url ?>">.</a>
-            <img class="moviePicture" src="./img/<?= $movie->movie_img ?>" />
-            <h2 class="movieTitle"><?= $movie->movie_title ?></h2>
-            <p class="movieDate"><?= $movie->movie_date ?></p>
-        </div>
-    <?php endforeach ?>
-</div>
+<script>
+    showMovies(moviesList);
+</script>
