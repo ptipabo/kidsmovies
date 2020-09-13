@@ -1,6 +1,6 @@
 <script>
     //On transmet les données de PHP au Javascript
-    musicList = <?= $params['songs'] ?>
+    const musicList = <?= $params['songs'] ?>
 </script>
 
 <div class="pageHeader">

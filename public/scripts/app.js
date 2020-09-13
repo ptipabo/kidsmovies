@@ -1,31 +1,3 @@
-//import DomElement from './components/DomElement.js'
-
-class DomElement{
-
-    constructor(id){
-        this.element = document.getElementById(id)
-        this.elementClasses = this.element.className.split(' ');
-
-    }
-
-    getClass(classNumber = null){
-        if(classNumber === null){
-            return this.elementClasses
-        }
-        else{
-            return this.elementClasses[classNumber]
-        }
-    }
-
-    addClass(className){
-        this.element.classList.add(className)
-    }
-
-    removeClass(className){
-        this.element.classList.remove(className)
-    }
-}
-
 function addElement(tagName = null, tagParams = [], paramsValues = []){
     if(tagName === null){
         console.log("addElement() => ERROR : tagName is not defined !")
@@ -40,6 +12,62 @@ function addElement(tagName = null, tagParams = [], paramsValues = []){
         }
 
         return newElement;
+    }
+}
+
+//Permet de filtrer une liste de films
+function movieFilter(filterString, moviesList){
+
+    //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
+    document.getElementById('mainContent').innerHTML = ''
+
+    //Si le filtre est vide, on affiche la liste complète des films
+    if(filterString === ''){
+        return moviesList
+    }
+    else{        
+        //On crée le tableau qui contiendra les films à afficher
+        let moviesFiltered = []
+
+        //Pour chaque film...
+        for(let i=0;i<moviesList.length;i++){
+            //Si le titre du film est identique au contenu du champ de filtre (totalement ou en partie)
+            if(searchFor(filterString, moviesList[i].movieTitle)){
+                //On ajoute ce film à la liste des films filtrés
+                moviesFiltered.push(moviesList[i])
+            }
+        }
+
+        return moviesFiltered
+    }
+}
+
+//Permet de vérifier si une chaine de caractères en contient une autre (dans le même ordre de caractères)
+function searchFor(filter, target){
+    //On sépare tous les caractères de la chaine de caractère à chercher et de la chaine de caractère à analyser (tout en les mettant en bas de casse pour simplifier la comparaison)
+    const lettersToSearch = filter.toLowerCase().split('')
+    const targetLetters = target.toLowerCase().split('')
+
+    //On reconstruit les chaines de caractère progressivement afin de pouvoir les comparer dynamiquement
+    let reconstructA = lettersToSearch[0];
+    let reconstructB = targetLetters[0];
+
+    //Pour chaque caractère à comparer...
+    for(let i=0;i<lettersToSearch.length;i++){
+        //Si la chaine A correspond à la chaine B...
+        if(reconstructA === reconstructB){
+
+            //Si cette boucle est la dernière, on renvoie true
+            if((i+1) >= lettersToSearch.length){
+                return true
+            }else{//Sinon on ajoute le caractère suivant et on passe à la boucle suivante
+                reconstructA += lettersToSearch[i+1]
+                reconstructB += targetLetters[i+1]
+            }
+        }
+        else{//Si elle ne correspond pas, on renvoie false
+            return false
+        }
     }
 }
 
@@ -68,7 +96,7 @@ function showMovies(moviesList){
 
 //Permet de trier une liste de films par date, suite, durée ou par titre (par défaut)
 function orderBy(moviesList, orderType){
-    //Tout d'abord On vide le contenu de la page afin de ne pas créer de doublons
+    //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
     document.getElementById('mainContent').innerHTML = ''
 
     //"slice(0)" Permet de créer une copie (pas un clone) de la liste de films

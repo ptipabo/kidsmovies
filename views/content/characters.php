@@ -1,6 +1,6 @@
 <script>
     //On transmet les données de PHP au Javascript
-    charList = <?= $params['characters'] ?>;
+    const charList = <?= $params['characters'] ?>;
 </script>
 
 <div class="pageHeader">

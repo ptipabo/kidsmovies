@@ -1,9 +1,9 @@
 <script>
     //On transmet les données de PHP au Javascript
-    movieInfo = <?= $params['movieDetails'] ?>;
-    suiteList = <?= $params['suite'] ?>;
-    musicList = <?= $params['songs'] ?>;
-    charList = <?= $params['characters'] ?>;
+    const movieInfo = <?= $params['movieDetails'] ?>;
+    const suiteList = <?= $params['suite'] ?>;
+    const musicList = <?= $params['songs'] ?>;
+    const charList = <?= $params['characters'] ?>;
 </script>
 
 <section id="movieHeader">

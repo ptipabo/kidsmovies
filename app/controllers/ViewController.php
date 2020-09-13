@@ -21,8 +21,8 @@ class ViewController extends Controller{
             $jsonConstruct .= '{
                 "movieId":'.$movies[$i]->movie_id.',
                 "movieImg":"'.$movies[$i]->movie_img.'",
-                "movieTitle":"'.$movies[$i]->movie_title.'",
-                "movieStory":"'.$movies[$i]->movie_story.'",
+                "movieTitle":"'.str_replace('"', '\"', $movies[$i]->movie_title).'",
+                "movieStory":"'.str_replace('"', '\"', $movies[$i]->movie_story).'",
                 "movieSuite":'.$movies[$i]->movie_suite.',
                 "movieDate":'.$movies[$i]->movie_date.',
                 "movieLength":'.$movies[$i]->movie_length.',
@@ -54,7 +54,7 @@ class ViewController extends Controller{
             "movieImg":"'.str_replace('"', '\"', $movie->movie_img).'",
             "movieTitle":"'.str_replace('"', '\"', $movie->movie_title).'",
             "movieStory":"'.str_replace('"', '\"', $movie->movie_story).'",
-            "movieSuite":"'.str_replace('"', '\"', $movie->movie_suite).'",
+            "movieSuite":"'.$movie->movie_suite.'",
             "movieDate":"'.$movie->movie_date.'",
             "movieLength":"'.$movie->movie_length.'"
         }]';
