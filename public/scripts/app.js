@@ -95,6 +95,45 @@ function orderBy(moviesList, orderType){
     }
 }
 
+//Permet d'afficher toutes les infos d'un film
+function showMovie(movieInfo,suiteList){
+    const movieImg = document.getElementById('moviePageImg')
+    const movieTitle = document.getElementById('movieTitle')
+    const movieDate = document.getElementById('movieDate')
+    const movieLength = document.getElementById('movieLength')
+    const movieStory = document.getElementById('movieStory')
+
+    movieImg.setAttribute('src', './img/'+movieInfo.movieImg)
+    movieTitle.innerHTML = movieInfo.movieTitle
+    movieDate.innerHTML = '<span>Année de sortie : </span> '+movieInfo.movieDate
+    movieLength.innerHTML = '<span>Durée du film : </span> '+movieInfo.movieLength+' minutes'
+    movieStory.innerHTML = '<span>Synopsis : </span><br/>'+movieInfo.movieStory
+
+    if(suiteList.length > 1){
+        const movieDetails = document.getElementById('movieDetails')
+        let suiteTitle = document.createElement('h3')
+        suiteTitle.setAttribute('class', 'suiteListTitle')
+        suiteTitle.innerHTML = 'Dans la même série de films :'
+        let suiteUl = document.createElement('ul')
+        movieDetails.appendChild(suiteTitle)
+        movieDetails.appendChild(suiteUl)
+
+        for(i=0;i<suiteList.length;i++){
+            if(suiteList[i].movieTitle !== movieInfo.movieTitle){
+                let newSuiteMovie = document.createElement('li')
+                let newMovieLink = document.createElement('a')
+                newMovieLink.innerHTML = suiteList[i].movieTitle
+                newMovieLink.setAttribute('href', './'+suiteList[i].movieUrl)
+                newMovieLink.setAttribute('title', suiteList[i].movieTitle)
+                newSuiteMovie.appendChild(newMovieLink)
+                suiteUl.appendChild(newSuiteMovie)
+            }
+        }
+    }
+    
+}
+
+//Permet d'afficher la liste de toutes les chansons
 function showSongs(musicList = null){
     if(musicList === null){
         console.log("showSongs() => ERROR : musicList is not defined !")
@@ -103,7 +142,8 @@ function showSongs(musicList = null){
         for(i=0;i<musicList.length;i++){
             let songDiv = document.createElement('div')//On crée une nouvelle chanson
             songDiv.setAttribute('class', 'listElement')//On lui dit qu'il est une chanson
-            document.getElementById('mainContent').appendChild(songDiv)//On l'ajoute dans la page
+
+            document.getElementById('musicList').appendChild(songDiv)//On l'ajoute dans la page
             
             //h3(elementTitle) -> span(elementMovie)
             let songTitle = addElement('h3', ['class'], ['elementTitle'])
@@ -117,6 +157,7 @@ function showSongs(musicList = null){
     }
 }
 
+//Permet d'ouvrir le lecteur d'une chanson
 function play(videoUrl){
     const divVideo = document.getElementById('videoPlayer')
     const iframe = document.getElementById('videoPlayed')
@@ -127,6 +168,7 @@ function play(videoUrl){
     divVideo.classList.remove('hidden')
 }
 
+//Permet de fermer le lecteur d'une chanson
 function closePlayer(){
     const divVideo = document.getElementById('videoPlayer')
     const iframe = document.getElementById('videoPlayed')
@@ -136,33 +178,81 @@ function closePlayer(){
     iframe.setAttribute('src', '')
 }
 
-function openInfo(charInfo){    
+//Permet d'afficher la liste de tous les personnages
+function showCharacters(charList = null){
+    if(charList === null){
+        console.log("showCharacters() => ERROR : charList is not defined !")
+    }
+    else{
+        for(i=0;i<charList.length;i++){
+            let charDiv = document.createElement('div')//On crée un nouveau personnage
+            charDiv.setAttribute('class', 'listElement')//On lui dit qu'il est un personnage
+            document.getElementById('charactersList').appendChild(charDiv)//On l'ajoute dans la page
+            
+            //h3(elementTitle) -> span(elementMovie)
+            let charName = addElement('h3', ['class'], ['elementTitle'])
+            charName.innerHTML = '<span class="elementMovie">'+charList[i].charMovie+'</span>'+'<br />'+charList[i].charName
+            charDiv.appendChild(charName)
+            
+            //img(elementImg,title,src,onclick)
+            let charImg = addElement('img',['class','title','src','onclick'],['elementImg', charList[i].charName, './img/characters/'+charList[i].charImg, 'openInfo(charList['+i+'])'])
+            charDiv.appendChild(charImg)
+        }
+    }
+}
+
+//Permet d'ouvrir la fiche info d'un personnage
+function openInfo(charInfo){
+    
+    if(charInfo === undefined){
+        console.log("openInfo() => ERROR : charInfo is not defined !")
+    }else{
+        //On vérifie tout d'abord si une fiche personnage n'est pas déjà ouverte
+        let charList = document.getElementById('charactersList')
+
+        if(charList.classList.contains('infoOpened')){
+            closeInfo()
+        }
+
+        const divChar = document.getElementById('charInfo')
+        const charImg = document.getElementById('charImg')
+        const charName = document.getElementById('charName')
+        const movieLink = document.getElementById('charMovieLink')
+        const charDesc = document.getElementById('charDesc')
+
+        //On intègre toutes les infos du personnage dans la fiche
+        charImg.setAttribute('src', './img/characters/'+charInfo.charImg)
+        charImg.setAttribute('alt', charInfo.charName)
+        charName.innerHTML = charInfo.charName
+        movieLink.setAttribute('href','./'+charInfo.movieUrl)
+        movieLink.setAttribute('title', charInfo.charMovie)
+        movieLink.innerHTML = charInfo.charMovie
+        charDesc.innerHTML = charInfo.charDesc
+
+        //On ajoute une classe à la liste des personnages afin de savoir si une fiche personnage est ouverte ou non
+        charList.classList.add('infoOpened')
+        charList.setAttribute('style', 'width:50%')
+
+        //On rend la fiche personnage visible et on la place au premier plan
+        divChar.setAttribute('style','z-index:9998')
+        divChar.removeAttribute('class')
+
+        //On déplace la vue jusqu'à la fiche personnage
+        location.href = "#charInfo";
+    }
+}
+
+//Permet de fermer la fiche info d'un personnage
+function closeInfo(){
     const divChar = document.getElementById('charInfo')
     const charImg = document.getElementById('charImg')
     const charName = document.getElementById('charName')
-    const charMovie = document.getElementById('charMovie')
+    const movieLink = document.getElementById('charMovieLink')
     const charDesc = document.getElementById('charDesc')
 
-    charImg.setAttribute('src', './img/characters/'+charInfo.charImg)
-    charImg.setAttribute('alt', charInfo.charName)
-    charName.innerHTML = charInfo.charName
-    charMovie.innerHTML = 'Film : '+charInfo.charMovie
-    charDesc.innerHTML = charInfo.charDesc
-    
-    charList = document.getElementsByClassName('charactersList')
-    charList[0].classList.add('infoOpened')
-
-    divChar.setAttribute('style','z-index:9998')
-    divChar.removeAttribute('class')
-
-    location.href = "#charInfo";
-}
-
-function closeInfo(){
-    const divChar = document.getElementById('charInfo')
-
-    charList = document.getElementsByClassName('charactersList')
-    charList[0].classList.remove('infoOpened')
+    let charList = document.getElementById('charactersList')
+    charList.classList.remove('infoOpened')
+    charList.removeAttribute('style')
 
     divChar.classList.add('hidden')
     divChar.removeAttribute('style')
@@ -170,6 +260,8 @@ function closeInfo(){
     charImg.setAttribute('src', '')
     charImg.removeAttribute('alt')
     charName.innerHTML = ''
-    charMovie.innerHTML = ''
+    movieLink.innerHTML = ''
+    movieLink.removeAttribute('href')
+    movieLink.removeAttribute('title')
     charDesc.innerHTML = ''
 }

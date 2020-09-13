@@ -49,7 +49,7 @@ h1 a:hover {
     text-align: center;
   }
 }
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 655px) {
   header {
     flex-flow: column wrap;
     align-items: center;
@@ -59,8 +59,25 @@ h1 a:hover {
     width: 100%;
     text-align: center;
   }
+
+  #charInfo {
+    width: 80%;
+    order: 1;
+  }
+  #charInfo #charImg {
+    width: 100%;
+  }
+
+  #moviePageInfo {
+    width: 85%;
+    margin-bottom: 15px;
+  }
+
+  .infoOpened {
+    order: 2;
+  }
 }
-@media screen and (min-width: 371px) and (max-width: 640px) {
+@media screen and (min-width: 371px) and (max-width: 655px) {
   nav {
     justify-content: center;
     margin-top: 20px;
@@ -69,7 +86,7 @@ h1 a:hover {
     margin: 0 5px 10px 5px;
   }
 }
-@media screen and (min-width: 641px) {
+@media screen and (min-width: 656px) {
   header {
     flex-flow: row wrap;
     justify-content: space-between;
@@ -82,6 +99,11 @@ h1 a:hover {
 
   nav a {
     margin: 0 5px 0 5px;
+  }
+
+  #moviePageInfo {
+    max-width: 50%;
+    margin: 0 0 15px 15px;
   }
 }
 .pageHeader {
@@ -139,17 +161,13 @@ h1 a:hover {
   text-indent: -9999px;
 }
 
-.charactersList {
+#charactersList {
   background-color: #c8c8c8;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
   padding-top: 15px;
   width: 100%;
-}
-
-.infoOpened {
-  width: 50%;
 }
 
 .listElement {
@@ -179,47 +197,61 @@ h1 a:hover {
   background-color: #f0f0f0;
 }
 
-.movieHeader {
+#movieHeader {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
   align-items: flex-start;
 }
-.movieHeader .moviePageImg {
+#movieHeader > img {
   width: 15%;
   min-width: 150px;
   padding: 10px;
   margin: 15px 0 15px 0;
   border: 1px solid #646464;
 }
-.movieHeader .moviePageInfo {
+#movieHeader #moviePageInfo {
   padding: 10px;
-  margin: 0 0 15px 15px;
 }
-.movieHeader .moviePageInfo h2 {
+#movieHeader #moviePageInfo h2 {
   padding: 0 10px 0 10px;
   font-size: 24pt;
 }
-.movieHeader .moviePageInfo .movieDetails {
+#movieHeader #moviePageInfo #movieDetails {
   background-color: #aaaaaa;
   padding: 10px 20px 20px 20px;
   margin-top: 10px;
   border-radius: 10px;
 }
-.movieHeader .moviePageInfo .movieDetails ul li {
+#movieHeader #moviePageInfo #movieDetails p {
   margin-top: 5px;
   padding-left: 10px;
   color: white;
 }
-.movieHeader .moviePageInfo .movieDetails ul li a {
+#movieHeader #moviePageInfo #movieDetails p span {
+  color: white;
+  text-decoration: underline;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+#movieHeader #moviePageInfo #movieDetails li {
+  margin-top: 5px;
+  padding-left: 10px;
   color: white;
 }
-.movieHeader .moviePageInfo .movieDetails ul li a:hover {
+#movieHeader #moviePageInfo #movieDetails li a {
+  color: white;
+}
+#movieHeader #moviePageInfo #movieDetails li a:hover {
   color: #646464;
 }
-.movieHeader .moviePageInfo .movieDetails h3 {
+#movieHeader #moviePageInfo #movieDetails h3 {
   margin: 15px 0 15px 0;
   color: white;
+}
+
+#movieStory {
+  text-align: justify;
 }
 
 .movieContent {
@@ -235,6 +267,12 @@ h1 a:hover {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
+}
+
+#musicList {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
 }
 
 #charInfo {
@@ -261,7 +299,7 @@ h1 a:hover {
   margin-right: auto;
   border-radius: 10px;
 }
-#charInfo h3, #charInfo h4, #charInfo p {
+#charInfo h3, #charInfo p {
   text-align: left;
   color: white;
 }
@@ -269,24 +307,17 @@ h1 a:hover {
   font-size: 150%;
   margin: 10px 0 10px 0;
 }
-#charInfo h4 {
+#charInfo #charMovie {
   font-size: 120%;
   margin-bottom: 10px;
 }
-
-@media screen and (max-width: 670px) {
-  #charInfo {
-    width: 80%;
-    order: 1;
-  }
-  #charInfo #charImg {
-    width: 100%;
-  }
-
-  .infoOpened {
-    order: 2;
-  }
+#charInfo a {
+  color: white;
 }
+#charInfo a:hover {
+  text-decoration: underline;
+}
+
 #videoPlayer {
   position: fixed;
   width: 100%;
