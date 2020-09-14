@@ -1,20 +1,21 @@
 <script>
     //On transmet les données de PHP au Javascript
-    const musicList = <?= $params['songs'] ?>
+    const musicList = <?= $params['songs'] ?>;
+    setMusicList(musicList);
 </script>
 
-<div class="pageHeader">
+<section id="pageHeader">
     <h2>Musiques</h2>
-</div>
+</section>
 
-<div id="mainContent">
-    <div id="musicList">
+<section id="musicList">
     <!-- Contient la liste des chansons -->
-    </div>
-    <div id="videoPlayer" class="hidden" onclick="closePlayer()">
-        <iframe id="videoPlayed" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-</div>
+</section>
+
+<section id="videoPlayer" class="hidden" onclick="closePlayer()">  
+    <div id="videoPlayed"></div>
+</section>
+
 <script>
     //On affiche la liste des chansons
     showSongs(musicList);
