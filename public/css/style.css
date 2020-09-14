@@ -119,6 +119,9 @@ h1 a:hover {
 .pageHeader .sortBy {
   padding-bottom: 20px;
 }
+.pageHeader .filterBy {
+  margin-bottom: 20px;
+}
 
 #mainContent {
   background-color: #c8c8c8;

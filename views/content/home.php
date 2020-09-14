@@ -1,5 +1,5 @@
 <script>
-    moviesList = <?= $params['movies'] ?>
+    const moviesList = <?= $params['movies'] ?>
 </script>
 
 <div class="pageHeader">
@@ -13,10 +13,10 @@
             <option value="length">Durée</option>
         </select>
     </div>
-    <!--<form class="searchField" method="post" action="./">
-        <input type="text" id="filterValue" value="" />
-        <input type="submit" />
-    </form>-->
+    <div class="filterBy">
+        <label for="filterBy">Rechercher un film : </label>
+        <input type="text" name="filterBy" id="filterValue" value="" onchange="showMovies(movieFilter(this.value, moviesList))" />
+    </div>
 </div>
 <div id="mainContent">
 </div>
