@@ -1,0 +1,354 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  text-decoration: none;
+  list-style: none;
+  font-size: 12pt;
+  font-family: Arial, sans-serif;
+  color: #646464;
+}
+
+header {
+  background-color: #f0f0f0;
+  padding: 20px 40px 20px 40px;
+  display: flex;
+}
+
+nav {
+  display: flex;
+  flex-flow: row wrap;
+}
+nav a {
+  color: white;
+  transition-duration: 300ms;
+  background-color: #aaaaaa;
+  border-radius: 3px;
+  padding: 10px;
+}
+nav a:hover {
+  transition-duration: 300ms;
+  background-color: #64c8ff;
+}
+
+h1 a {
+  transition-duration: 300ms;
+  font-size: 200%;
+}
+h1 a:hover {
+  transition-duration: 300ms;
+  color: #c8c8c8;
+}
+
+@media screen and (max-width: 370px) {
+  nav {
+    flex-flow: column nowrap;
+    margin-top: 20px;
+  }
+  nav a {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+}
+@media screen and (max-width: 655px) {
+  header {
+    flex-flow: column wrap;
+    align-items: center;
+  }
+
+  h1 {
+    width: 100%;
+    text-align: center;
+  }
+
+  #charInfo {
+    width: 80%;
+    order: 1;
+  }
+  #charInfo #charImg {
+    width: 100%;
+  }
+
+  #moviePageInfo {
+    width: 85%;
+    margin-bottom: 15px;
+  }
+
+  .infoOpened {
+    order: 2;
+  }
+}
+@media screen and (min-width: 371px) and (max-width: 655px) {
+  nav {
+    justify-content: center;
+    margin-top: 20px;
+  }
+  nav a {
+    margin: 0 5px 10px 5px;
+  }
+}
+@media screen and (min-width: 656px) {
+  header {
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  h1 {
+    margin: 0 40px 0 40px;
+  }
+
+  nav a {
+    margin: 0 5px 0 5px;
+  }
+
+  #moviePageInfo {
+    max-width: 50%;
+    margin: 0 0 15px 15px;
+  }
+}
+.pageHeader {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  padding-top: 20px;
+}
+.pageHeader h2 {
+  padding-bottom: 20px;
+  font-size: 24pt;
+}
+.pageHeader .sortBy {
+  padding-bottom: 20px;
+}
+
+#mainContent {
+  background-color: #c8c8c8;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  padding-top: 15px;
+}
+#mainContent .movie {
+  position: relative;
+  margin: 10px;
+  width: 10%;
+  min-width: 200px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 10px;
+  transition-duration: 300ms;
+}
+#mainContent .movie:hover {
+  transition-duration: 300ms;
+  box-shadow: 0px 0px 10px;
+}
+#mainContent .movie .moviePicture {
+  width: 100%;
+  border-radius: 10px;
+}
+#mainContent .movie .movieTitle {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#mainContent .movie .movieLink {
+  position: absolute;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  text-indent: -9999px;
+}
+
+#charactersList {
+  background-color: #c8c8c8;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  padding-top: 15px;
+  width: 100%;
+}
+
+.listElement {
+  margin: 10px 15px 15px 15px;
+  padding: 15px;
+  text-align: center;
+  border-radius: 10px;
+}
+.listElement .elementMovie {
+  text-align: left;
+  color: #aaaaaa;
+  font-size: 12pt;
+}
+.listElement .elementTitle {
+  color: #646464;
+  font-size: 16pt;
+  margin-bottom: 10px;
+}
+.listElement .elementImg {
+  border-radius: 10px;
+  width: 180px;
+}
+.listElement .elementImg:hover {
+  cursor: pointer;
+}
+.listElement:hover {
+  background-color: #f0f0f0;
+}
+
+#movieHeader {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+#movieHeader > img {
+  width: 15%;
+  min-width: 150px;
+  padding: 10px;
+  margin: 15px 0 15px 0;
+  border: 1px solid #646464;
+}
+#movieHeader #moviePageInfo {
+  padding: 10px;
+}
+#movieHeader #moviePageInfo h2 {
+  padding: 0 10px 0 10px;
+  font-size: 24pt;
+}
+#movieHeader #moviePageInfo #movieDetails {
+  background-color: #aaaaaa;
+  padding: 10px 20px 20px 20px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+#movieHeader #moviePageInfo #movieDetails p {
+  margin-top: 5px;
+  padding-left: 10px;
+  color: white;
+}
+#movieHeader #moviePageInfo #movieDetails p span {
+  color: white;
+  text-decoration: underline;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+#movieHeader #moviePageInfo #movieDetails li {
+  margin-top: 5px;
+  padding-left: 10px;
+  color: white;
+}
+#movieHeader #moviePageInfo #movieDetails li a {
+  color: white;
+}
+#movieHeader #moviePageInfo #movieDetails li a:hover {
+  color: #646464;
+}
+#movieHeader #moviePageInfo #movieDetails h3 {
+  margin: 15px 0 15px 0;
+  color: white;
+}
+
+#movieStory {
+  text-align: justify;
+}
+
+.movieContent {
+  background-color: #c8c8c8;
+}
+.movieContent h2 {
+  padding: 15px 15px 15px 30px;
+  font-size: 22pt;
+  background-color: #aaaaaa;
+  color: white;
+}
+.movieContent .movieSection {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+
+#musicList {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+#charInfo {
+  background-color: #646464;
+  width: 40%;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 3px;
+  text-align: center;
+  position: relative;
+}
+#charInfo #closeInfo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+#charInfo #closeInfo:hover {
+  cursor: pointer;
+  filter: brightness(200%);
+}
+#charInfo #charImg {
+  width: 270px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+}
+#charInfo h3, #charInfo p {
+  text-align: left;
+  color: white;
+}
+#charInfo h3 {
+  font-size: 150%;
+  margin: 10px 0 10px 0;
+}
+#charInfo #charMovie {
+  font-size: 120%;
+  margin-bottom: 10px;
+}
+#charInfo a {
+  color: white;
+}
+#charInfo a:hover {
+  text-decoration: underline;
+}
+
+#videoPlayer {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  top: 0;
+  text-align: center;
+}
+#videoPlayer img {
+  z-index: 9999;
+  position: fixed;
+  width: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (orientation: landscape) {
+  #videoPlayed {
+    height: 100%;
+    width: 177.7777777778vh;
+  }
+}
+@media screen and (orientation: portrait) {
+  #videoPlayed {
+    width: 100%;
+    height: 56.25vw;
+  }
+}
+.hidden {
+  display: none;
+  z-index: -9999;
+}
+
+/*# sourceMappingURL=style.css.map */
