@@ -23,11 +23,33 @@ nav a {
   transition-duration: 300ms;
   background-color: #aaaaaa;
   border-radius: 3px;
-  padding: 10px;
+  padding: 13px 20px 13px 50px;
+  position: relative;
 }
 nav a:hover {
   transition-duration: 300ms;
   background-color: #64c8ff;
+}
+nav a::before {
+  display: inline-block;
+  height: 5px;
+  margin-right: 10px;
+  filter: brightness(200%);
+  position: absolute;
+  top: 6px;
+  left: 10px;
+}
+
+#navMovie::before {
+  content: url("../../img/movieIcon.png");
+}
+
+#navMusic::before {
+  content: url("../../img/musicIcon.png");
+}
+
+#navChar::before {
+  content: url("../../img/characterIcon.png");
 }
 
 h1 a {
@@ -44,6 +66,7 @@ h1 a:hover {
   flex-flow: column wrap;
   align-items: center;
   padding-top: 20px;
+  background-color: white;
 }
 #pageHeader h2 {
   padding-bottom: 20px;
@@ -108,6 +131,7 @@ h1 a:hover {
   padding: 15px;
   text-align: center;
   border-radius: 10px;
+  width: 185px;
 }
 .listElement:hover {
   background-color: #f0f0f0;
@@ -135,6 +159,7 @@ h1 a:hover {
   flex-flow: row wrap;
   justify-content: center;
   align-items: flex-start;
+  background-color: white;
 }
 #movieHeader img {
   width: 15%;
@@ -262,16 +287,64 @@ h1 a:hover {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.9);
   top: 0;
-  text-align: center;
-}
-#videoPlayer img {
-  z-index: 9999;
-  position: fixed;
-  width: 20px;
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  justify-content: center;
 }
 
+#videoNavBar {
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 30px;
+  padding: 10px;
+  top: 30px;
+  width: 160px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  transition-duration: 300ms;
+}
+#videoNavBar:hover {
+  transition-duration: 300ms;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+#videoNavBar img {
+  height: 30px;
+  padding: 5px;
+  display: block;
+  filter: brightness(200%);
+  opacity: 0.3;
+}
+#videoNavBar img:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+@media screen and (orientation: landscape) {
+  #videoPlayer {
+    flex-flow: row nowrap;
+  }
+
+  #videoNavBar {
+    position: absolute;
+    top: 30px;
+  }
+}
+@media screen and (orientation: portrait) {
+  #videoPlayer {
+    flex-flow: column nowrap;
+    align-items: center;
+  }
+
+  #videoNavBar {
+    position: relative;
+    width: 80%;
+    order: 1;
+  }
+  #videoNavBar img {
+    filter: brightness(100%);
+  }
+}
 @media screen and (max-width: 370px) {
   nav {
     flex-flow: column nowrap;
@@ -353,6 +426,7 @@ h1 a:hover {
 }
 .hidden {
   display: none;
+  visibility: hidden;
   z-index: -9999;
 }
 

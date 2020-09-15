@@ -13,6 +13,11 @@
 </section>
 
 <section id="videoPlayer" class="hidden" onclick="closePlayer()">  
+    <div id="videoNavBar">
+        <img id="previousVid" src="./img/previous.png" title="Vidéo précédente" />
+        <img id="closeVid" src="./img/close.png" onclick="closePlayer()" title="Fermer le lecteur" />
+        <img id="nextVid" src="./img/next.png" title="Vidéo suivante" />
+    </div>
     <div id="videoPlayed"></div>
 </section>
 

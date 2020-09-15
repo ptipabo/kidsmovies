@@ -29,7 +29,12 @@
     <div id="musicList">
         <!-- Contient la liste des chansons -->
     </div>
-    <section id="videoPlayer" class="hidden" onclick="closePlayer()">  
+    <section id="videoPlayer" class="hidden" onclick="closePlayer()">
+        <div id="videoNavBar">
+            <img id="previousVid" src="./img/previous.png" title="Vidéo précédente" />
+            <img id="closeVid" src="./img/close.png" onclick="closePlayer()" title="Fermer le lecteur" />
+            <img id="nextVid" src="./img/next.png" title="Vidéo suivante" />
+        </div>    
         <div id="videoPlayed"></div>
     </section>
     <script>
@@ -46,7 +51,7 @@
         </div>
         <div id="charInfo" class="hidden">
             <img id="closeInfo" src="./img/close.png" title="Fermer" onclick="closeInfo()" />
-            <img id="charImg" />
+            <img id="charInfoImg" />
             <h3 id="charName"></h3>
             <p id="charMovie">Film : <a id="charMovieLink"></a></p>
             <p id="charDesc"></p>
