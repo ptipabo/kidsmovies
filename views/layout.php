@@ -10,7 +10,7 @@
     </head>
     <body>
         <header>
-            <h1><a title="<?= TITLE ?>" href="<?= dirname(SCRIPTS) ?>"><?= TITLE ?></a></h1>
+            <h1><a title="<?= TITLE ?>" href="<?= dirname(SCRIPTS) ?>"><span id="titleLetterA">K</span><span id="titleLetterB">i</span><span id="titleLetterC">d</span><span id="titleLetterD">s</span> Movies</a></h1>
             <nav>
                 <a id="navMovie" class="pageLink" href="./" title="Films">Films</a>
                 <a id="navMusic" class="pageLink" href="./music" title="Musiques">Musiques</a>

@@ -3,6 +3,10 @@ $mediumColor:rgb(170,170,170);
 $medLightColor:rgb(200,200,200);
 $lightColor:rgb(240,240,240);
 $testColor:rgba(255,0,0,0.5);
+$blueKids:rgb(100,200,255);
+$redKids:rgb(255,100,20);
+$greenKids:rgb(69, 201, 113);
+$yellowKids:rgb(231, 196, 37);
 
 @function adaptHeight(){
     $newHeight: (100vw/16)*9;
@@ -26,7 +30,7 @@ $testColor:rgba(255,0,0,0.5);
 
 header{
     background-color:$lightColor;
-    padding:20px 40px 20px 40px;
+    padding:20px 40px 20px 20px;
     display:flex;
 }
 
@@ -44,7 +48,6 @@ nav{
 
         &:hover{
             transition-duration: 300ms;
-            background-color:rgb(100,200,255);
         }
 
         &::before{
@@ -59,6 +62,21 @@ nav{
     }
 }
 
+<<<<<<< Updated upstream
+=======
+#navMovie:hover{
+    background-color:$blueKids;
+}
+
+#navMusic:hover{
+    background-color:$redKids;
+}
+
+#navChar:hover{
+    background-color:$greenKids;
+}
+
+>>>>>>> Stashed changes
 #navMovie::before{
     content:url("../../img/movieIcon.png");
 }
@@ -71,14 +89,44 @@ nav{
     content:url("../../img/characterIcon.png");
 }
 
+<<<<<<< Updated upstream
+=======
+
+#titleLetterA{
+    color:$blueKids;
+}
+
+#titleLetterB{
+    color:$redKids;
+}
+
+#titleLetterC{
+    color:$greenKids;
+}
+
+#titleLetterD{
+    color:$yellowKids;
+}
+
+>>>>>>> Stashed changes
 h1{
     a{
         transition-duration: 300ms;
         font-size:200%;
+        display:block;
 
         &:hover{
             transition-duration: 300ms;
-            color:$medLightColor;
+            color:white;
+
+            #titleLetterA, #titleLetterB, #titleLetterC, #titleLetterD {
+                transition-duration: 250ms;
+                color:white;
+            }
+        }
+
+        span{
+            font-size:160%;
         }
     }
 }
@@ -309,6 +357,8 @@ h1{
     position:absolute;
     top:20px;
     right:20px;
+    display:block;
+    width:25px;
 
     &:hover{
         cursor:pointer;
@@ -411,7 +461,7 @@ h1{
     }
 }
 
-@media screen and (max-width: 655px) {//Tous smartphones et petites tablettes
+@media screen and (max-width: 810px) {//Tous smartphones et petites tablettes
     header{
         flex-flow:column wrap;
         align-items:center;
@@ -425,10 +475,10 @@ h1{
     #charInfo{
         width:80%;
         order:1;
+    }
 
-        img{
-            width:100%;
-        }
+    #charInfoImg{
+        width:100%;
     }
 
     #moviePageInfo{
@@ -441,7 +491,7 @@ h1{
     }
 }
 
-@media screen and (min-width:371px) and (max-width: 655px) {//Smartphones larges et petites tablettes
+@media screen and (min-width:371px) and (max-width: 810px) {//Smartphones larges et grandes tablettes
     nav{
         justify-content:center;
         margin-top:20px;
@@ -453,6 +503,13 @@ h1{
 }
 
 @media screen and (min-width: 656px) {//Grandes tablettes ou PC
+    #moviePageInfo{
+        max-width:50%;
+        margin:0 0 15px 15px;
+    }
+}
+
+@media screen and (min-width: 811px) {//PC
     header{
         flex-flow:row wrap;
         justify-content:space-between;
@@ -462,16 +519,11 @@ h1{
     h1{
         margin:0 40px 0 40px;
     }
-
+    
     nav{
         a{
             margin:0 5px 0 5px;
         }
-    }
-
-    #moviePageInfo{
-        max-width:50%;
-        margin:0 0 15px 15px;
     }
 }
 

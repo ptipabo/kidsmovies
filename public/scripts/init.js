@@ -2,19 +2,16 @@ let videoList
 let videoPlayedId
 let nextVideoId
 let youtubeApi
-//let activeVideo = false
 
 function addElement(tagName = null, tagParams = [], paramsValues = []){
-    if(tagName === null){
+    if(tagName === null || tagName === undefined){
         console.log("addElement() => ERROR : tagName is not defined !")
     }else{
         let newElement = document.createElement(tagName)
         if(tagParams.length === paramsValues.length){
             for(y=0;y<tagParams.length;y++){
-                if(tagParams[y] === 'innerHTML'){
-                    newElement.innerHTML = paramsValues[y]
-                }else{
-                    newElement.setAttribute(tagParams[y], paramsValues[y])
+                if(tagParams[y] !== ''){
+                    newElement[tagParams[y]] = paramsValues[y]
                 }
             }
         }else{
@@ -28,10 +25,6 @@ function addElement(tagName = null, tagParams = [], paramsValues = []){
 //Permet de filtrer une liste de films
 function movieFilter(filterString, moviesList){
 
-    //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
-    const divMoviesList = document.getElementById('moviesList')
-    divMoviesList.innerHTML = ''
-
     //Si le filtre est vide, on affiche la liste complète des films
     if(filterString === ''){
         return moviesList
@@ -44,11 +37,17 @@ function movieFilter(filterString, moviesList){
 
         //Pour chaque film...
         for(let i=0;i<moviesList.length;i++){
+            let movieTest = 0
+            //On vérifie chaque mot clé...
             for(let y=0;y<keywords.length;y++){
                 if(moviesList[i].movieTitle.toLowerCase().includes(keywords[y])){
-                    //On ajoute ce film à la liste des films filtrés
-                    moviesFiltered.push(moviesList[i])
+                    movieTest++
                 }
+            }
+
+            //Si tous les mots clés se trouvent dans le nom du film, on l'ajoute à la liste
+            if(movieTest === keywords.length){
+                moviesFiltered.push(moviesList[i])
             }
         }
 
@@ -58,40 +57,69 @@ function movieFilter(filterString, moviesList){
 
 //Permet d'afficher une liste de films, reçoit simplement en paramètres une liste de films
 function showMovies(moviesList){
+    //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
+    DIVMOVIESLIST.innerHTML = ''
+
     for(i=0;i<moviesList.length;i++){
-        let movieDiv = addElement('div', ['class'], ['movie'])//On crée un nouveau film
-        const divMoviesList = document.getElementById('moviesList')
-        divMoviesList.appendChild(movieDiv)//On l'ajoute dans la page
+        let movieDiv = addElement('div', ['className'], ['movie'])//On crée un nouveau film
+        DIVMOVIESLIST.appendChild(movieDiv)//On l'ajoute dans la page
         
-        movieLink = addElement('a', ['title', 'href'], [moviesList[i].movieTitle, moviesList[i].movieURL])
+        let movieLink = addElement('a', ['href','title'], [moviesList[i].movieURL, moviesList[i].movieTitle])
         movieDiv.appendChild(movieLink)
 
-        movieImg = addElement('img', ['src'], ['./img/'+moviesList[i].movieImg])
+        let movieImg = addElement('img', ['src', 'alt'], [moviesList[i].movieImg, moviesList[i].movieTitle])
+        movieImg.setAttribute('onerror', 'imgBadLink(this)')
         movieDiv.appendChild(movieImg)
 
-        movieTitle = addElement('h3')
+        let movieTitle = addElement('h3')
         movieTitle.innerHTML = moviesList[i].movieTitle
         movieDiv.appendChild(movieTitle)
 
-        movieDate = addElement('p')
+        let movieDate = addElement('p')
         movieDate.innerHTML = moviesList[i].movieDate
         movieDiv.appendChild(movieDate)
     }
 }
 
+//Permet de savoir si un lien d'image est toujours valide ou non
+function imgBadLink(e){
+    e.setAttribute("src", "./img/image_not_found.jpg")
+    e.removeAttribute('onerror')
+}
+
 //Permet de trier une liste de films par date, suite, durée ou par titre (par défaut)
 function orderBy(moviesList, orderType){
     //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
-    const divMoviesList = document.getElementById('moviesList')
-    divMoviesList.innerHTML = ''
+    DIVMOVIESLIST.innerHTML = ''
 
     //"slice(0)" Permet de créer une copie (pas un clone) de la liste de films
     let listCopy = moviesList.slice(0)
 
-    if(orderType === 'date'){
-        
+    if(orderType === 'titleDesc'){
+        listCopy.sort((b, a) => {
+            if(a.movieTitle < b.movieTitle) { return -1; }
+            if(a.movieTitle > b.movieTitle) { return 1; }
+            return 0;
+        });
+        return listCopy
+    }else if(orderType === 'dateAsc'){
         listCopy.sort((a, b) => {
             return a.movieDate - b.movieDate
+        });
+        return listCopy
+    }else if(orderType === 'dateDesc'){
+        listCopy.sort((b, a) => {
+            return a.movieDate - b.movieDate
+        });
+        return listCopy
+    }else if(orderType === 'lengthAsc'){
+        listCopy.sort((a, b) => {
+            return a.movieLength - b.movieLength;
+        });
+        return listCopy
+    }else if(orderType === 'lengthDesc'){
+        listCopy.sort((b, a) => {
+            return a.movieLength - b.movieLength;
         });
         return listCopy
     }else if(orderType === 'suite'){
@@ -99,11 +127,51 @@ function orderBy(moviesList, orderType){
             return a.movieSuite - b.movieSuite
         });
         return listCopy
-    }else if(orderType === 'length'){
-        listCopy.sort((a, b) => {
-            return a.movieLength - b.movieLength;
-        });
-        return listCopy
+    }else{
+        return moviesList
+    }
+}
+
+//Permet d'afficher ou masquer les suites éventuelles des films qui en possèdent
+function showHideSeries(moviesList){
+    let hideSeries = document.getElementById('hideSeries');
+    let moviesFiltered = []
+    //Si le bouton de masquage des suites est activé...
+    if(hideSeries.checked === true){
+        //Pour chaque film de la liste complète...
+        for(let i=0;i<moviesList.length;i++){            
+            //On crée une variable qui comptera le nombre d'éléments ayant le même id de série(ou suite)
+            let matches = 0
+            
+            //Tout d'abord on doit s'assurer que le premier film d'une série sera bien le plus ancien
+            //On crée donc un array qui récoltera tous les films d'une même série
+            let sameSuite = []
+            
+            //Pour chaque film de la liste complète...
+            for(let z=0;z<moviesList.length;z++){
+                //On récolte tous les films de la série du film en cours de traitement
+                if(moviesList[z].movieSuite === moviesList[i].movieSuite){
+                    sameSuite.push(moviesList[z].movieDate)
+                }
+            }
+
+            //On place le plus ancien de cette suite de films en premier dans la liste(car c'est forcément celui-là qui sera inséré dans moviesFiltered) 
+            sameSuite.sort((a, b) => {
+                return a - b
+            });
+
+            //Si le film en cours de traitement n'est pas le plus ancien de sa série, on fait comme si il était déjà dans moviesFiltered et on ne l'insère donc pas
+            if(sameSuite[0] !== moviesList[i].movieDate){
+                matches++
+            }
+            
+            //Si le compteur n'a détecté aucun doublon, il ajoute ce film à la nouvelle liste
+            if(matches === 0){
+                moviesFiltered.push(moviesList[i])
+            }
+        }
+
+        return moviesFiltered
     }else{
         return moviesList
     }
@@ -117,15 +185,18 @@ function showMovie(movieInfo,suiteList){
     const movieLength = document.getElementById('movieLength')
     const movieStory = document.getElementById('movieStory')
 
-    movieImg.setAttribute('src', './img/'+movieInfo.movieImg)
+    let lengthInHours = minToHour(movieInfo.movieLength)
+
+    movieImg.src = movieInfo.movieImg
+    movieImg.setAttribute('onerror', 'imgBadLink(this)')
     movieTitle.innerHTML = movieInfo.movieTitle
     movieDate.innerHTML = '<span>Année de sortie : </span> '+movieInfo.movieDate
-    movieLength.innerHTML = '<span>Durée du film : </span> '+movieInfo.movieLength+' minutes'
+    movieLength.innerHTML = '<span>Durée du film : </span> '+lengthInHours
     movieStory.innerHTML = '<span>Synopsis : </span><br/>'+movieInfo.movieStory
 
     if(suiteList.length > 1){
         const movieDetails = document.getElementById('movieDetails')
-        let suiteTitle = addElement('h3', ['class', 'innerHTML'], ['suiteListTitle', 'Dans la même série de films :'])
+        let suiteTitle = addElement('h3', ['className', 'innerHTML'], ['suiteListTitle', 'Dans la même série de films :'])
         let suiteUl = addElement('ul')
         movieDetails.appendChild(suiteTitle)
         movieDetails.appendChild(suiteUl)
@@ -141,6 +212,18 @@ function showMovie(movieInfo,suiteList){
     }
 }
 
+//Permet de convertir des minutes en heures
+function minToHour(timeInMinutes){
+    let timeInHours = Math.floor(timeInMinutes/60)
+    let minutesLeft = timeInMinutes - (timeInHours*60)
+
+    if(minutesLeft<10){
+        minutesLeft = '0'+minutesLeft
+    }
+
+    return timeInHours+'h'+minutesLeft
+}
+
 //Permet de stocker la liste des vidéos en cours
 function setMusicList(musicList){
     videoList = musicList
@@ -153,7 +236,7 @@ function showSongs(musicList = null){
     }
     else{
         for(i=0;i<musicList.length;i++){
-            let songDiv = addElement('div', ['class'], ['listElement'])//On crée une nouvelle chanson
+            let songDiv = addElement('div', ['className'], ['listElement'])//On crée une nouvelle chanson
 
             document.getElementById('musicList').appendChild(songDiv)//On l'ajoute dans la page
             
@@ -163,7 +246,8 @@ function showSongs(musicList = null){
             songDiv.appendChild(songTitle)
 
             //img(elementImg,title,src,onclick)
-            let songImg = addElement('img',['title','src','onclick'],[musicList[i].songTitle, 'https://img.youtube.com/vi/'+musicList[i].videoId+'/1.jpg', 'play('+i+')'])//"'+musicList[i].videoId+'"
+            let songImg = addElement('img',['title', 'src', 'alt'],[musicList[i].songTitle, 'https://img.youtube.com/vi/'+musicList[i].videoId+'/1.jpg', musicList[i].songTitle])//"'+musicList[i].videoId+'"
+            songImg.setAttribute('onclick', 'play('+i+')')
             songDiv.appendChild(songImg)
         }
     }
@@ -171,6 +255,7 @@ function showSongs(musicList = null){
 
 //Permet d'ouvrir le lecteur d'une chanson
 function play(videoInternalId){
+    console.log(videoInternalId)
     //Permet d'empècher le déclenchement de l'événement du div parent
     if(!e){
         var e = window.event;
@@ -190,8 +275,6 @@ function play(videoInternalId){
     if(iframe[0]){
         closePlayer()
     }
-
-    //activeVideo = true
 
     //On stock l'id youtube de la vidéo à afficher
     videoPlayedId = videoList[videoInternalId].videoId
@@ -221,15 +304,13 @@ function play(videoInternalId){
     }
     
     //On affiche le div "videoPlayer" et on le place en avant-plan
-    divVideo.setAttribute('style','z-index:9997')
+    divVideo.style.zIndex = '9997'
     divVideo.classList.remove('hidden')
 }
 
 //Permet de fermer le lecteur d'une chanson
 function closePlayer(){
     const divVideo = document.getElementById('videoPlayer')
-
-    //activeVideo = false
 
     //On masque le div "videoPlayer" et on le vide entièrement
     divVideo.classList.add('hidden')
@@ -255,16 +336,17 @@ function showCharacters(charList = null){
     }
     else{
         for(i=0;i<charList.length;i++){
-            let charDiv = addElement('div', ['class'], ['listElement'])//On crée un nouveau personnage
+            let charDiv = addElement('div', ['className'], ['listElement'])//On crée un nouveau personnage
             document.getElementById('charactersList').appendChild(charDiv)//On l'ajoute dans la page
             
             //h3(elementTitle) -> span(elementMovie)
-            let charName = addElement('h3', ['class'], ['elementTitle'])
+            let charName = addElement('h3', ['className'], ['elementTitle'])
             charName.innerHTML = '<span class="elementMovie">'+charList[i].charMovie+'</span>'+'<br />'+charList[i].charName
             charDiv.appendChild(charName)
             
             //img(elementImg,title,src,onclick)
-            let charImg = addElement('img',['class','title','src','onclick'],['elementImg', charList[i].charName, './img/characters/'+charList[i].charImg, 'openInfo(charList['+i+'])'])
+            let charImg = addElement('img',['className', 'title', 'src', 'alt'],['elementImg', charList[i].charName, './img/characters/'+charList[i].charImg,charList[i].charName])//
+            charImg.setAttribute('onclick', 'openInfo(charList['+i+'])')
             charDiv.appendChild(charImg)
         }
     }
@@ -290,20 +372,20 @@ function openInfo(charInfo){
         const charDesc = document.getElementById('charDesc')
 
         //On intègre toutes les infos du personnage dans la fiche
-        charImg.setAttribute('src', './img/characters/'+charInfo.charImg)
-        charImg.setAttribute('alt', charInfo.charName)
+        charImg.src = './img/characters/'+charInfo.charImg
+        charImg.alt = charInfo.charName
         charName.innerHTML = charInfo.charName
-        movieLink.setAttribute('href','./'+charInfo.movieUrl)
-        movieLink.setAttribute('title', charInfo.charMovie)
+        movieLink.href = './'+charInfo.movieUrl
+        movieLink.title = charInfo.charMovie
         movieLink.innerHTML = charInfo.charMovie
         charDesc.innerHTML = charInfo.charDesc
 
         //On ajoute une classe à la liste des personnages afin de savoir si une fiche personnage est ouverte ou non
         charList.classList.add('infoOpened')
-        charList.setAttribute('style', 'width:50%')
+        charList.style.width = '50%'
 
         //On rend la fiche personnage visible et on la place au premier plan
-        divChar.setAttribute('style','z-index:9998')
+        divChar.style.zIndex = '9998'
         divChar.removeAttribute('class')
 
         //On déplace la vue jusqu'à la fiche personnage
@@ -326,7 +408,7 @@ function closeInfo(){
     divChar.classList.add('hidden')
     divChar.removeAttribute('style')
 
-    charImg.setAttribute('src', '')
+    charImg.src = ''
     charImg.removeAttribute('alt')
     charName.innerHTML = ''
     movieLink.innerHTML = ''
@@ -349,6 +431,7 @@ function onYouTubePlayerAPIReady() {
 
 //API Youtube : L'API appellera cette fonction quand le lecteur sera prêt
 function onPlayerReady(event) {
+    console.log('Test')
     event.target.playVideo();
 }
 

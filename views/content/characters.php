@@ -12,9 +12,9 @@
         <!-- Contient la liste des personnages -->
     </div>
     <div id="charInfo" class="hidden">
-        <img id="closeInfo" src="./img/close.png" title="Fermer" onclick="closeInfo()" />
         <img id="charInfoImg" />
         <h3 id="charName"></h3>
+        <img id="closeInfo" src="./img/close.png" title="Fermer" onclick="closeInfo()" />
         <p id="charMovie">Film : <a id="charMovieLink"></a></p>
         <p id="charDesc"></p>
     </div>
