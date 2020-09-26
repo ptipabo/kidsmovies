@@ -15,15 +15,19 @@ define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');
 define('DB_PWD', '');
 define('DB_NAME', 'kidsmovies');
+/*define('DB_HOST', 'sql308.byethost12.com');
+define('DB_USER', 'b12_26748664');
+define('DB_PWD', 'Wolfy188.');
+define('DB_NAME', 'b12_26748664_kidsmovies');*/
 
 //On crée notre routeur en lui indiquant l'url actuelle
 $router = new Router($_GET['url']);
 
 //On crée toutes les routes de l'application
-$router->setGetRoute('/', 'App\Controllers\ViewController@home');
-$router->setGetRoute('/music', 'App\Controllers\ViewController@music');
-$router->setGetRoute('/characters', 'App\Controllers\ViewController@characters');
-$router->setGetRoute('/:movieUrl', 'App\Controllers\ViewController@movie');
+$router->setGetRoute('/', 'App\controllers\ViewController@home');
+$router->setGetRoute('/music', 'App\controllers\ViewController@music');
+$router->setGetRoute('/characters', 'App\controllers\ViewController@characters');
+$router->setGetRoute('/:movieUrl', 'App\controllers\ViewController@movie');
 
 $router->urlCheck();
 

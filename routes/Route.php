@@ -2,6 +2,7 @@
 
 namespace Routes;
 
+use App\Controllers\ViewController;
 use Database\ServerConnection;
 
 class Route{

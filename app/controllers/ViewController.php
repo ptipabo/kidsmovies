@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\controllers;
 
 use App\Models\Song;
 use App\Models\Movie;
@@ -89,7 +89,7 @@ class ViewController extends Controller{
         $songs = new Song($this->getDB(), 'song_title');
         $songs = $songs->findByMovie($movie->movie_id);
 
-        //On crée un fichier Json via PHP d'après le résultat de la requête
+        //On crée un objet javascript via PHP d'après le résultat de la requête
         $jsonConstruct = '[';
         if(count($songs) !== 0){
             for($i=0;$i < count($songs);$i++){
