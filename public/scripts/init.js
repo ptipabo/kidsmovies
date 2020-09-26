@@ -1,9 +1,30 @@
+//import DomElement from './classes/DomElement.js';
+import Movie from './classes/Movie.js';
+//import Character from './classes/Character.js';
+
 let videoList
 let videoPlayedId
 let nextVideoId
 let youtubeApi
+export let divMoviesList
 
-function addElement(tagName = null, tagParams = [], paramsValues = []){
+export function setDivMoviesList(value){
+    divMoviesList = value;
+}
+
+//On ajoute un écouteur d'évenement sur le champ "Trier par"
+const sortByField = document.getElementById('sortByValue');
+sortByField.addEventListener('change', () => {showMovies(orderBy(moviesList, sortByField.value))});
+
+//On ajoute un écouteur d'évenement sur le champ "Rechercher un film"
+const filterField = document.getElementById('filterValue');
+filterField.addEventListener('change', () => {showMovies(movieFilter(filterField.value, moviesList))});
+
+//On ajoute un écouteur d'évenement sur le champ "Masquer les suites"
+const hideSeriesField = document.getElementById('hideSeries');
+hideSeriesField.addEventListener('change', () => {showMovies(showHideSeries(moviesList))});
+
+/*function addElement(tagName = null, tagParams = [], paramsValues = []){
     if(tagName === null || tagName === undefined){
         console.log("addElement() => ERROR : tagName is not defined !")
     }else{
@@ -20,7 +41,7 @@ function addElement(tagName = null, tagParams = [], paramsValues = []){
 
         return newElement;
     }
-}
+}*/
 
 //Permet de filtrer une liste de films
 function movieFilter(filterString, moviesList){
@@ -56,41 +77,27 @@ function movieFilter(filterString, moviesList){
 }
 
 //Permet d'afficher une liste de films, reçoit simplement en paramètres une liste de films
-function showMovies(moviesList){
+export function showMovies(moviesList){
     //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
-    DIVMOVIESLIST.innerHTML = ''
+    divMoviesList.innerHTML = ''
 
-    for(i=0;i<moviesList.length;i++){
-        let movieDiv = addElement('div', ['className'], ['movie'])//On crée un nouveau film
-        DIVMOVIESLIST.appendChild(movieDiv)//On l'ajoute dans la page
-        
-        let movieLink = addElement('a', ['href','title'], [moviesList[i].movieURL, moviesList[i].movieTitle])
-        movieDiv.appendChild(movieLink)
-
-        let movieImg = addElement('img', ['src', 'alt'], [moviesList[i].movieImg, moviesList[i].movieTitle])
-        movieImg.setAttribute('onerror', 'imgBadLink(this)')
-        movieDiv.appendChild(movieImg)
-
-        let movieTitle = addElement('h3')
-        movieTitle.innerHTML = moviesList[i].movieTitle
-        movieDiv.appendChild(movieTitle)
-
-        let movieDate = addElement('p')
-        movieDate.innerHTML = moviesList[i].movieDate
-        movieDiv.appendChild(movieDate)
+    for(let i=0;i<moviesList.length;i++){
+        let movie = new Movie(moviesList[i]);
+        movie.displayMovie();
     }
 }
 
 //Permet de savoir si un lien d'image est toujours valide ou non
-function imgBadLink(e){
+export function imgBadLink(e){
     e.setAttribute("src", "./img/image_not_found.jpg")
     e.removeAttribute('onerror')
+    console.log(e.id)
 }
 
 //Permet de trier une liste de films par date, suite, durée ou par titre (par défaut)
 function orderBy(moviesList, orderType){
     //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
-    DIVMOVIESLIST.innerHTML = ''
+    divMoviesList.innerHTML = ''
 
     //"slice(0)" Permet de créer une copie (pas un clone) de la liste de films
     let listCopy = moviesList.slice(0)
@@ -178,42 +185,18 @@ function showHideSeries(moviesList){
 }
 
 //Permet d'afficher toutes les infos d'un film
-function showMovie(movieInfo,suiteList){
-    const movieImg = document.getElementById('moviePageImg')
-    const movieTitle = document.getElementById('movieTitle')
-    const movieDate = document.getElementById('movieDate')
-    const movieLength = document.getElementById('movieLength')
-    const movieStory = document.getElementById('movieStory')
-
-    let lengthInHours = minToHour(movieInfo.movieLength)
-
-    movieImg.src = movieInfo.movieImg
-    movieImg.setAttribute('onerror', 'imgBadLink(this)')
-    movieTitle.innerHTML = movieInfo.movieTitle
-    movieDate.innerHTML = '<span>Année de sortie : </span> '+movieInfo.movieDate
-    movieLength.innerHTML = '<span>Durée du film : </span> '+lengthInHours
-    movieStory.innerHTML = '<span>Synopsis : </span><br/>'+movieInfo.movieStory
-
-    if(suiteList.length > 1){
-        const movieDetails = document.getElementById('movieDetails')
-        let suiteTitle = addElement('h3', ['className', 'innerHTML'], ['suiteListTitle', 'Dans la même série de films :'])
-        let suiteUl = addElement('ul')
-        movieDetails.appendChild(suiteTitle)
-        movieDetails.appendChild(suiteUl)
-
-        for(i=0;i<suiteList.length;i++){
-            if(suiteList[i].movieTitle !== movieInfo.movieTitle){
-                let newSuiteMovie = addElement('li')
-                let newMovieLink = addElement('a', ['innerHTML', 'href', 'title'], [suiteList[i].movieTitle, './'+suiteList[i].movieUrl, suiteList[i].movieTitle])
-                newSuiteMovie.appendChild(newMovieLink)
-                suiteUl.appendChild(newSuiteMovie)
-            }
+function showMovie(moviesList, movieUrl){
+    for(i=0;i<moviesList.length;i++){
+        if(moviesList[i].movieUrl === movieUrl){
+            let movie = Movie(moviesList[i]);
+            movie.getSuiteList(moviesList).movieDetails();
+            return;
         }
     }
 }
 
 //Permet de convertir des minutes en heures
-function minToHour(timeInMinutes){
+/*function minToHour(timeInMinutes){
     let timeInHours = Math.floor(timeInMinutes/60)
     let minutesLeft = timeInMinutes - (timeInHours*60)
 
@@ -222,7 +205,7 @@ function minToHour(timeInMinutes){
     }
 
     return timeInHours+'h'+minutesLeft
-}
+}*/
 
 //Permet de stocker la liste des vidéos en cours
 function setMusicList(musicList){

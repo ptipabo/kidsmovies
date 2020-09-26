@@ -11,6 +11,7 @@ use App\Controllers\Controller;
 define('TITLE', 'Kids Movies');
 define('VIEWS', dirname(__DIR__).DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR);
 define('SCRIPTS', dirname($_SERVER['SCRIPT_NAME']) . DIRECTORY_SEPARATOR);
+//define('SCRIPTS', 'kidsmovies' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR);
 define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');
 define('DB_PWD', '');

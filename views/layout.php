@@ -6,7 +6,7 @@
         <title><?= TITLE ?></title>
         <link rel="stylesheet" href="<?= SCRIPTS.'css'.DIRECTORY_SEPARATOR.'style.css' ?>"/>
         <link rel="icon" href="./favicon.ico" />
-        <script src="<?= SCRIPTS.'scripts'.DIRECTORY_SEPARATOR.'init.js' ?>"></script>
+        <script type="module" src="<?= SCRIPTS.'scripts'.DIRECTORY_SEPARATOR.'init.js' ?>"></script>
     </head>
     <body>
         <header>

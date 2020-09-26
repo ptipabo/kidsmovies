@@ -26,7 +26,7 @@ class ViewController extends Controller{
                 "movieSuite":'.$movies[$i]->movie_suite.',
                 "movieDate":'.$movies[$i]->movie_date.',
                 "movieLength":'.$movies[$i]->movie_length.',
-                "movieURL":"'.$movies[$i]->movie_url.'"
+                "movieUrl":"'.$movies[$i]->movie_url.'"
             }';
 
             if($i+1 === count($movies)){
@@ -48,7 +48,7 @@ class ViewController extends Controller{
         //On récupère les infos concernant ce film via son "titre-url"
         $movie = $movies->findByUrl($movieUrl);
 
-        //On crée un fichier Json via PHP d'après le résultat de la requête
+        /*//On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = '[{
             "movieId":'.$movie->movie_id.',
             "movieImg":"'.str_replace('"', '\"', $movie->movie_img).'",
@@ -58,9 +58,36 @@ class ViewController extends Controller{
             "movieDate":"'.$movie->movie_date.'",
             "movieLength":"'.$movie->movie_length.'"
         }]';
-        $movieDetails = $jsonConstruct;
+        $movieDetails = $jsonConstruct;*/
 
-        //On récupère la liste des films liés à celui-ci (s'il y en a)
+        //On récupère la liste de tous les films triés par titre
+        $movies = new Movie($this->getDB(), 'movie_title');
+        $movies = $movies->all();
+        
+        //On crée un fichier Json via PHP d'après le résultat de la requête
+        $jsonConstruct = '[';
+        for($i=0;$i < count($movies);$i++){
+            $jsonConstruct .= '{
+                "movieId":'.$movies[$i]->movie_id.',
+                "movieImg":"'.$movies[$i]->movie_img.'",
+                "movieTitle":"'.str_replace('"', '\"', $movies[$i]->movie_title).'",
+                "movieStory":"'.str_replace('"', '\"', $movies[$i]->movie_story).'",
+                "movieSuite":'.$movies[$i]->movie_suite.',
+                "movieDate":'.$movies[$i]->movie_date.',
+                "movieLength":'.$movies[$i]->movie_length.',
+                "movieUrl":"'.$movies[$i]->movie_url.'"
+            }';
+
+            if($i+1 === count($movies)){
+                $jsonConstruct .= ']';
+            }
+            else{
+                $jsonConstruct .= ',';
+            }
+        }
+        $movies = $jsonConstruct;
+
+        /*//On récupère la liste des films liés à celui-ci (s'il y en a)
         $suite = $movies->findBySuite($movie->movie_suite);
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
@@ -83,7 +110,7 @@ class ViewController extends Controller{
                 $jsonConstruct .= ',';
             }
         }
-        $suite = $jsonConstruct;
+        $suite = $jsonConstruct;*/
 
         //On récupère la liste de toutes les musiques liées à ce film
         $songs = new Song($this->getDB(), 'song_title');
@@ -148,7 +175,7 @@ class ViewController extends Controller{
 
         $characters = $jsonConstruct;
 
-        $this->view('content.movie', compact('movieDetails', 'suite', 'songs', 'characters'));
+        $this->view('content.movie', compact('movies',/*'movieDetails', 'suite',*/ 'songs', 'characters'));
     }
 
     //Permet d'afficher la page Music de l'application

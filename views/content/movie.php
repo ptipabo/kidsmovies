@@ -1,7 +1,8 @@
 <script>
     //On transmet les données de PHP au Javascript
-    const movieInfo = <?= $params['movieDetails'] ?>;
-    const suiteList = <?= $params['suite'] ?>;
+    //const movieInfo = <?= $params['movieDetails'] ?>;
+    const moviesList = <?= $params['movies'] ?>;
+    //const suiteList = <?= $params['suite'] ?>;
     const musicList = <?= $params['songs'] ?>;
     setMusicList(musicList);
     const charList = <?= $params['characters'] ?>;
