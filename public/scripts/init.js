@@ -1,3 +1,6 @@
+import {Movie} from 'classes/Movie.js';
+import {Character} from 'classes/Character.js';
+
 let videoList
 let videoPlayedId
 let nextVideoId
