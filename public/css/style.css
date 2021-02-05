@@ -29,10 +29,6 @@ nav a {
 nav a:hover {
   transition-duration: 300ms;
 }
-
-#navMovie:hover {
-  background-color: #64c8ff;
-}
 nav a::before {
   display: inline-block;
   height: 5px;
@@ -43,16 +39,8 @@ nav a::before {
   left: 10px;
 }
 
-#navMovie::before {
-  content: url("../../img/movieIcon.png");
-}
-
-#navMusic::before {
-  content: url("../../img/musicIcon.png");
-}
-
-#navChar::before {
-  content: url("../../img/characterIcon.png");
+#navMovie:hover {
+  background-color: #64c8ff;
 }
 
 #navMusic:hover {

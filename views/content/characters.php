@@ -1,6 +1,11 @@
-<script>
-    //On transmet les données de PHP au Javascript
-    const charList = <?= $params['characters'] ?>;
+<?php
+    $characters = $params['characters'];
+    $jsonCharactersList = json_encode($characters);
+?>
+<script type="module">
+    import {setCharactersList} from '../../public/scripts/characters.js';
+    // For the video player to work, we need to pass the songs data to JS
+    setCharactersList(<?= $jsonCharactersList ?>);
 </script>
 
 <section id="pageHeader">
@@ -10,6 +15,12 @@
 <section id="charactersDisplay">
     <div id="charactersList">
         <!-- Contient la liste des personnages -->
+        <?php for($i=0;$i<count($characters);$i++) : ?>
+            <div class="listElement">
+                <h3><span><?= $characters[$i]['movie'] ?></span><br/><?= $characters[$i]['name'] ?></h3>
+                <img class="elementImg" id="char-<?= $i ?>" title="<?= $characters[$i]['name'] ?>" src="./img/characters/<?= $characters[$i]['img'] ?>" alt="<?= $characters[$i]['name'] ?>" />
+            </div>
+        <?php endfor; ?>
     </div>
     <div id="charInfo" class="hidden">
         <img id="charInfoImg" />
@@ -19,8 +30,3 @@
         <p id="charDesc"></p>
     </div>
 </section>
-
-<script>
-    //On affiche la liste des personnages
-    showCharacters(charList);
-</script>

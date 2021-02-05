@@ -62,8 +62,6 @@ nav{
     }
 }
 
-<<<<<<< Updated upstream
-=======
 #navMovie:hover{
     background-color:$blueKids;
 }
@@ -76,7 +74,6 @@ nav{
     background-color:$greenKids;
 }
 
->>>>>>> Stashed changes
 #navMovie::before{
     content:url("../../img/movieIcon.png");
 }
@@ -88,9 +85,6 @@ nav{
 #navChar::before{
     content:url("../../img/characterIcon.png");
 }
-
-<<<<<<< Updated upstream
-=======
 
 #titleLetterA{
     color:$blueKids;
@@ -108,7 +102,6 @@ nav{
     color:$yellowKids;
 }
 
->>>>>>> Stashed changes
 h1{
     a{
         transition-duration: 300ms;

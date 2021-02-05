@@ -12,6 +12,9 @@ abstract class Controller{
         $this->db = $db;
     }
 
+    /**
+     * Get the view of the route selected
+     */
     protected function view(string $filePath, array $params = null){
 
         ob_start();
@@ -25,6 +28,9 @@ abstract class Controller{
         require VIEWS.'layout.php';
     }
 
+    /**
+     * Make the connection to the database
+     */
     protected function getDB(){
         return $this->db;
     }

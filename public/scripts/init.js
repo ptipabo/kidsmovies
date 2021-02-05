@@ -1,28 +1,74 @@
-//import DomElement from './classes/DomElement.js';
+import {addElement} from './domElement.js';
 import Movie from './classes/Movie.js';
 //import Character from './classes/Character.js';
 
-let videoList
-let videoPlayedId
+export let videoList
+/*let videoPlayedId
 let nextVideoId
-let youtubeApi
+let youtubeApi*/
 export let divMoviesList
 
 export function setDivMoviesList(value){
     divMoviesList = value;
 }
 
+/*function addElement(tagName, tagParams = [], paramsValues = []){
+    let newElement = document.createElement(tagName)
+    if(tagParams.length === paramsValues.length){
+        for(let y=0;y<tagParams.length;y++){
+            if(tagParams[y] !== ''){
+                newElement[tagParams[y]] = paramsValues[y]
+            }
+        }
+    }else{
+        console.log("addElement() => ERROR : the number of parameters doesn't match the number of parameters values !")
+    }
+
+    return newElement;
+}*/
+
 //On ajoute un écouteur d'évenement sur le champ "Trier par"
-const sortByField = document.getElementById('sortByValue');
-sortByField.addEventListener('change', () => {showMovies(orderBy(moviesList, sortByField.value))});
+if(document.getElementById('sortByValue')){
+    const sortByField = document.getElementById('sortByValue');
+
+    sortByField.addEventListener('change',
+        () => {
+            if(divMoviesList){
+                showMovies(
+                    orderBy(moviesList, sortByField.value)
+                )
+            }
+        }
+    );
+}
 
 //On ajoute un écouteur d'évenement sur le champ "Rechercher un film"
-const filterField = document.getElementById('filterValue');
-filterField.addEventListener('change', () => {showMovies(movieFilter(filterField.value, moviesList))});
+if(document.getElementById('filterValue')){
+    const filterField = document.getElementById('filterValue');
+    filterField.addEventListener('change',
+        () => {
+            if(divMoviesList){
+                showMovies(
+                    movieFilter(filterField.value, moviesList)
+                )
+            }
+        }
+    );
+}
 
 //On ajoute un écouteur d'évenement sur le champ "Masquer les suites"
-const hideSeriesField = document.getElementById('hideSeries');
-hideSeriesField.addEventListener('change', () => {showMovies(showHideSeries(moviesList))});
+if(document.getElementById('hideSeries')){
+    const hideSeriesField = document.getElementById('hideSeries');
+    hideSeriesField.addEventListener('change',
+        () => {
+            if(divMoviesList){
+                showMovies(
+                    showHideSeries(moviesList)
+                )
+            }
+        }
+    );
+}
 
 /*function addElement(tagName = null, tagParams = [], paramsValues = []){
     if(tagName === null || tagName === undefined){
@@ -96,8 +142,6 @@ export function imgBadLink(e){
 
 //Permet de trier une liste de films par date, suite, durée ou par titre (par défaut)
 function orderBy(moviesList, orderType){
-    //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
-    divMoviesList.innerHTML = ''
 
     //"slice(0)" Permet de créer une copie (pas un clone) de la liste de films
     let listCopy = moviesList.slice(0)
@@ -185,7 +229,7 @@ function showHideSeries(moviesList){
 }
 
 //Permet d'afficher toutes les infos d'un film
-function showMovie(moviesList, movieUrl){
+export function showMovie(moviesList, movieUrl){
     for(i=0;i<moviesList.length;i++){
         if(moviesList[i].movieUrl === movieUrl){
             let movie = Movie(moviesList[i]);
@@ -207,18 +251,18 @@ function showMovie(moviesList, movieUrl){
     return timeInHours+'h'+minutesLeft
 }*/
 
-//Permet de stocker la liste des vidéos en cours
-function setMusicList(musicList){
+/*//Permet de stocker la liste des vidéos en cours
+export function setMusicList(musicList){
     videoList = musicList
 }
 
 //Permet d'afficher la liste de toutes les chansons
-function showSongs(musicList = null){
+export function showSongs(musicList = null){
     if(musicList === null){
         console.log("showSongs() => ERROR : musicList is not defined !")
     }
     else{
-        for(i=0;i<musicList.length;i++){
+        for(var i=0;i<musicList.length;i++){
             let songDiv = addElement('div', ['className'], ['listElement'])//On crée une nouvelle chanson
 
             document.getElementById('musicList').appendChild(songDiv)//On l'ajoute dans la page
@@ -304,16 +348,26 @@ function closePlayer(){
     //Ensuite on recrée le div "videoPlayed" afin de réinitialiser le lecteur de vidéo
     let newPlayer = addElement('div', ['id'], ['videoPlayed'])
     divVideo.appendChild(newPlayer)
+}*/
+
+/**
+ * Permet de convertir des minutes en heures
+ * 
+ * @param {number} timeInMinutes 
+ */
+function minToHour(timeInMinutes){
+    let timeInHours = Math.floor(timeInMinutes/60)
+    let minutesLeft = timeInMinutes - (timeInHours*60)
+
+    if(minutesLeft<10){
+        minutesLeft = '0'+minutesLeft
+    }
+
+    return timeInHours+'h'+minutesLeft
 }
 
-//Permet de retirer un élément de la page html
-function removeElement(elementId) {
-    let element = document.getElementById(elementId);
-    element.parentNode.removeChild(element);
-}
-
-//Permet d'afficher la liste de tous les personnages
-function showCharacters(charList = null){
+/*//Permet d'afficher la liste de tous les personnages
+export function showCharacters(charList = null){
     if(charList === null){
         console.log("showCharacters() => ERROR : charList is not defined !")
     }
@@ -333,10 +387,10 @@ function showCharacters(charList = null){
             charDiv.appendChild(charImg)
         }
     }
-}
+}*/
 
-//Permet d'ouvrir la fiche info d'un personnage
-function openInfo(charInfo){
+/*//Permet d'ouvrir la fiche info d'un personnage
+export function openInfo(charInfo){
     
     if(charInfo === undefined){
         console.log("openInfo() => ERROR : charInfo is not defined !")
@@ -398,9 +452,9 @@ function closeInfo(){
     movieLink.removeAttribute('href')
     movieLink.removeAttribute('title')
     charDesc.innerHTML = ''
-}
+}*/
 
-//API Youtube : Crée un lecteur vidéo Youtube
+/*//API Youtube : Crée un lecteur vidéo Youtube
 var player;
 function onYouTubePlayerAPIReady() {
     player = new YT.Player('videoPlayed', {
@@ -426,4 +480,4 @@ function onPlayerStateChange(event) {
         //On lance la vidéo suivante
         play(nextVideoId)
     }
-}
+}*/

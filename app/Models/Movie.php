@@ -7,7 +7,7 @@ use PDO;
 class Movie extends Model{
     protected $table = 'movies';
 
-    public function findByUrl(string $movieUrl): Movie{
+    public function findBySlug(string $movieUrl): Movie{
         //prepare() permet simplement d'éviter les injections sql
         $stmt = $this->db->getConnection()->prepare("SELECT * FROM $this->table WHERE movie_url=?");
         //On indique ensuite au statement qu'il doit remplacer le "?" par la variable $id
