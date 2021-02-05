@@ -98,3 +98,26 @@ function classRemove(domElement, classToRemove){
         }
     }
 }
+
+/*//Permet d'afficher la liste de tous les personnages
+export function showCharacters(charList = null){
+    if(charList === null){
+        console.log("showCharacters() => ERROR : charList is not defined !")
+    }
+    else{
+        for(i=0;i<charList.length;i++){
+            let charDiv = addElement('div', ['className'], ['listElement'])//On crée un nouveau personnage
+            document.getElementById('charactersList').appendChild(charDiv)//On l'ajoute dans la page
+            
+            //h3(elementTitle) -> span(elementMovie)
+            let charName = addElement('h3', ['className'], ['elementTitle'])
+            charName.innerHTML = '<span class="elementMovie">'+charList[i].charMovie+'</span>'+'<br />'+charList[i].charName
+            charDiv.appendChild(charName)
+            
+            //img(elementImg,title,src,onclick)
+            let charImg = addElement('img',['className', 'title', 'src', 'alt'],['elementImg', charList[i].charName, './img/characters/'+charList[i].charImg,charList[i].charName])//
+            charImg.setAttribute('onclick', 'openInfo(charList['+i+'])')
+            charDiv.appendChild(charImg)
+        }
+    }
+}*/

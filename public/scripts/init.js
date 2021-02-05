@@ -1,33 +1,18 @@
-import {addElement} from './domElement.js';
 import Movie from './classes/Movie.js';
 //import Character from './classes/Character.js';
 
 export let videoList
-/*let videoPlayedId
-let nextVideoId
-let youtubeApi*/
-export let divMoviesList
+export let divMoviesList = document.getElementById('moviesList');
 
+/**
+ * 
+ * @param {*} value 
+ */
 export function setDivMoviesList(value){
     divMoviesList = value;
 }
 
-/*function addElement(tagName, tagParams = [], paramsValues = []){
-    let newElement = document.createElement(tagName)
-    if(tagParams.length === paramsValues.length){
-        for(let y=0;y<tagParams.length;y++){
-            if(tagParams[y] !== ''){
-                newElement[tagParams[y]] = paramsValues[y]
-            }
-        }
-    }else{
-        console.log("addElement() => ERROR : the number of parameters doesn't match the number of parameters values !")
-    }
-
-    return newElement;
-}*/
-
-//On ajoute un écouteur d'évenement sur le champ "Trier par"
+// Adds a "change" event on the "Order by" field
 if(document.getElementById('sortByValue')){
     const sortByField = document.getElementById('sortByValue');
 
@@ -42,10 +27,10 @@ if(document.getElementById('sortByValue')){
     );
 }
 
-//On ajoute un écouteur d'évenement sur le champ "Rechercher un film"
+// Adds a "change" event on the "Search a movie" field
 if(document.getElementById('filterValue')){
     const filterField = document.getElementById('filterValue');
-    filterField.addEventListener('change',
+    filterField.addEventListener('keyup',
         () => {
             if(divMoviesList){
                 showMovies(
@@ -56,7 +41,7 @@ if(document.getElementById('filterValue')){
     );
 }
 
-//On ajoute un écouteur d'évenement sur le champ "Masquer les suites"
+//Adds a "change" event on the "Hide sequels" field
 if(document.getElementById('hideSeries')){
     const hideSeriesField = document.getElementById('hideSeries');
     hideSeriesField.addEventListener('change',
@@ -70,26 +55,12 @@ if(document.getElementById('hideSeries')){
     );
 }
 
-/*function addElement(tagName = null, tagParams = [], paramsValues = []){
-    if(tagName === null || tagName === undefined){
-        console.log("addElement() => ERROR : tagName is not defined !")
-    }else{
-        let newElement = document.createElement(tagName)
-        if(tagParams.length === paramsValues.length){
-            for(y=0;y<tagParams.length;y++){
-                if(tagParams[y] !== ''){
-                    newElement[tagParams[y]] = paramsValues[y]
-                }
-            }
-        }else{
-            console.log("addElement() => ERROR : the number of parameters doesn't match the number of parameters values !")
-        }
-
-        return newElement;
-    }
-}*/
-
-//Permet de filtrer une liste de films
+/**
+ * Filter a list of movies by keywords
+ * 
+ * @param {string} filterString 
+ * @param {[object]} moviesList 
+ */
 function movieFilter(filterString, moviesList){
 
     //Si le filtre est vide, on affiche la liste complète des films
@@ -122,7 +93,11 @@ function movieFilter(filterString, moviesList){
     }
 }
 
-//Permet d'afficher une liste de films, reçoit simplement en paramètres une liste de films
+/**
+ * Display a list of movies
+ * 
+ * @param {[object]} moviesList 
+ */
 export function showMovies(moviesList){
     //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
     divMoviesList.innerHTML = ''
@@ -133,14 +108,23 @@ export function showMovies(moviesList){
     }
 }
 
-//Permet de savoir si un lien d'image est toujours valide ou non
+/**
+ * Check if the link of a picture is still good or not
+ * 
+ * @param {event} e 
+ */
 export function imgBadLink(e){
     e.setAttribute("src", "./img/image_not_found.jpg")
     e.removeAttribute('onerror')
     console.log(e.id)
 }
 
-//Permet de trier une liste de films par date, suite, durée ou par titre (par défaut)
+/**
+ * Order a movies list by date of release, sequel, duration or title (by default)
+ * 
+ * @param {[object]} moviesList 
+ * @param {string} orderType 
+ */
 function orderBy(moviesList, orderType){
 
     //"slice(0)" Permet de créer une copie (pas un clone) de la liste de films
@@ -183,7 +167,11 @@ function orderBy(moviesList, orderType){
     }
 }
 
-//Permet d'afficher ou masquer les suites éventuelles des films qui en possèdent
+/**
+ * Display or hide the sequels of movies that has it
+ * 
+ * @param {[object]} moviesList 
+ */
 function showHideSeries(moviesList){
     let hideSeries = document.getElementById('hideSeries');
     let moviesFiltered = []
@@ -228,8 +216,13 @@ function showHideSeries(moviesList){
     }
 }
 
-//Permet d'afficher toutes les infos d'un film
-export function showMovie(moviesList, movieUrl){
+/**
+ * Display all the info from a movie
+ * 
+ * @param {[object]} moviesList 
+ * @param {string} movieUrl 
+ */
+function showMovie(moviesList, movieUrl){
     for(i=0;i<moviesList.length;i++){
         if(moviesList[i].movieUrl === movieUrl){
             let movie = Movie(moviesList[i]);
@@ -238,117 +231,6 @@ export function showMovie(moviesList, movieUrl){
         }
     }
 }
-
-//Permet de convertir des minutes en heures
-/*function minToHour(timeInMinutes){
-    let timeInHours = Math.floor(timeInMinutes/60)
-    let minutesLeft = timeInMinutes - (timeInHours*60)
-
-    if(minutesLeft<10){
-        minutesLeft = '0'+minutesLeft
-    }
-
-    return timeInHours+'h'+minutesLeft
-}*/
-
-/*//Permet de stocker la liste des vidéos en cours
-export function setMusicList(musicList){
-    videoList = musicList
-}
-
-//Permet d'afficher la liste de toutes les chansons
-export function showSongs(musicList = null){
-    if(musicList === null){
-        console.log("showSongs() => ERROR : musicList is not defined !")
-    }
-    else{
-        for(var i=0;i<musicList.length;i++){
-            let songDiv = addElement('div', ['className'], ['listElement'])//On crée une nouvelle chanson
-
-            document.getElementById('musicList').appendChild(songDiv)//On l'ajoute dans la page
-            
-            //h3(elementTitle) -> span(elementMovie)
-            let songTitle = addElement('h3')
-            songTitle.innerHTML = '<span>'+musicList[i].songMovie+'</span>'+'<br />'+musicList[i].songTitle
-            songDiv.appendChild(songTitle)
-
-            //img(elementImg,title,src,onclick)
-            let songImg = addElement('img',['title', 'src', 'alt'],[musicList[i].songTitle, 'https://img.youtube.com/vi/'+musicList[i].videoId+'/1.jpg', musicList[i].songTitle])//"'+musicList[i].videoId+'"
-            songImg.setAttribute('onclick', 'play('+i+')')
-            songDiv.appendChild(songImg)
-        }
-    }
-}
-
-//Permet d'ouvrir le lecteur d'une chanson
-function play(videoInternalId){
-    console.log(videoInternalId)
-    //Permet d'empècher le déclenchement de l'événement du div parent
-    if(!e){
-        var e = window.event;
-        e.cancelBubble = true;
-    }
-
-    //Permet d'empècher le déclenchement de l'événement du div enfant
-    if(e.stopPropagation){
-        e.stopPropagation();
-    }
-
-    const divVideo = document.getElementById('videoPlayer')
-    const previousArrow = document.getElementById('previousVid')
-    const nextArrow = document.getElementById('nextVid')
-    const iframe = document.getElementsByTagName('iframe')
-
-    if(iframe[0]){
-        closePlayer()
-    }
-
-    //On stock l'id youtube de la vidéo à afficher
-    videoPlayedId = videoList[videoInternalId].videoId
-
-    if(videoInternalId === 0){
-        previousArrow.setAttribute('onclick', 'play('+(videoList.length-1)+')')
-    }else{
-        previousArrow.setAttribute('onclick', 'play('+(videoInternalId-1)+')')
-    }
-
-    //Si cette vidéo est la dernière de la liste, on indique au script que la vidéo qui suivra sera la première de la liste
-    if(videoInternalId+1 < videoList.length){
-        nextVideoId = videoInternalId+1
-    }else{
-        nextVideoId = 0
-    }
-
-    nextArrow.setAttribute('onclick', 'play('+nextVideoId+')')
-
-    if(youtubeApi !== undefined){
-        onYouTubePlayerAPIReady()
-    }else{
-        //On récupère l'API iframe de Youtube dans une balise script
-        youtubeApi = addElement('script', ['src'], ['http://www.youtube.com/iframe_api'])
-        //On ajoute cette balise script dans le div "videoPlayer" afin que le lien vers l'API ne se fasse qu'à partir de ce moment-ci
-        divVideo.appendChild(youtubeApi)
-    }
-    
-    //On affiche le div "videoPlayer" et on le place en avant-plan
-    divVideo.style.zIndex = '9997'
-    divVideo.classList.remove('hidden')
-}
-
-//Permet de fermer le lecteur d'une chanson
-function closePlayer(){
-    const divVideo = document.getElementById('videoPlayer')
-
-    //On masque le div "videoPlayer" et on le vide entièrement
-    divVideo.classList.add('hidden')
-    divVideo.removeAttribute('style')
-    //divVideo.innerHTML = ''
-    removeElement('videoPlayed')
-
-    //Ensuite on recrée le div "videoPlayed" afin de réinitialiser le lecteur de vidéo
-    let newPlayer = addElement('div', ['id'], ['videoPlayed'])
-    divVideo.appendChild(newPlayer)
-}*/
 
 /**
  * Permet de convertir des minutes en heures
@@ -365,119 +247,3 @@ function minToHour(timeInMinutes){
 
     return timeInHours+'h'+minutesLeft
 }
-
-/*//Permet d'afficher la liste de tous les personnages
-export function showCharacters(charList = null){
-    if(charList === null){
-        console.log("showCharacters() => ERROR : charList is not defined !")
-    }
-    else{
-        for(i=0;i<charList.length;i++){
-            let charDiv = addElement('div', ['className'], ['listElement'])//On crée un nouveau personnage
-            document.getElementById('charactersList').appendChild(charDiv)//On l'ajoute dans la page
-            
-            //h3(elementTitle) -> span(elementMovie)
-            let charName = addElement('h3', ['className'], ['elementTitle'])
-            charName.innerHTML = '<span class="elementMovie">'+charList[i].charMovie+'</span>'+'<br />'+charList[i].charName
-            charDiv.appendChild(charName)
-            
-            //img(elementImg,title,src,onclick)
-            let charImg = addElement('img',['className', 'title', 'src', 'alt'],['elementImg', charList[i].charName, './img/characters/'+charList[i].charImg,charList[i].charName])//
-            charImg.setAttribute('onclick', 'openInfo(charList['+i+'])')
-            charDiv.appendChild(charImg)
-        }
-    }
-}*/
-
-/*//Permet d'ouvrir la fiche info d'un personnage
-export function openInfo(charInfo){
-    
-    if(charInfo === undefined){
-        console.log("openInfo() => ERROR : charInfo is not defined !")
-    }else{
-        //On vérifie tout d'abord si une fiche personnage n'est pas déjà ouverte
-        let charList = document.getElementById('charactersList')
-
-        if(charList.classList.contains('infoOpened')){
-            closeInfo()
-        }
-
-        const divChar = document.getElementById('charInfo')
-        const charImg = document.getElementById('charInfoImg')
-        const charName = document.getElementById('charName')
-        const movieLink = document.getElementById('charMovieLink')
-        const charDesc = document.getElementById('charDesc')
-
-        //On intègre toutes les infos du personnage dans la fiche
-        charImg.src = './img/characters/'+charInfo.charImg
-        charImg.alt = charInfo.charName
-        charName.innerHTML = charInfo.charName
-        movieLink.href = './'+charInfo.movieUrl
-        movieLink.title = charInfo.charMovie
-        movieLink.innerHTML = charInfo.charMovie
-        charDesc.innerHTML = charInfo.charDesc
-
-        //On ajoute une classe à la liste des personnages afin de savoir si une fiche personnage est ouverte ou non
-        charList.classList.add('infoOpened')
-        charList.style.width = '50%'
-
-        //On rend la fiche personnage visible et on la place au premier plan
-        divChar.style.zIndex = '9998'
-        divChar.removeAttribute('class')
-
-        //On déplace la vue jusqu'à la fiche personnage
-        location.href = "#charInfo";
-    }
-}
-
-//Permet de fermer la fiche info d'un personnage
-function closeInfo(){
-    const divChar = document.getElementById('charInfo')
-    const charImg = document.getElementById('charInfoImg')
-    const charName = document.getElementById('charName')
-    const movieLink = document.getElementById('charMovieLink')
-    const charDesc = document.getElementById('charDesc')
-
-    let charList = document.getElementById('charactersList')
-    charList.classList.remove('infoOpened')
-    charList.removeAttribute('style')
-
-    divChar.classList.add('hidden')
-    divChar.removeAttribute('style')
-
-    charImg.src = ''
-    charImg.removeAttribute('alt')
-    charName.innerHTML = ''
-    movieLink.innerHTML = ''
-    movieLink.removeAttribute('href')
-    movieLink.removeAttribute('title')
-    charDesc.innerHTML = ''
-}*/
-
-/*//API Youtube : Crée un lecteur vidéo Youtube
-var player;
-function onYouTubePlayerAPIReady() {
-    player = new YT.Player('videoPlayed', {
-        'videoId': videoPlayedId,
-        'events': {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
-}
-
-//API Youtube : L'API appellera cette fonction quand le lecteur sera prêt
-function onPlayerReady(event) {
-    console.log('Test')
-    event.target.playVideo();
-}
-
-//API Youtube : Quand la vidéo en cours de lecture est terminée
-function onPlayerStateChange(event) {        
-    if(event.data === 0) {
-        closePlayer()
-        console.log('Démarrage vidéo '+(nextVideoId)+'...')      
-        //On lance la vidéo suivante
-        play(nextVideoId)
-    }
-}*/

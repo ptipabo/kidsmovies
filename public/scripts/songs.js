@@ -140,3 +140,27 @@ function onPlayerStateChange(event) {
         play(nextVideoId)
     }
 }
+
+/*//Permet d'afficher la liste de toutes les chansons
+export function showSongs(musicList = null){
+    if(musicList === null){
+        console.log("showSongs() => ERROR : musicList is not defined !")
+    }
+    else{
+        for(var i=0;i<musicList.length;i++){
+            let songDiv = addElement('div', ['className'], ['listElement'])//On crée une nouvelle chanson
+
+            document.getElementById('musicList').appendChild(songDiv)//On l'ajoute dans la page
+            
+            //h3(elementTitle) -> span(elementMovie)
+            let songTitle = addElement('h3')
+            songTitle.innerHTML = '<span>'+musicList[i].songMovie+'</span>'+'<br />'+musicList[i].songTitle
+            songDiv.appendChild(songTitle)
+
+            //img(elementImg,title,src,onclick)
+            let songImg = addElement('img',['title', 'src', 'alt'],[musicList[i].songTitle, 'https://img.youtube.com/vi/'+musicList[i].videoId+'/1.jpg', musicList[i].songTitle])//"'+musicList[i].videoId+'"
+            songImg.setAttribute('onclick', 'play('+i+')')
+            songDiv.appendChild(songImg)
+        }
+    }
+}*/
