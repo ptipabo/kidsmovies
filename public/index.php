@@ -24,7 +24,11 @@ $router = new Router($_GET['url']);
 $router->setGetRoute('/', 'App\controllers\ViewController@home');
 $router->setGetRoute('/music', 'App\controllers\ViewController@music');
 $router->setGetRoute('/characters', 'App\controllers\ViewController@characters');
+$router->setGetRoute('/games', 'App\controllers\ViewController@games');
 $router->setGetRoute('/:movieUrl', 'App\controllers\ViewController@movie');
+
+$router->setGetRoute('/admin/movies', 'App\controllers\Admin\MovieController@index');
+$router->setGetRoute('/admin/movies/delete/:id', 'App\controllers\Admin\MovieController@destroy');
 
 //On utilise la méthode urlCheck contenue dans Router.php
 $router->urlCheck();

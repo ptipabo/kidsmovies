@@ -12,6 +12,7 @@
             integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
             crossorigin="anonymous">
         </script>
+        <script src="http://www.youtube.com/iframe_api"></script>
     </head>
     <body>
         <header>
@@ -20,11 +21,11 @@
                 <a id="navMovie" class="pageLink" href="./" title="Films">Films</a>
                 <a id="navMusic" class="pageLink" href="./music" title="Musiques">Musiques</a>
                 <a id="navChar" class="pageLink" href="./characters" title="Personnages">Personnages</a>
+                <a id="navGame" class="pageLink" href="./games" title="Jeux">Jeux</a>
             </nav>
         </header>
         <main>
             <?= $content ?>
         </main>
-        <?php /*<script src="<?= PUBLICFOLDER.'scripts'.DIRECTORY_SEPARATOR.'init.js' ?>"></script>*/ ?>
     </body>
 </html>

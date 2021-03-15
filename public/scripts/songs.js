@@ -28,6 +28,14 @@ export function setMusicsList(musicList){
     playList = musicList;
 }
 
+/**
+ * Return the content of the playlist
+ * 
+ */
+export function getMusicsList(){
+    return playList;
+}
+
 $previousArrow.on('click', () => {
     play(previousVideoId);
 });
@@ -41,7 +49,7 @@ $nextArrow.on('click', () => {
  * 
  * @param {number} playListPosition 
  */
-function play(playListPosition){
+export function play(playListPosition){
     // Permet d'empècher le déclenchement de l'événement du div parent
     if(!e){
         var e = window.event;
@@ -127,6 +135,7 @@ function onYouTubePlayerAPIReady() {
  * API Youtube : L'API appellera cette fonction quand le lecteur sera prêt
  */
 function onPlayerReady(event) {
+    console.log('The player is ready!');
     event.target.playVideo();
 }
 

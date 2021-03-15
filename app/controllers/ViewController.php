@@ -187,4 +187,41 @@ class ViewController extends Controller{
 
         $this->view('content.characters', compact('characters'));
     }
+
+    /**
+     * Display the games page of the application
+     */
+    public function games(){
+        //On récupère la liste de toutes les musiques
+        $songs = new Song($this->getDB(), 'song_movie');
+        $songs = $songs->all();
+
+        //On récupère le titre du film correspondant à chaque musique
+        $movies = new Movie($this->getDB());
+        $movies = $movies->all();
+
+        //On crée un fichier Json via PHP d'après le résultat de la requête
+        $jsonConstruct = array();
+        for($i=0;$i < count($songs);$i++){
+            
+            foreach($movies as $movie){
+                if($movie->movie_id === $songs[$i]->song_movie){
+                    $songMovie = $movie->movie_title;
+                }
+            }
+            
+            $videoId = explode('/', $songs[$i]->song_video);
+
+            $jsonConstruct[] = array(
+                "id" => $songs[$i]->song_id,
+                "movie" => str_replace('"', '\"', $songMovie),
+                "title" => str_replace('"', '\"', $songs[$i]->song_title),
+                "link" => $songs[$i]->song_video,
+                "youtubeId" => $videoId[4]
+            );
+        }
+        $songs = $jsonConstruct;
+
+        $this->view('content.games', compact('songs'));
+    }
 }

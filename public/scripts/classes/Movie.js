@@ -50,7 +50,7 @@ export default class Movie{
         let movieLink = addElement('a', ['href','title'], [this.movieUrl, this.movieTitle])
         movieDiv.appendChild(movieLink)
 
-        let movieImg = addElement('img', ['src', 'alt', 'id'], [this.movieImg, this.movieTitle, 'movieImg_'+this.movieUrl])
+        let movieImg = addElement('img', ['src', 'alt', 'id', 'loading', 'width', 'height', 'decoding'], [this.movieImg, this.movieTitle, 'movieImg_'+this.movieUrl, 'lazy', '200', '300', 'async'])
         movieImg.addEventListener('error', () => {imgBadLink(document.getElementById('movieImg_'+this.movieUrl))})
         movieDiv.appendChild(movieImg)
 

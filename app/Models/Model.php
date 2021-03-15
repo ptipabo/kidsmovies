@@ -12,7 +12,7 @@ abstract class Model{
     protected $orderBy = null;
     protected $findByMovie = null;
 
-    public function __construct(ServerConnection $db, string $orderBy = null){
+    public function __construct(ServerConnection $db = null, string $orderBy = null){
         //On stock la connection à la base de données
         $this->db = $db;
         
@@ -44,4 +44,9 @@ abstract class Model{
         }
         return $stmt->fetchAll();
     }
+
+    /* Voir fin de vidéo https://www.youtube.com/watch?v=BsHpNiDeB4w&list=PLeeuvNW2FHVgfbhZM3S8kqZOmnY7TEorW&index=12 + Créer méthode "query" (voir dans 2-3 vidéos précédentes comment faire)
+    public function destroy(int $id): bool{
+        return $this->query('DELETE FROM {$this->table} WHERE id = ?', $id)
+    }*/
 }

@@ -27,6 +27,15 @@ if(document.getElementById('sortByValue')){
     );
 }
 
+//console.log(document.getElementsByClassName('game-randomizerButton'));
+
+/*if(document.getElementsByClassName('game-randomizerButton')){
+    console.log('test');
+    document.getElementsByClassName('game-randomizerButton')[0].on('click', () => {
+        console.log('Hellow!')
+    });
+}*/
+
 // Adds a "change" event on the "Search a movie" field
 if(document.getElementById('filterValue')){
     const filterField = document.getElementById('filterValue');
@@ -102,9 +111,14 @@ export function showMovies(moviesList){
     //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
     divMoviesList.innerHTML = ''
 
-    for(let i=0;i<moviesList.length;i++){
-        let movie = new Movie(moviesList[i]);
-        movie.displayMovie();
+    if(moviesList.length > 1){
+        for(let i=0;i<moviesList.length;i++){
+            let movie = new Movie(moviesList[i]);
+            movie.displayMovie();
+        }
+    }
+    else{
+        divMoviesList.innerHTML = "<p class=\"errorMsg\">Désolé Donald, mais je n'ai rien compris...</p>"
     }
 }
 
@@ -116,7 +130,6 @@ export function showMovies(moviesList){
 export function imgBadLink(e){
     e.setAttribute("src", "./img/image_not_found.jpg")
     e.removeAttribute('onerror')
-    console.log(e.id)
 }
 
 /**

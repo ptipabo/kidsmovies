@@ -23,9 +23,9 @@
             <p id="movieDate">Année de sortie : <?= $movieDetails['date']?></p>
             <?php
                 $hours = floor($movieDetails['length']/60);
-                $minutes = $movieDetails['length'] - ($hours*60)
+                $minutes = $movieDetails['length'] - ($hours*60);
             ?>
-            <p id="movieLength">Durée : <?= $hours ?>h<?= $minutes ?></p>
+            <p id="movieLength">Durée : <?= $hours ?>h<?= $minutes < 10 ? '0' : '' ?><?= $minutes ?></p>
             <?php if($movieDetails['story'] != "") :?>
                 <h3>Synopsis :</h3>
                 <p id="movieStory"><?= $movieDetails['story'] ?></p>

@@ -6,6 +6,15 @@ use PDO;
 
 class Movie extends Model{
     protected $table = 'movies';
+    // These variables are there to provide prettier names in the final view code
+    public $id = array();
+    public $title = array();
+    public $duration = array();
+    public $story = array();
+    public $year = array();
+    public $img = array();
+    public $sequel = array();
+    public $slug = array();
 
     public function findBySlug(string $movieUrl): Movie{
         //prepare() permet simplement d'éviter les injections sql

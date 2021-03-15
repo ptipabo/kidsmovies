@@ -51,6 +51,10 @@ nav a::before {
   background-color: #45c971;
 }
 
+#navGame:hover {
+  background-color: #e7c425;
+}
+
 #navMovie::before {
   content: url("../../img/movieIcon.png");
 }
@@ -61,6 +65,10 @@ nav a::before {
 
 #navChar::before {
   content: url("../../img/characterIcon.png");
+}
+
+#navGame::before {
+  content: url("../../img/gamesIcon.png");
 }
 
 #titleLetterA {
@@ -136,6 +144,9 @@ h1 a span {
 }
 .movie img {
   width: 100%;
+  content-visibility: auto;
+  max-width: 100%;
+  height: auto;
   border-radius: 10px;
 }
 .movie h3 {
@@ -467,6 +478,41 @@ h1 a span {
   display: none;
   visibility: hidden;
   z-index: -9999;
+}
+
+.errorMsg {
+  color: red;
+  font-weight: 700;
+  margin: 10px 0 25px;
+}
+
+.section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: #646464;
+}
+
+.section-container {
+  width: 80%;
+  text-align: center;
+}
+
+.kidsMoviesBtn {
+  padding: 10px;
+  margin: 20px;
+  background-color: #c8c8c8;
+  color: white;
+  border-radius: 4px;
+  border: none;
+}
+.kidsMoviesBtn:hover {
+  cursor: pointer;
+  background-color: #e7c425;
+}
+
+#videoPlayerContainer > iframe {
+  margin-bottom: 20px;
 }
 
 /*# sourceMappingURL=style.css.map */
