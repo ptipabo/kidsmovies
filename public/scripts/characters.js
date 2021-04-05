@@ -6,6 +6,7 @@ const $charName = $('#charName');
 const $movieLink = $('#charMovieLink');
 const $charDesc = $('#charDesc');
 
+// Events
 $('.elementImg').on('click', (event) => {
     var characterId = event.target.id.split('-')[1];
     openInfo(charList[characterId]);
@@ -24,6 +25,8 @@ export function setCharactersList(charactersList){
 
 /**
  * Open a character's sheet
+ * 
+ * @param {[object]} charInfo
  */
 function openInfo(charInfo){
     if(charInfo === undefined){

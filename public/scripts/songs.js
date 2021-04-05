@@ -5,18 +5,27 @@ let youtubeApi;
 let currentVideoId;
 let nextVideoId;
 let previousVideoId;
+let playListPosition;
 const $previousArrow = $('#previousVid');
 const $nextArrow = $('#nextVid');
-let playListPosition;
 const $divVideo = $('#videoPlayer');
 
+// Events
 // When the video player or the close icon of the video player is clicked, the video player closes
-$('#videoPlayer').on('click', closePlayer);
+$divVideo.on('click', closePlayer);
 
 // When a song image is clicked, the video player opens
 $('.songItem').on('click', (event) => {
     playListPosition = event.target.id.split('-')[1];
     play(playListPosition);
+});
+
+$previousArrow.on('click', () => {
+    play(previousVideoId);
+});
+
+$nextArrow.on('click', () => {
+    play(nextVideoId);
 });
 
 /**
@@ -36,14 +45,6 @@ export function getMusicsList(){
     return playList;
 }
 
-$previousArrow.on('click', () => {
-    play(previousVideoId);
-});
-
-$nextArrow.on('click', () => {
-    play(nextVideoId);
-});
-
 /**
  * Set everything to correctly display the video player and its controls
  * 
@@ -60,8 +61,6 @@ export function play(playListPosition){
     if(e.stopPropagation){
         e.stopPropagation();
     }
-
-    //const $divVideo = $('#videoPlayer');
 
     const $iframe = $('iframe');
 
@@ -99,7 +98,6 @@ export function play(playListPosition){
  * Closes the video player
  */
 function closePlayer(){
-    //const $divVideo = $('#videoPlayer');
     // Hide the "videoPlayer" div
     $divVideo.addClass('hidden');
     removeElement('videoPlayed');
@@ -120,7 +118,7 @@ if(youtubeApi == undefined){
 /**
  * API Youtube : Create a Youtube video player when the Youtube API is loaded
  */
-var player;
+let player;
 function onYouTubePlayerAPIReady() {
     player = new YT.Player('videoPlayed', {
         'videoId': currentVideoId,

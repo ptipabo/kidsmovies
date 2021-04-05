@@ -16,12 +16,12 @@
     </head>
     <body>
         <header>
-            <h1><a title="<?= TITLE ?>" href="<?= dirname(PUBLICFOLDER) ?>"><span id="titleLetterA">K</span><span id="titleLetterB">i</span><span id="titleLetterC">d</span><span id="titleLetterD">s</span> Movies</a></h1>
-            <nav>
-                <a id="navMovie" class="pageLink" href="./" title="Films">Films</a>
-                <a id="navMusic" class="pageLink" href="./music" title="Musiques">Musiques</a>
-                <a id="navChar" class="pageLink" href="./characters" title="Personnages">Personnages</a>
-                <a id="navGame" class="pageLink" href="./games" title="Jeux">Jeux</a>
+            <h1 class="mainTitle"><a title="<?= TITLE ?>" href="<?= dirname(PUBLICFOLDER) ?>"><span id="titleLetterA">K</span><span id="titleLetterB">i</span><span id="titleLetterC">d</span><span id="titleLetterD">s</span> Movies</a></h1>
+            <nav class="navMenu">
+                <a class="pageLink navMovie" href="./" title="Films">Films</a>
+                <a class="pageLink navMusic" href="./music" title="Musiques">Musiques</a>
+                <a class="pageLink navChar" href="./characters" title="Personnages">Personnages</a>
+                <a class="pageLink navGame" href="./games" title="Jeux">Jeux</a>
             </nav>
         </header>
         <main>

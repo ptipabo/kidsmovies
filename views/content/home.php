@@ -2,8 +2,14 @@
     const moviesList = <?= $params['movies'] ?>;
 </script>
 
-<section id="pageHeader">
-    <h2>Films</h2>
+<section class="section whiteBG">
+    <div class="section-container">
+        <h2 class="pageTitle">Films</h2>
+    </div>
+</section>
+
+<section class="section whiteBG">
+    <div class="section-container">
     <div class="moviesListOptions">
         <label for="sortBy">Trier par : </label>
         <select name="sortBy" id="sortByValue">
@@ -24,10 +30,11 @@
         <label for="hideSeries">Masquer les suites : </label>
         <input type="checkbox" name="hideSeries" id="hideSeries" />
     </div>
+</div>
 </section>
 
-<section id="mainContent">
-    <div id="moviesList">
+<section class="section greyBG">
+    <div id="moviesList" class="section-container">
         <!--Contient la liste de tous les films-->
     </div>
 </section>

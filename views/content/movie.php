@@ -14,40 +14,47 @@
     setCharactersList(<?= $jsonCharactersList ?>);
 </script>
 
-<section id="movieHeader">
-    <img id="moviePageImg" src="<?= $movieDetails['img']?>" />
-    <div id="moviePageInfo">
-        <h2 id="movieTitle"><?= $movieDetails['title']?></h2>
-        <div id="movieDetails">
-            <h3>Informations :</h3>
-            <p id="movieDate">Année de sortie : <?= $movieDetails['date']?></p>
+<section class="section whiteBG">
+<div class="section-container movieHeader">
+    <img class="movieHeader-img" src="<?= $movieDetails['img']?>" />
+    <div class="movieHeader-info">
+        <h2 class="pageTitle"><?= $movieDetails['title']?></h2>
+        <div class="movieHeader-info-details">
+            <h3 class="movieHeader-info-details-title">Informations :</h3>
+            <p id="movieDate" class="movieHeader-info-details-text">Année de sortie : <?= $movieDetails['date']?></p>
             <?php
                 $hours = floor($movieDetails['length']/60);
                 $minutes = $movieDetails['length'] - ($hours*60);
             ?>
-            <p id="movieLength">Durée : <?= $hours ?>h<?= $minutes < 10 ? '0' : '' ?><?= $minutes ?></p>
+            <p id="movieLength" class="movieHeader-info-details-text">Durée : <?= $hours ?>h<?= $minutes < 10 ? '0' : '' ?><?= $minutes ?></p>
             <?php if($movieDetails['story'] != "") :?>
-                <h3>Synopsis :</h3>
-                <p id="movieStory"><?= $movieDetails['story'] ?></p>
+                <h3 class="movieHeader-info-details-title">Synopsis :</h3>
+                <p class="movieHeader-info-details-text longText"><?= $movieDetails['story'] ?></p>
             <?php endif; ?>
             <!-- Liste des suites éventuelles -->
             <?php if(count($movieSuiteList) > 1) :?>
-                <h3 id="movieSuiteTitle">Dans la même série de films :</h3>
-                <ul>
+                <h3 id="movieSuiteTitle" class="movieHeader-info-details-title">Dans la même série de films :</h3>
+                <ul class="movieHeader-info-details-list">
                     <?php foreach($movieSuiteList as $suite) :?>
                         <?php if($suite['slug'] != $movieDetails['slug']) : ?>
-                            <li><a href="./<?= $suite['slug'] ?>" title="<?= $suite['title'] ?>"><?= $suite['title'] ?></a></li>
+                            <li class="movieHeader-info-details-list-item"><a class="movieHeader-info-details-list-item-link" href="./<?= $suite['slug'] ?>" title="<?= $suite['title'] ?>"><?= $suite['title'] ?></a></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
         </div>
     </div>
-</section>
+</div>
+                        </section>
 
 <?php if(count($movieSongs) > 0): ?>
-    <h2 class="movieSectionTitle">Musiques</h2>
-    <div id="musicList">
+<section class="section midGreyBG">
+    <div class="section-container">
+        <h3 class="sectionTitle">Musiques</h3>
+    </div>
+</section>
+<section class="section greyBG">
+    <div id="musicList" class="section-container d-flex fairSpread">
         <!-- Contient la liste des chansons -->
         <?php for($i=0;$i<count($movieSongs);$i++) : ?>
             <div class="listElement">
@@ -56,19 +63,25 @@
             </div>
         <?php endfor; ?>
     </div>
-    <section id="videoPlayer" class="hidden">
-        <div id="videoNavBar">
-            <img id="previousVid" src="./img/previous.png" title="Vidéo précédente" />
-            <img id="closeVid" src="./img/close.png" title="Fermer le lecteur" />
-            <img id="nextVid" src="./img/next.png" title="Vidéo suivante" />
-        </div>    
-        <div id="videoPlayed"></div>
-    </section>
+</section>
+<section id="videoPlayer" class="hidden">
+    <div id="videoNavBar">
+        <img id="previousVid" src="./img/previous.png" title="Vidéo précédente" />
+        <img id="closeVid" src="./img/close.png" title="Fermer le lecteur" />
+        <img id="nextVid" src="./img/next.png" title="Vidéo suivante" />
+    </div>    
+    <div id="videoPlayed"></div>
+</section>
 <?php endif; ?>
 
 <?php if(count($movieCharacters) > 0): ?>
-    <h2 class="movieSectionTitle">Personnages</h2>
-    <div id="charactersDisplay">
+<section class="section midGreyBG">
+    <div class="section-container">
+        <h3 class="sectionTitle">Personnages</h3>
+    </div>
+</section>
+<section class="section greyBG">
+    <div class="section-container d-flex fairSpread">
         <div id="charactersList">
             <!-- Contient la liste des personnages -->
             <?php for($i=0;$i<count($movieCharacters);$i++) : ?>
@@ -78,7 +91,7 @@
                 </div>
             <?php endfor; ?>
         </div>
-        <div id="charInfo" class="hidden">
+        <div id="charInfo" class="dataSheet hidden">
             <img id="closeInfo" src="./img/close.png" title="Fermer" />
             <img id="charInfoImg" />
             <h3 id="charName"></h3>
@@ -86,4 +99,5 @@
             <p id="charDesc"></p>
         </div>
     </div>
+</section>
 <?php endif; ?>

@@ -14,69 +14,12 @@ header {
   display: flex;
 }
 
-nav {
-  display: flex;
-  flex-flow: row wrap;
-}
-nav a {
-  color: white;
-  transition-duration: 300ms;
-  background-color: #aaaaaa;
-  border-radius: 3px;
-  padding: 13px 20px 13px 50px;
-  position: relative;
-}
-nav a:hover {
-  transition-duration: 300ms;
-}
-nav a::before {
-  display: inline-block;
-  height: 5px;
-  margin-right: 10px;
-  filter: brightness(200%);
-  position: absolute;
-  top: 6px;
-  left: 10px;
-}
-
-#navMovie:hover {
-  background-color: #64c8ff;
-}
-
-#navMusic:hover {
-  background-color: #ff6414;
-}
-
-#navChar:hover {
-  background-color: #45c971;
-}
-
-#navGame:hover {
-  background-color: #e7c425;
-}
-
-#navMovie::before {
-  content: url("../../img/movieIcon.png");
-}
-
-#navMusic::before {
-  content: url("../../img/musicIcon.png");
-}
-
-#navChar::before {
-  content: url("../../img/characterIcon.png");
-}
-
-#navGame::before {
-  content: url("../../img/gamesIcon.png");
-}
-
 #titleLetterA {
   color: #64c8ff;
 }
 
 #titleLetterB {
-  color: #ff6414;
+  color: #ff3e0e;
 }
 
 #titleLetterC {
@@ -84,38 +27,38 @@ nav a::before {
 }
 
 #titleLetterD {
-  color: #e7c425;
+  color: #ffdf28;
 }
 
-h1 a {
+.mainTitle a {
   transition-duration: 300ms;
   font-size: 200%;
   display: block;
 }
-h1 a:hover {
+.mainTitle a:hover {
   transition-duration: 300ms;
   color: white;
 }
-h1 a:hover #titleLetterA, h1 a:hover #titleLetterB, h1 a:hover #titleLetterC, h1 a:hover #titleLetterD {
+.mainTitle a:hover #titleLetterA, .mainTitle a:hover #titleLetterB, .mainTitle a:hover #titleLetterC, .mainTitle a:hover #titleLetterD {
   transition-duration: 250ms;
   color: white;
 }
-h1 a span {
+.mainTitle a span {
   font-size: 160%;
 }
 
-#pageHeader {
-  display: flex;
-  flex-flow: column wrap;
-  align-items: center;
-  padding-top: 20px;
-  background-color: white;
-}
-#pageHeader h2 {
-  padding-bottom: 20px;
-  font-size: 24pt;
-}
+/*#pageHeader{
+    display:flex;
+    flex-flow:column wrap;
+    align-items:center;
+    padding-top:20px;
+    background-color: white;
 
+    h2{
+        padding-bottom: 20px;
+        font-size:24pt;
+    }
+}*/
 .moviesListOptions {
   margin-bottom: 20px;
 }
@@ -155,6 +98,7 @@ h1 a span {
 }
 .movie a {
   position: absolute;
+  z-index: 1000;
   display: inline-block;
   width: 100%;
   height: 100%;
@@ -163,13 +107,6 @@ h1 a span {
   top: 0;
   overflow: hidden;
   text-indent: -9999px;
-}
-
-.movieSectionTitle {
-  padding: 15px 15px 15px 30px;
-  font-size: 22pt;
-  background-color: #aaaaaa;
-  color: white;
 }
 
 .listElement {
@@ -200,74 +137,13 @@ h1 a span {
   cursor: pointer;
 }
 
-#movieHeader {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: flex-start;
-  background-color: white;
-}
-#movieHeader img {
-  width: 15%;
-  min-width: 150px;
-  padding: 10px;
-  margin: 15px 0 15px 0;
-  border: 1px solid #646464;
-}
-
-#moviePageInfo {
-  padding: 10px;
-}
-#moviePageInfo h2 {
-  padding: 0 10px 0 10px;
-  font-size: 24pt;
-}
-
-#movieDetails {
-  background-color: #aaaaaa;
-  padding: 10px 20px 20px 20px;
-  margin-top: 10px;
-  border-radius: 10px;
-}
-#movieDetails p {
-  margin-top: 5px;
-  padding-left: 10px;
-  color: white;
-}
-#movieDetails p span {
-  color: white;
-  text-decoration: underline;
-  display: inline-block;
-  margin-bottom: 5px;
-}
-#movieDetails li {
-  margin-top: 5px;
-  padding-left: 10px;
-  color: white;
-}
-#movieDetails li a {
-  color: white;
-}
-#movieDetails li a:hover {
-  color: #646464;
-}
-#movieDetails h3 {
-  margin: 15px 0 15px 0;
-  color: white;
-}
-
-#movieStory {
-  text-align: justify;
-}
-
-#charactersDisplay {
-  background-color: #c8c8c8;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-  padding-top: 15px;
-}
-
+/*#charactersDisplay{
+    background-color:$medLightColor;
+    display:flex;
+    flex-flow:row wrap;
+    justify-content:space-around;
+    padding-top:15px;
+}*/
 #charactersList {
   display: flex;
   flex-flow: row wrap;
@@ -322,13 +198,12 @@ h1 a span {
   margin-bottom: 10px;
 }
 
-#musicList {
-  background-color: #c8c8c8;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-}
-
+/*#musicList{
+    background-color:$medLightColor;
+    display:flex;
+    flex-flow:row wrap;
+    justify-content:space-around;
+}*/
 #videoPlayer {
   position: fixed;
   width: 100%;
@@ -409,7 +284,7 @@ h1 a span {
     align-items: center;
   }
 
-  h1 {
+  .mainTitle {
     width: 100%;
     text-align: center;
   }
@@ -454,7 +329,7 @@ h1 a span {
     align-items: center;
   }
 
-  h1 {
+  .mainTitle {
     margin: 0 40px 0 40px;
   }
 
@@ -486,16 +361,170 @@ h1 a span {
   margin: 10px 0 25px;
 }
 
+.whiteBG {
+  background-color: white;
+}
+
+.greyBG {
+  background-color: #c8c8c8;
+}
+
+.midGreyBG {
+  background-color: #aaaaaa;
+}
+
+.darkGreyBG {
+  background-color: #646464;
+}
+
+.yellowBG {
+  background-color: #ffdf28;
+}
+
+.redBG {
+  background-color: #ff3e0e;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.fairSpread {
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.navMenu {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.pageLink {
+  color: white;
+  font-weight: 700;
+  transition-duration: 300ms;
+  background-color: #aaaaaa;
+  border-radius: 4px;
+  padding: 13px 20px 13px 50px;
+  position: relative;
+}
+.pageLink:hover {
+  transition-duration: 300ms;
+}
+.pageLink::before {
+  display: inline-block;
+  height: 5px;
+  margin-right: 10px;
+  filter: brightness(200%);
+  position: absolute;
+  top: 6px;
+  left: 10px;
+}
+
+.navMovie:hover {
+  background-color: #64c8ff;
+}
+.navMovie::before {
+  content: url("../../img/movieIcon.png");
+}
+.navMusic:hover {
+  background-color: #ff3e0e;
+}
+.navMusic::before {
+  content: url("../../img/musicIcon.png");
+}
+.navChar:hover {
+  background-color: #45c971;
+}
+.navChar::before {
+  content: url("../../img/characterIcon.png");
+}
+.navGame:hover {
+  background-color: #ffdf28;
+}
+.navGame::before {
+  content: url("../../img/gamesIcon.png");
+}
+
 .section {
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: #646464;
 }
 
 .section-container {
-  width: 80%;
+  width: 70%;
   text-align: center;
+}
+
+.pageTitle {
+  padding: 20px 0;
+  font-size: 24pt;
+}
+
+.sectionTitle {
+  padding: 15px 15px 15px 30px;
+  font-size: 22pt;
+  text-align: left;
+  color: white;
+}
+
+.movieHeader {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+.movieHeader-img {
+  width: 15%;
+  min-width: 150px;
+  padding: 10px;
+  margin: 15px 0 15px 0;
+  border: 1px solid #646464;
+}
+.movieHeader-info {
+  padding: 10px;
+  text-align: left;
+}
+.movieHeader-info-details {
+  background-color: #aaaaaa;
+  padding: 10px 20px 20px 20px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+.movieHeader-info-details-title {
+  margin: 15px 0 15px 0;
+  color: white;
+}
+.movieHeader-info-details-text {
+  margin-top: 5px;
+  padding-left: 10px;
+  color: white;
+}
+.movieHeader-info-details-text-span {
+  color: white;
+  text-decoration: underline;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.movieHeader-info-details-list-item {
+  margin-top: 5px;
+  padding-left: 10px;
+  color: white;
+}
+.movieHeader-info-details-list-item-link {
+  color: white;
+}
+.movieHeader-info-details-list-item-link:hover {
+  color: #646464;
+}
+
+.longText {
+  text-align: justify;
+}
+
+.dataSheet {
+  margin-top: 20px;
 }
 
 .kidsMoviesBtn {
@@ -505,10 +534,16 @@ h1 a span {
   color: white;
   border-radius: 4px;
   border: none;
-}
-.kidsMoviesBtn:hover {
+  font-weight: 700;
   cursor: pointer;
-  background-color: #e7c425;
+}
+
+.kidsMoviesBtn.yellowBG:hover {
+  background-color: #ffdf28;
+}
+
+.kidsMoviesBtn.redBG:hover {
+  background-color: #ff3e0e;
 }
 
 #videoPlayerContainer > iframe {
