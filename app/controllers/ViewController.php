@@ -5,6 +5,8 @@ namespace App\controllers;
 use App\Models\Song;
 use App\Models\Movie;
 use App\Models\Character;
+use App\Models\Favourite;
+use App\Models\User;
 
 class ViewController extends Controller{
 
@@ -45,7 +47,7 @@ class ViewController extends Controller{
         $movie = $movieTable->findBySlug($movieSlug);
 
         //On stock toutes les infos concernant ce film dans un tableau
-        $movieDetails = array(
+        $movieDetails = [
             "id" => $movie->movie_id,
             "img" => str_replace('"', '\"', $movie->movie_img),
             "title" => str_replace('"', '\"', $movie->movie_title),
@@ -54,23 +56,23 @@ class ViewController extends Controller{
             "date" => $movie->movie_date,
             "length" => $movie->movie_length,
             "slug" => $movie->movie_url
-        );
+        ];
         //$movieDetails = json_encode($jsonConstruct);
 
         //On récupère la liste des films liés à celui-ci (s'il y en a)
         $suiteMovies = $movieTable->findBySuite($movie->movie_suite);
 
         //On stock tous les films faisant partie de la même série que ce film dans un tableau
-        $movieSuiteList = array();
+        $movieSuiteList = [];
         for($i=0;$i < count($suiteMovies);$i++){
-            $movieSuiteList[] = array(
+            $movieSuiteList[] = [
                 "id" => $suiteMovies[$i]->movie_id,
                 "title" => str_replace('"', '\"', $suiteMovies[$i]->movie_title),
                 "story" => str_replace('"', '\"', $suiteMovies[$i]->movie_story),
                 "date" => $suiteMovies[$i]->movie_date,
                 "length" => $suiteMovies[$i]->movie_length,
                 "slug" => $suiteMovies[$i]->movie_url
-            );
+            ];
         }
         //$suiteList = json_encode($jsonConstruct);
 
@@ -79,17 +81,17 @@ class ViewController extends Controller{
         $songs = $songs->findByMovie($movie->movie_id);
 
         //On stock la liste des musiques liées à ce film dans un tableau
-        $movieSongs = array();
+        $movieSongs = [];
         for($i=0;$i < count($songs);$i++){
             $videoId = explode('/', $songs[$i]->song_video);
 
-            $movieSongs[] = array(
+            $movieSongs[] = [
                 "id" => $songs[$i]->song_id,
                 "movie" => str_replace('"', '\"', $movie->movie_title),
                 "title" => str_replace('"', '\"', $songs[$i]->song_title),
                 "link" => $songs[$i]->song_video,
                 "youtubeId" => $videoId[4]
-            ) ;
+             ];
         }
         //$songs = json_encode($jsonConstruct);
 
@@ -98,16 +100,16 @@ class ViewController extends Controller{
         $characters = $characters->findByMovie($movie->movie_id);
 
         //On stock la liste des personnages liés à ce film dans un tableau
-        $movieCharacters = array();
+        $movieCharacters = [];
         for($i=0;$i < count($characters);$i++){
-            $movieCharacters[] = array(
+            $movieCharacters[] = [
                 "id" => $characters[$i]->char_id,
                 "movie" => str_replace('"', '\"', $movie->movie_title),
                 "name" => str_replace('"', '\"', $characters[$i]->char_name),
                 "img" => $characters[$i]->char_img,
                 "desc" => str_replace('"', '\"', $characters[$i]->char_desc),
                 "slug" => $movieSlug
-            );
+            ];
         }
         //$characters = json_encode($jsonConstruct);
 
@@ -118,6 +120,14 @@ class ViewController extends Controller{
      * Display the music page of the application
      */
     public function music(){
+        //On récupère la liste de tous les favoris
+        $favourites = new Favourite($this->getDB());
+        $favourites = $favourites->all();
+
+        //On récupère la liste de toutes les users
+        $users = new User($this->getDB());
+        $users = $users->all();
+
         //On récupère la liste de toutes les musiques
         $songs = new Song($this->getDB(), 'song_movie');
         $songs = $songs->all();
@@ -127,7 +137,18 @@ class ViewController extends Controller{
         $movies = $movies->all();
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
-        $jsonConstruct = array();
+        $jsonConstruct = [];
+        for($i=0;$i < count($users);$i++){
+            $jsonConstruct[] = [
+                "id" => $users[$i]->user_id,
+                "name" => str_replace('"', '\"', $users[$i]->user_name),
+                "color" => $users[$i]->user_color,
+            ];
+        }
+        $users = $jsonConstruct;
+
+        //On crée un fichier Json via PHP d'après le résultat de la requête
+        $jsonConstruct = [];
         for($i=0;$i < count($songs);$i++){
             
             foreach($movies as $movie){
@@ -135,20 +156,40 @@ class ViewController extends Controller{
                     $songMovie = $movie->movie_title;
                 }
             }
+
+            $usersFiltered = [];
+
+            foreach($favourites as $favourite){
+                if($favourite->song_id == $songs[$i]->song_id){
+                    foreach($users as $user){
+                        if($user['id'] == $favourite->user_id){
+                            $userName = $user['name'];
+                            $userColor = $user['color'];
+                        }
+                    }
+
+                    $usersFiltered[] = [
+                        "userId" => $favourite->user_id,
+                        "userName" => $userName,
+                        "userColor" => $userColor,
+                    ];
+                }
+            }
             
             $videoId = explode('/', $songs[$i]->song_video);
 
-            $jsonConstruct[] = array(
+            $jsonConstruct[] = [
                 "id" => $songs[$i]->song_id,
                 "movie" => str_replace('"', '\"', $songMovie),
                 "title" => str_replace('"', '\"', $songs[$i]->song_title),
                 "link" => $songs[$i]->song_video,
-                "youtubeId" => $videoId[4]
-            );
+                "youtubeId" => $videoId[4],
+                "users" => $usersFiltered,
+            ];
         }
         $songs = $jsonConstruct;
 
-        $this->view('content.music', compact('songs'));
+        $this->view('content.music', compact('songs', 'users'));
     }
 
     /**

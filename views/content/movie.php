@@ -15,37 +15,37 @@
 </script>
 
 <section class="section whiteBG">
-<div class="section-container movieHeader">
-    <img class="movieHeader-img" src="<?= $movieDetails['img']?>" />
-    <div class="movieHeader-info">
-        <h2 class="pageTitle"><?= $movieDetails['title']?></h2>
-        <div class="movieHeader-info-details">
-            <h3 class="movieHeader-info-details-title">Informations :</h3>
-            <p id="movieDate" class="movieHeader-info-details-text">Année de sortie : <?= $movieDetails['date']?></p>
-            <?php
-                $hours = floor($movieDetails['length']/60);
-                $minutes = $movieDetails['length'] - ($hours*60);
-            ?>
-            <p id="movieLength" class="movieHeader-info-details-text">Durée : <?= $hours ?>h<?= $minutes < 10 ? '0' : '' ?><?= $minutes ?></p>
-            <?php if($movieDetails['story'] != "") :?>
-                <h3 class="movieHeader-info-details-title">Synopsis :</h3>
-                <p class="movieHeader-info-details-text longText"><?= $movieDetails['story'] ?></p>
-            <?php endif; ?>
-            <!-- Liste des suites éventuelles -->
-            <?php if(count($movieSuiteList) > 1) :?>
-                <h3 id="movieSuiteTitle" class="movieHeader-info-details-title">Dans la même série de films :</h3>
-                <ul class="movieHeader-info-details-list">
-                    <?php foreach($movieSuiteList as $suite) :?>
-                        <?php if($suite['slug'] != $movieDetails['slug']) : ?>
-                            <li class="movieHeader-info-details-list-item"><a class="movieHeader-info-details-list-item-link" href="./<?= $suite['slug'] ?>" title="<?= $suite['title'] ?>"><?= $suite['title'] ?></a></li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
+    <div class="section-container movieHeader">
+        <img class="movieHeader-img" src="<?= $movieDetails['img']?>" />
+        <div class="movieHeader-info">
+            <h2 class="pageTitle"><?= $movieDetails['title']?></h2>
+            <div class="movieHeader-info-details">
+                <h3 class="movieHeader-info-details-title">Informations :</h3>
+                <p id="movieDate" class="movieHeader-info-details-text">Année de sortie : <?= $movieDetails['date']?></p>
+                <?php
+                    $hours = floor($movieDetails['length']/60);
+                    $minutes = $movieDetails['length'] - ($hours*60);
+                ?>
+                <p id="movieLength" class="movieHeader-info-details-text">Durée : <?= $hours ?>h<?= $minutes < 10 ? '0' : '' ?><?= $minutes ?></p>
+                <?php if($movieDetails['story'] != "") :?>
+                    <h3 class="movieHeader-info-details-title">Synopsis :</h3>
+                    <p class="movieHeader-info-details-text longText"><?= $movieDetails['story'] ?></p>
+                <?php endif; ?>
+                <!-- Liste des suites éventuelles -->
+                <?php if(count($movieSuiteList) > 1) :?>
+                    <h3 id="movieSuiteTitle" class="movieHeader-info-details-title">Dans la même série de films :</h3>
+                    <ul class="movieHeader-info-details-list">
+                        <?php foreach($movieSuiteList as $suite) :?>
+                            <?php if($suite['slug'] != $movieDetails['slug']) : ?>
+                                <li class="movieHeader-info-details-list-item"><a class="movieHeader-info-details-list-item-link" href="./<?= $suite['slug'] ?>" title="<?= $suite['title'] ?>"><?= $suite['title'] ?></a></li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
-</div>
-                        </section>
+</section>
 
 <?php if(count($movieSongs) > 0): ?>
 <section class="section midGreyBG">

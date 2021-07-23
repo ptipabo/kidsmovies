@@ -519,6 +519,55 @@ header {
   color: #646464;
 }
 
+.usersList {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.usersList_user {
+  border: 1px solid #c8c8c8;
+  text-align: center;
+  font-size: 130%;
+  vertical-align: middle;
+  border-radius: 50px;
+  padding: 20px;
+  padding-top: 30px;
+  margin: 0 5px;
+  width: 40px;
+  height: 30px;
+  font-weight: bolder;
+}
+.usersList_user:hover {
+  border: 1px solid #646464;
+  cursor: pointer;
+}
+.usersList_user.isActive {
+  border: 3px solid black;
+}
+.usersList_user.userColor_green {
+  border-color: #45c971;
+}
+.usersList_user.userColor_blue {
+  border-color: #2c71f0;
+}
+.usersList_user.userColor_red {
+  border-color: #f34242;
+}
+.usersList_user.userColor_yellow {
+  border-color: #fcc120;
+}
+.usersList_user.userColor_orange {
+  border-color: #fa7537;
+}
+.usersList_user.userColor_pink {
+  border-color: #f02ca5;
+}
+.usersList_user.userColor_grey {
+  border-color: #727272;
+}
+
 .longText {
   text-align: justify;
 }

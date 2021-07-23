@@ -1,6 +1,8 @@
 <?php
     $songs = $params['songs'];
+    $users = $params['users'];
     $jsonSongsList = json_encode($songs);
+    $jsonUsersList = json_encode($users);
 ?>
 <script type="module">
     import {setMusicsList} from '../../public/scripts/songs.js';
@@ -11,6 +13,13 @@
 <section class="section whiteBG">
     <div class="section-container">
         <h2 class="pageTitle">Musiques</h2>
+        <ul class="usersList">
+            <?php
+                foreach($users as $user){
+                    echo '<li class="usersList_user user_'.$user['id'].' userColor_'.strToLower($user['color']).'" title="'.$user['name'].'">'.strToUpper($user['name'][0]).'</li>';
+                }
+            ?>   
+        </ul>
     </div>
 </section>
 
