@@ -16,7 +16,7 @@
         <ul class="usersList">
             <?php
                 foreach($users as $user){
-                    echo '<li class="usersList_user user_'.$user['id'].'">'.$user['name'].'</li>';
+                    echo '<li class="usersList_user user_'.$user['id'].' userColor_'.strToLower($user['color']).'">'.strToUpper($user['name'][0]).'</li>';
                 }
             ?>   
         </ul>
