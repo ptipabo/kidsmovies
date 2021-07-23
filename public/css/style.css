@@ -523,15 +523,19 @@ header {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 20px;
 }
 .usersList_user {
   border: 1px solid #c8c8c8;
   text-align: center;
+  font-size: 130%;
+  vertical-align: middle;
   border-radius: 50px;
   padding: 20px;
+  padding-top: 30px;
   margin: 0 5px;
-  width: 30px;
+  width: 40px;
   height: 30px;
   font-weight: bolder;
 }
@@ -540,7 +544,7 @@ header {
   cursor: pointer;
 }
 .usersList_user.isActive {
-  border: 2px solid black;
+  border: 3px solid black;
 }
 .usersList_user.userColor_green {
   border-color: #45c971;
