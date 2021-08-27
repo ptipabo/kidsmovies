@@ -5,9 +5,10 @@
     $jsonUsersList = json_encode($users);
 ?>
 <script type="module">
-    import {setMusicsList} from '../../public/scripts/songs.js';
+    import {setMusicsList, setUsersList} from '../../public/scripts/songs.js';
     // For the video player to work, we need to pass the songs data to JS
     setMusicsList(<?= $jsonSongsList ?>);
+    setUsersList(<?= $jsonUsersList ?>);
 </script>
 
 <section class="section whiteBG">
@@ -41,6 +42,18 @@
             <div class="listElement">
                 <h3><span><?= $songs[$i]['movie'] ?></span><br/><?= $songs[$i]['title'] ?></h3>
                 <img class="songItem" id="song-<?= $i ?>" title="<?= $songs[$i]['title'] ?>" src="https://img.youtube.com/vi/<?= $songs[$i]['youtubeId'] ?>/1.jpg" alt="<?= $songs[$i]['title'] ?>" />
+                <ul class="song_usersList">
+                    <?php foreach($users as $user) : ?>
+                        <?php 
+                        $userDetected = false;
+                        foreach($songs[$i]['users'] as $songUser){
+                            if($songUser['userId'] == $user['id']){
+                                $userDetected = true;
+                            }
+                        } ?>
+                        <li class="<?= $userDetected ? 'songUser' : 'notSongUser' ?> border favourite userColor_<?= $user['color'] ?>" id="favData_<?= $songs[$i]['id'] ?>_<?= $user['id'][0] ?>" title="<?= $userDetected ? 'Retirer des' : 'Ajouter aux' ?> favoris de <?= $user['name'] ?>"><?= $user['name'][0] ?></li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         <?php endfor; ?>
     </div>

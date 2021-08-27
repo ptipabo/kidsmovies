@@ -1,6 +1,7 @@
 import {addElement, removeElement} from './domElement.js';
 
 let playList;
+let users;
 let currentPlayList;
 let youtubeApi;
 let currentVideoId;
@@ -23,6 +24,17 @@ export function initSongsEvents(){
         playListPosition = event.target.id.split('-')[1];
         play(playListPosition);
     });
+
+    $('.favourite').on('click', (event) => {
+        let songId = event.target.id.split('_')[1];
+        let userId = event.target.id.split('_')[2];
+
+        if(checkFavourite(songId, userId) == true){
+            removeFavourite(songId, userId);
+        }else{
+            addFavourite(songId, userId);
+        }
+    });
 }
 
 $previousArrow.on('click', () => {
@@ -38,6 +50,46 @@ $users.on('click', (event) => {
     let userId = classList[1].split('_')[1];
     filterByUser(userId);
 });
+
+function checkFavourite(songId, userId){
+    let response = false;
+    $.ajax({url: '/api/checkfavourite', 
+        data: {
+            'songId': songId,
+            'userId': userId
+        },
+        async: false,
+        success: (result) => {
+            response = result.success;
+        }
+    });
+
+    return response;
+}
+
+function addFavourite(songId, userId){
+    $.ajax({url: '/api/addfavourite', 
+        data: {
+            'songId': songId,
+            'userId': userId
+        },
+        success: (result) => {
+            document.location.reload();
+        }
+    });
+}
+
+function removeFavourite(songId, userId){
+    $.ajax({url: '/api/removefavourite', 
+        data: {
+            'songId': songId,
+            'userId': userId
+        },
+        success: (result) => {
+            document.location.reload();
+        }
+    });
+}
 
 /**
  * Enable or disable the filter by user's favourite songs
@@ -141,6 +193,15 @@ export function setMusicsList(musicList){
 }
 
 /**
+ * Store the current users list
+ * 
+ * @param {[object]} usersList 
+ */
+ export function setUsersList(usersList){
+    users = usersList;
+}
+
+/**
  * Return the content of the playlist
  * 
  */
@@ -169,6 +230,21 @@ export function showSongs(musicList = null){
 
             let songImg = addElement('img',['className','id','title', 'src', 'alt'],['songItem', 'song-'+i, musicList[i].title, 'https://img.youtube.com/vi/'+musicList[i].youtubeId+'/1.jpg', musicList[i].title]);
             songDiv.appendChild(songImg)
+
+            let usersList = addElement('ul',['className'], ['song_usersList']);
+            songDiv.appendChild(usersList);
+
+            users.forEach(user => {
+                let userDetected = false;
+                musicList[i].users.forEach(songUser => {
+                    if(songUser.userId == user.id){
+                        userDetected = true;
+                    }
+                });
+                let newItem = addElement('li', ['className', 'id', 'title'], [(userDetected ? 'songUser' : 'notSongUser')+' border favourite userColor_'+user.color, 'favData_'+musicList[i].id+'_'+user.id, (userDetected ? 'Retirer des' : 'Ajouter aux')+' favoris de '+user.name ]);
+                newItem.innerHTML = user.name[0];
+                usersList.appendChild(newItem);
+            });
         }
 
         initSongsEvents();

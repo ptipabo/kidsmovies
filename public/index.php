@@ -27,6 +27,10 @@ $router->setGetRoute('/characters', 'App\controllers\ViewController@characters')
 $router->setGetRoute('/games', 'App\controllers\ViewController@games');
 $router->setGetRoute('/:movieUrl', 'App\controllers\ViewController@movie');
 
+$router->setGetRoute('/api/checkfavourite', 'App\controllers\ApiController@checkFavourite');
+$router->setGetRoute('/api/addfavourite', 'App\controllers\ApiController@addFavourite');
+$router->setGetRoute('/api/removefavourite', 'App\controllers\ApiController@removeFavourite');
+
 $router->setGetRoute('/admin/movies', 'App\controllers\Admin\MovieController@index');
 $router->setGetRoute('/admin/movies/delete/:id', 'App\controllers\Admin\MovieController@destroy');
 

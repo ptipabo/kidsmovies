@@ -633,38 +633,116 @@ header{
             border:1px solid rgb(100,100,100);
             cursor:pointer;
         }
+    }
+}
 
-        &.isActive{
-            border:3px solid black;
-        }
-        
-        &.userColor_green{
-            border-color:rgb(69, 201, 113);
-        }
+.border {
+    border:1px solid rgb(200,200,200);
+}
 
-        &.userColor_blue{
-            border-color:rgb(44, 113, 240);
-        }
+.songUser{
+    color:white;
+    border-color:white;
+    padding:.2rem .4rem;
+    border-radius:10rem;
+    font-size: .6rem;
 
-        &.userColor_red{
-            border-color:rgb(243, 66, 66);
-        }
+    &:hover{
+        cursor: pointer;
+    }
+}
 
-        &.userColor_yellow{
-            border-color:rgb(252, 193, 32);
-        }
+.notSongUser {
+    padding:.2rem .4rem;
+    border-radius:10rem;
+    font-size: .6rem;
 
-        &.userColor_orange{
-            border-color:rgb(250, 117, 55);
-        }
+    &:hover{
+        cursor: pointer;
+    }
+}
 
-        &.userColor_pink{
-            border-color:rgb(240, 44, 165);
-        }
+.userColor_green{
+    border-color:rgb(69, 201, 113);
 
-        &.userColor_grey{
-            border-color:rgb(114, 114, 114);
-        }
+    &.songUser{
+        background-color: rgb(69, 201, 113);
+    }
+
+    &.isActive{
+        border:3px solid rgb(69, 201, 113);
+    }
+}
+
+.userColor_blue{
+    border-color:rgb(44, 113, 240);
+
+    &.songUser{
+        background-color: rgb(44, 113, 240);
+    }
+
+    &.isActive{
+        border:3px solid rgb(44, 113, 240);
+    }
+}
+
+.userColor_red{
+    border-color:rgb(243, 66, 66);
+
+    &.songUser{
+        background-color: rgb(243, 66, 66);
+    }
+
+    &.isActive{
+        border:3px solid rgb(243, 66, 66);
+    }
+}
+
+.userColor_yellow{
+    border-color:rgb(252, 193, 32);
+
+    &.songUser{
+        background-color: rgb(252, 193, 32);
+    }
+
+    &.isActive{
+        border:3px solid rgb(252, 193, 32);
+    }
+}
+
+.userColor_orange{
+    border-color:rgb(250, 117, 55);
+
+    &.songUser{
+        background-color: rgb(250, 117, 55);
+    }
+
+    &.isActive{
+        border:3px solid rgb(250, 117, 55);
+    }
+}
+
+.userColor_pink{
+    border-color:rgb(240, 44, 165);
+
+    &.songUser{
+        background-color: rgb(240, 44, 165);
+    }
+
+    &.isActive{
+        border:3px solid rgb(240, 44, 165);
+    }
+}
+
+.userColor_grey{
+    border-color:rgb(114, 114, 114);
+
+    &.songUser{
+        background-color: rgb(114, 114, 114);
+    }
+
+    &.isActive{
+        border:3px solid rgb(114, 114, 114);
     }
 }
 
@@ -674,6 +752,16 @@ header{
 
 .dataSheet{
     margin-top:20px;
+}
+
+.song_usersList{
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    >li {
+        margin-right:.3rem;
+    }
 }
 
 .kidsMoviesBtn{
