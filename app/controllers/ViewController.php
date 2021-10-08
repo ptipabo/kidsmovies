@@ -67,6 +67,7 @@ class ViewController extends Controller{
         for($i=0;$i < count($suiteMovies);$i++){
             $movieSuiteList[] = [
                 "id" => $suiteMovies[$i]->movie_id,
+                "img" => $suiteMovies[$i]->movie_img,
                 "title" => str_replace('"', '\"', $suiteMovies[$i]->movie_title),
                 "story" => str_replace('"', '\"', $suiteMovies[$i]->movie_story),
                 "date" => $suiteMovies[$i]->movie_date,
@@ -88,9 +89,11 @@ class ViewController extends Controller{
             $movieSongs[] = [
                 "id" => $songs[$i]->song_id,
                 "movie" => str_replace('"', '\"', $movie->movie_title),
+                "movieImg" => $movie->movie_img,
                 "title" => str_replace('"', '\"', $songs[$i]->song_title),
                 "link" => $songs[$i]->song_video,
-                "youtubeId" => $videoId[4]
+                "youtubeId" => $videoId[4],
+                "censored" => $songs[$i]->song_censored,
              ];
         }
         //$songs = json_encode($jsonConstruct);
@@ -154,6 +157,7 @@ class ViewController extends Controller{
             foreach($movies as $movie){
                 if($movie->movie_id === $songs[$i]->song_movie){
                     $songMovie = $movie->movie_title;
+                    $songMovieImg = $movie->movie_img;
                 }
             }
 
@@ -181,10 +185,12 @@ class ViewController extends Controller{
             $jsonConstruct[] = [
                 "id" => $songs[$i]->song_id,
                 "movie" => str_replace('"', '\"', $songMovie),
+                "movieImg" => $songMovieImg,
                 "title" => str_replace('"', '\"', $songs[$i]->song_title),
                 "link" => $songs[$i]->song_video,
                 "youtubeId" => $videoId[4],
                 "users" => $usersFiltered,
+                "censored" => $songs[$i]->song_censored,
             ];
         }
         $songs = $jsonConstruct;
@@ -248,6 +254,7 @@ class ViewController extends Controller{
             foreach($movies as $movie){
                 if($movie->movie_id === $songs[$i]->song_movie){
                     $songMovie = $movie->movie_title;
+                    $songMovieImg = $movie->movie_img;
                 }
             }
             
@@ -256,9 +263,11 @@ class ViewController extends Controller{
             $jsonConstruct[] = array(
                 "id" => $songs[$i]->song_id,
                 "movie" => str_replace('"', '\"', $songMovie),
+                "movieImg" => $songMovieImg,
                 "title" => str_replace('"', '\"', $songs[$i]->song_title),
                 "link" => $songs[$i]->song_video,
-                "youtubeId" => $videoId[4]
+                "youtubeId" => $videoId[4],
+                "censored" => $songs[$i]->song_censored,
             );
         }
         $songs = $jsonConstruct;

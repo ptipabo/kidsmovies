@@ -75,7 +75,7 @@ header {
   position: relative;
   margin: 10px;
   width: 10%;
-  min-width: 200px;
+  min-width: 100px;
   padding: 10px;
   background-color: white;
   border-radius: 10px;
@@ -95,6 +95,10 @@ header {
 .movie h3 {
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+.movie p {
+  font-size: 0.8rem;
 }
 .movie a {
   position: absolute;
@@ -381,6 +385,14 @@ header {
   background-color: #ffdf28;
 }
 
+.blueBG {
+  background-color: #64c8ff;
+}
+
+.greenBG {
+  background-color: #45c971;
+}
+
 .redBG {
   background-color: #ff3e0e;
 }
@@ -507,6 +519,11 @@ header {
   display: inline-block;
   margin-bottom: 5px;
 }
+.movieHeader-info-details-list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 .movieHeader-info-details-list-item {
   margin-top: 5px;
   padding-left: 10px;
@@ -517,6 +534,13 @@ header {
 }
 .movieHeader-info-details-list-item-link:hover {
   color: #646464;
+}
+.movieHeader-info-details-list-item-link img {
+  border: 2px solid #ffb419;
+  height: 100px;
+}
+.movieHeader-info-details-list-item-link img:hover {
+  box-shadow: 0 0 5px #000000dd;
 }
 
 .usersList {
@@ -670,12 +694,35 @@ header {
   background-color: #ffdf28;
 }
 
+.kidsMoviesBtn.blueBG:hover {
+  background-color: #64c8ff;
+}
+
+.kidsMoviesBtn.greenBG:hover {
+  background-color: #45c971;
+}
+
 .kidsMoviesBtn.redBG:hover {
   background-color: #ff3e0e;
 }
 
 #videoPlayerContainer > iframe {
   margin-bottom: 20px;
+}
+
+.censoredBlock {
+  background-color: black;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5000;
+  text-align: center;
+}
+.censoredBlock img {
+  margin-top: 10rem;
+  height: 50%;
 }
 
 /*# sourceMappingURL=style.css.map */

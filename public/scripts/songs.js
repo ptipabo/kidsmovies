@@ -73,7 +73,7 @@ function addFavourite(songId, userId){
             'songId': songId,
             'userId': userId
         },
-        success: (result) => {
+        success: () => {
             document.location.reload();
         }
     });
@@ -85,7 +85,7 @@ function removeFavourite(songId, userId){
             'songId': songId,
             'userId': userId
         },
-        success: (result) => {
+        success: () => {
             document.location.reload();
         }
     });
@@ -298,6 +298,27 @@ export function play(playListPosition){
     
     // Display the "videoPlayer" div
     $divVideo.removeClass('hidden');
+
+    let $censoredBlock = $('#censoredBlock')[0];
+    if(currentPlayList[playListPosition].censored != 0) {
+        removeCensoredImg();
+        let movieImg = addElement('img',['id', 'src', 'alt'],['censoredBlock-img', currentPlayList[playListPosition].movieImg, currentPlayList[playListPosition].title]);
+        $censoredBlock.appendChild(movieImg);
+        $censoredBlock.classList.remove('hidden');
+    }
+    else {
+        $censoredBlock.classList.add('hidden');
+        removeCensoredImg();
+    }
+}
+
+/**
+ * Remove the previous image from the censored block
+ */
+function removeCensoredImg(){
+    if($('#censoredBlock img')[0]) {
+        removeElement('censoredBlock-img');
+    }
 }
 
 /**

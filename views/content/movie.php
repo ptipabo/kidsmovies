@@ -37,7 +37,11 @@
                     <ul class="movieHeader-info-details-list">
                         <?php foreach($movieSuiteList as $suite) :?>
                             <?php if($suite['slug'] != $movieDetails['slug']) : ?>
-                                <li class="movieHeader-info-details-list-item"><a class="movieHeader-info-details-list-item-link" href="./<?= $suite['slug'] ?>" title="<?= $suite['title'] ?>"><?= $suite['title'] ?></a></li>
+                                <li class="movieHeader-info-details-list-item">
+                                    <a class="movieHeader-info-details-list-item-link" href="./<?= $suite['slug'] ?>" title="<?= $suite['title'] ?>">
+                                        <img src="<?= $suite['img'] ?>" alt="<?= $suite['title'] ?>" />
+                                    </a>
+                                </li>
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </ul>
@@ -69,7 +73,8 @@
         <img id="previousVid" src="./img/previous.png" title="Vidéo précédente" />
         <img id="closeVid" src="./img/close.png" title="Fermer le lecteur" />
         <img id="nextVid" src="./img/next.png" title="Vidéo suivante" />
-    </div>    
+    </div>
+    <div id="censoredBlock" class="censoredBlock hidden"></div>
     <div id="videoPlayed"></div>
 </section>
 <?php endif; ?>

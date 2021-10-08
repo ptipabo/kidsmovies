@@ -63,6 +63,7 @@
         <img id="previousVid" src="./img/previous.png" title="Vidéo précédente" />
         <img id="closeVid" src="./img/close.png" title="Fermer le lecteur" />
         <img id="nextVid" src="./img/next.png" title="Vidéo suivante" />
-    </div>    
+    </div>
+    <div id="censoredBlock" class="censoredBlock hidden"></div>
     <div id="videoPlayed"></div>
 </section>

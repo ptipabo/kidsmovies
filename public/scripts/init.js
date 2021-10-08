@@ -108,7 +108,7 @@ function movieFilter(filterString, moviesList){
  * @param {[object]} moviesList 
  */
 export function showMovies(moviesList){
-    //Tout d'abord on vide le contenu de la page afin de ne pas créer de doublons
+    //Firstly we remove the current content of the page to not create double content
     divMoviesList.innerHTML = ''
 
     if(moviesList.length > 1){
