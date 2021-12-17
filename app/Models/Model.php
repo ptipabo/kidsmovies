@@ -22,7 +22,11 @@ abstract class Model{
         }
     }
 
-    public function all(): array{
+    /**
+     * Get all the data from a database table
+     */
+    public function all(): array
+    {
         if($this->orderBy !== null){
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} ORDER BY {$this->orderBy} ASC");
         }
@@ -35,7 +39,40 @@ abstract class Model{
         return $stmt->fetchAll();
     }
 
-    public function findByMovie(string $movieId): array{
+    /**
+     * Get all the data from one entry in a table
+     */
+    public function findOneBy(array $column, array $orderBy = null){
+        if($orderBy !== null){
+            $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE ". key($column) ." = '". reset($column) ."' ORDER BY ". key($orderBy) ." ". reset($orderBy) ." LIMIT 1");
+        }
+        else{
+            $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE ". key($column) ." = '". reset($column) ."' LIMIT 1");
+        }
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_class($this), [$this->db]);
+        
+        return $stmt->fetchAll()[0];
+    }
+
+    /**
+     * Get all the data from specified entries in a table
+     */
+    public function findBy(array $column, array $orderBy = null){
+        if($orderBy !== null){
+            $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE ". key($column) ." = '". reset($column) ."' ORDER BY ". key($orderBy) ." ". reset($orderBy) .";");
+        }
+        else{
+            $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE ". key($column) ." = '". reset($column) ."';");
+        }
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_class($this), [$this->db]);
+        
+        return $stmt->fetchAll();
+    }
+
+    public function findByMovie(string $movieId): array
+    {
         if($this->orderBy !== null){
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE {$this->findByMovie}={$movieId} ORDER BY {$this->orderBy} ASC");
         }

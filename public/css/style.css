@@ -725,4 +725,86 @@ header {
   height: 50%;
 }
 
+.deleteButton.redVersion {
+  color: red;
+}
+
+.admin-table {
+  margin: 2rem auto;
+  width: 80%;
+  border-collapse: collapse;
+}
+.admin-table th, .admin-table td {
+  border: 1px solid #646464;
+  padding: 0.4rem;
+}
+.admin-table .link.editButton {
+  color: #0064c8;
+}
+.admin-table .link:hover {
+  text-decoration: underline;
+}
+.admin-form {
+  padding-top: 1rem;
+  text-align: left;
+}
+.admin-form fieldset {
+  margin-bottom: 1rem;
+  padding: 0.7rem;
+}
+.admin-form fieldset legend {
+  background-color: white;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.admin-form .suiteChoice {
+  margin-bottom: 0.4rem;
+}
+.admin-form input[type=radio] {
+  margin-right: 0.4rem;
+}
+.admin-form #newMovieSuiteField {
+  display: none;
+}
+.admin-form .mainInfo {
+  display: flex;
+  flex-flow: column nowrap;
+}
+.admin-form .mainInfo label {
+  margin-top: 0.4rem;
+}
+.admin-form .mainInfo textarea {
+  height: 6rem;
+}
+.admin-list {
+  text-align: left;
+}
+.admin-list li {
+  list-style-type: square;
+}
+
+.linksBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.2rem;
+}
+.btn-green {
+  background-color: green;
+  color: white;
+}
+.btn-danger {
+  background-color: red;
+  color: white;
+}
+
 /*# sourceMappingURL=style.css.map */

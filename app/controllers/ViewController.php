@@ -3,10 +3,15 @@
 namespace App\controllers;
 
 use App\Models\Song;
+use App\Entities\Song as SongEntity;
 use App\Models\Movie;
+use App\Entities\Movie as MovieEntity;
 use App\Models\Character;
+use App\Entities\Character as CharacterEntity;
 use App\Models\Favourite;
+use App\Entities\Favourite as FavouriteEntity;
 use App\Models\User;
+use App\Entities\User as UserEntity;
 
 class ViewController extends Controller{
 
@@ -20,16 +25,17 @@ class ViewController extends Controller{
         
         //On crée un array d'après le résultat de la requête qui sera ensuite converti en JSON pour passer les données au JS
         $jsonConstruct = array();
-        for($i=0;$i < count($movies);$i++){
+        /** @var MovieEntity $movie */
+        foreach($movies as $movie){
             $jsonConstruct[] = array(
-                "movieId" => $movies[$i]->movie_id,
-                "movieImg" => $movies[$i]->movie_img,
-                "movieTitle" => str_replace('"', '\"', $movies[$i]->movie_title),
-                "movieStory" => str_replace('"', '\"', $movies[$i]->movie_story),
-                "movieSuite" => $movies[$i]->movie_suite,
-                "movieDate" => $movies[$i]->movie_date,
-                "movieLength" => $movies[$i]->movie_length,
-                "movieUrl" => $movies[$i]->movie_url
+                "movieId" => $movie->getId(),
+                "movieImg" => $movie->getImg(),
+                "movieTitle" => str_replace('"', '\"', $movie->getTitle()),
+                "movieStory" => str_replace('"', '\"', $movie->getStory()),
+                "movieSuite" => $movie->getSuite(),
+                "movieDate" => $movie->getDate(),
+                "movieLength" => $movie->getLength(),
+                "movieUrl" => $movie->getSlug()
             );
         }
         $movies = json_encode($jsonConstruct);
@@ -44,73 +50,74 @@ class ViewController extends Controller{
         //On se connecte à la table des films via un objet de type film (auquel on indique qu'on voudra récupèrer les films triés d'après leurs titres)
         $movieTable = new Movie($this->getDB(), 'movie_title');
         //On récupère les infos concernant le film indiqué dans l'url
-        $movie = $movieTable->findBySlug($movieSlug);
+        /** @var MovieEntity $movie */
+        $movie = $movieTable->findOneBy(['movie_url' => $movieSlug]);
 
         //On stock toutes les infos concernant ce film dans un tableau
         $movieDetails = [
-            "id" => $movie->movie_id,
-            "img" => str_replace('"', '\"', $movie->movie_img),
-            "title" => str_replace('"', '\"', $movie->movie_title),
-            "story" => str_replace('"', '\"', $movie->movie_story),
-            "suiteId" => $movie->movie_suite,
-            "date" => $movie->movie_date,
-            "length" => $movie->movie_length,
-            "slug" => $movie->movie_url
+            "id" => $movie->getId(),
+            "img" => str_replace('"', '\"', $movie->getImg()),
+            "title" => str_replace('"', '\"', $movie->getTitle()),
+            "story" => str_replace('"', '\"', $movie->getStory()),
+            "suiteId" => $movie->getSuite(),
+            "date" => $movie->getDate(),
+            "length" => $movie->getLength(),
+            "slug" => $movie->getSlug()
         ];
         //$movieDetails = json_encode($jsonConstruct);
 
         //On récupère la liste des films liés à celui-ci (s'il y en a)
-        $suiteMovies = $movieTable->findBySuite($movie->movie_suite);
+        $suiteMovies = $movieTable->findBy(['movie_suite' => $movie->getSuite()]);
 
         //On stock tous les films faisant partie de la même série que ce film dans un tableau
         $movieSuiteList = [];
-        for($i=0;$i < count($suiteMovies);$i++){
+        /** @var MovieEntity $suiteMovie */
+        foreach($suiteMovies as $suiteMovie){
             $movieSuiteList[] = [
-                "id" => $suiteMovies[$i]->movie_id,
-                "img" => $suiteMovies[$i]->movie_img,
-                "title" => str_replace('"', '\"', $suiteMovies[$i]->movie_title),
-                "story" => str_replace('"', '\"', $suiteMovies[$i]->movie_story),
-                "date" => $suiteMovies[$i]->movie_date,
-                "length" => $suiteMovies[$i]->movie_length,
-                "slug" => $suiteMovies[$i]->movie_url
+                "id" => $suiteMovie->getId(),
+                "img" => $suiteMovie->getImg(),
+                "title" => str_replace('"', '\"', $suiteMovie->getTitle()),
+                "story" => str_replace('"', '\"', $suiteMovie->getStory()),
+                "date" => $suiteMovie->getDate(),
+                "length" => $suiteMovie->getLength(),
+                "slug" => $suiteMovie->getSlug()
             ];
         }
         //$suiteList = json_encode($jsonConstruct);
 
         //On récupère la liste de toutes les musiques liées à ce film
-        $songs = new Song($this->getDB(), 'song_title');
-        $songs = $songs->findByMovie($movie->movie_id);
+        $songs = new Song($this->getDB(), 'song_order');
+        $songs = $songs->findBy(['song_movie' => $movie->getId()]);
 
         //On stock la liste des musiques liées à ce film dans un tableau
         $movieSongs = [];
-        for($i=0;$i < count($songs);$i++){
-            $videoId = explode('/', $songs[$i]->song_video);
-
+        /** @var SongEntity $song */
+        foreach($songs as $song){
             $movieSongs[] = [
-                "id" => $songs[$i]->song_id,
-                "movie" => str_replace('"', '\"', $movie->movie_title),
-                "movieImg" => $movie->movie_img,
-                "title" => str_replace('"', '\"', $songs[$i]->song_title),
-                "link" => $songs[$i]->song_video,
-                "youtubeId" => $videoId[4],
-                "censored" => $songs[$i]->song_censored,
+                "id" => $song->getId(),
+                "movie" => str_replace('"', '\"', $movie->getTitle()),
+                "movieImg" => $movie->getImg(),
+                "title" => str_replace('"', '\"', $song->getTitle()),
+                "youtubeId" => $song->getVideo(),
+                "censored" => $song->isCensored(),
              ];
         }
         //$songs = json_encode($jsonConstruct);
 
         //On récupère la liste de tous les personnages liés à ce film
-        $characters = new Character($this->getDB(), 'char_name');
-        $characters = $characters->findByMovie($movie->movie_id);
+        $charactersTable = new Character($this->getDB(), 'char_name');
+        $characters = $charactersTable->findBy(['char_movie' => $movie->getId()]);
 
         //On stock la liste des personnages liés à ce film dans un tableau
         $movieCharacters = [];
-        for($i=0;$i < count($characters);$i++){
+        /** @var CharacterEntity $character */
+        foreach($characters as $character){
             $movieCharacters[] = [
-                "id" => $characters[$i]->char_id,
-                "movie" => str_replace('"', '\"', $movie->movie_title),
-                "name" => str_replace('"', '\"', $characters[$i]->char_name),
-                "img" => $characters[$i]->char_img,
-                "desc" => str_replace('"', '\"', $characters[$i]->char_desc),
+                "id" => $character->getId(),
+                "movie" => str_replace('"', '\"', $movie->getTitle()),
+                "name" => str_replace('"', '\"', $character->getName()),
+                "img" => $character->getImg(),
+                "desc" => str_replace('"', '\"', $character->getDesc()),
                 "slug" => $movieSlug
             ];
         }
@@ -132,7 +139,7 @@ class ViewController extends Controller{
         $users = $users->all();
 
         //On récupère la liste de toutes les musiques
-        $songs = new Song($this->getDB(), 'song_movie');
+        $songs = new Song($this->getDB(), 'song_title');
         $songs = $songs->all();
 
         //On récupère le titre du film correspondant à chaque musique
@@ -141,56 +148,56 @@ class ViewController extends Controller{
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = [];
-        for($i=0;$i < count($users);$i++){
+        /** @var UserEntity $user */
+        foreach($users as $user){
             $jsonConstruct[] = [
-                "id" => $users[$i]->user_id,
-                "name" => str_replace('"', '\"', $users[$i]->user_name),
-                "color" => $users[$i]->user_color,
+                "id" => $user->getId(),
+                "name" => str_replace('"', '\"', $user->getName()),
+                "color" => $user->getColor(),
             ];
         }
         $users = $jsonConstruct;
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = [];
-        for($i=0;$i < count($songs);$i++){
-            
+        /** @var SongEntity $song */
+        foreach($songs as $song){
+            /** @var MovieEntity $movie */
             foreach($movies as $movie){
-                if($movie->movie_id === $songs[$i]->song_movie){
-                    $songMovie = $movie->movie_title;
-                    $songMovieImg = $movie->movie_img;
+                if($movie->getId() === $song->getMovie()){
+                    $songMovie = $movie->getTitle();
+                    $songMovieImg = $movie->getImg();
                 }
             }
 
             $usersFiltered = [];
 
+            /** @var FavouriteEntity $favourite */
             foreach($favourites as $favourite){
-                if($favourite->song_id == $songs[$i]->song_id){
+                if($favourite->getSong() == $song->getId()){
                     foreach($users as $user){
-                        if($user['id'] == $favourite->user_id){
+                        if($user['id'] == $favourite->getUser()){
                             $userName = $user['name'];
                             $userColor = $user['color'];
                         }
                     }
 
                     $usersFiltered[] = [
-                        "userId" => $favourite->user_id,
+                        "userId" => $favourite->getUser(),
                         "userName" => $userName,
                         "userColor" => $userColor,
                     ];
                 }
             }
-            
-            $videoId = explode('/', $songs[$i]->song_video);
 
             $jsonConstruct[] = [
-                "id" => $songs[$i]->song_id,
+                "id" => $song->getId(),
                 "movie" => str_replace('"', '\"', $songMovie),
                 "movieImg" => $songMovieImg,
-                "title" => str_replace('"', '\"', $songs[$i]->song_title),
-                "link" => $songs[$i]->song_video,
-                "youtubeId" => $videoId[4],
+                "title" => str_replace('"', '\"', $song->getTitle()),
+                "youtubeId" => $song->getVideo(),
                 "users" => $usersFiltered,
-                "censored" => $songs[$i]->song_censored,
+                "censored" => $song->isCensored(),
             ];
         }
         $songs = $jsonConstruct;
@@ -203,8 +210,8 @@ class ViewController extends Controller{
      */
     public function characters(){
         //On récupère la liste de tous les personnages
-        $characters = new Character($this->getDB(), 'char_movie');
-        $characters = $characters->all();
+        $charactersTable = new Character($this->getDB(), 'char_movie');
+        $characters = $charactersTable->all();
 
         //On récupère le titre du film correspondant à chaque musique
         $movies = new Movie($this->getDB());
@@ -212,21 +219,22 @@ class ViewController extends Controller{
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = array();
-        for($i=0;$i < count($characters);$i++){
-            
+        /** @var CharacterEntity $character */
+        foreach($characters as $character){
+            /** @var MovieEntity $movie */
             foreach($movies as $movie){
-                if($movie->movie_id === $characters[$i]->char_movie){
-                    $charMovie = $movie->movie_title;
-                    $movieSlug = $movie->movie_url;
+                if($movie->getId() === $character->getMovie()){
+                    $charMovie = $movie->getTitle();
+                    $movieSlug = $movie->getSlug();
                 }
             }
 
             $jsonConstruct[] = array(
-                "id" => $characters[$i]->char_id,
+                "id" => $character->getId(),
                 "movie" => str_replace('"', '\"',$charMovie),
-                "name" => str_replace('"', '\"', $characters[$i]->char_name),
-                "img" => $characters[$i]->char_img,
-                "desc" => str_replace('"', '\"', $characters[$i]->char_desc),
+                "name" => str_replace('"', '\"', $character->getName()),
+                "img" => $character->getImg(),
+                "desc" => str_replace('"', '\"', $character->getDesc()),
                 "slug" => $movieSlug
             );
         }
@@ -249,25 +257,23 @@ class ViewController extends Controller{
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = array();
-        for($i=0;$i < count($songs);$i++){
-            
+        /** @var SongEntity $song */
+        foreach($songs as $song){
+            /** @var MovieEntity $movie */
             foreach($movies as $movie){
-                if($movie->movie_id === $songs[$i]->song_movie){
-                    $songMovie = $movie->movie_title;
-                    $songMovieImg = $movie->movie_img;
+                if($movie->getId() === $song->getMovie()){
+                    $songMovie = $movie->getTitle();
+                    $songMovieImg = $movie->getImg();
                 }
             }
-            
-            $videoId = explode('/', $songs[$i]->song_video);
 
             $jsonConstruct[] = array(
-                "id" => $songs[$i]->song_id,
+                "id" => $song->getId(),
                 "movie" => str_replace('"', '\"', $songMovie),
                 "movieImg" => $songMovieImg,
-                "title" => str_replace('"', '\"', $songs[$i]->song_title),
-                "link" => $songs[$i]->song_video,
-                "youtubeId" => $videoId[4],
-                "censored" => $songs[$i]->song_censored,
+                "title" => str_replace('"', '\"', $song->getTitle()),
+                "youtubeId" => $song->getVideo(),
+                "censored" => $song->isCensored(),
             );
         }
         $songs = $jsonConstruct;

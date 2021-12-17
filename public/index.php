@@ -21,6 +21,20 @@ define('DB_NAME', 'kidsmovies');
 $router = new Router($_GET['url']);
 
 //On crée toutes les routes de l'application (NB: la route '/:movieUrl' doit être placée en dernier sinon le navigateur confond le nom d'un film avec le nom de nos pages)
+$router->setGetRoute('/admin', 'App\controllers\Admin\AdminController@index');
+$router->setGetRoute('/admin/movies', 'App\controllers\Admin\MovieController@index');
+$router->setGetRoute('/admin/movies/create', 'App\controllers\Admin\MovieController@create');
+$router->setPostRoute('/admin/movies/create', 'App\controllers\Admin\MovieController@create');
+$router->setGetRoute('/admin/movies/edit/:id', 'App\controllers\Admin\MovieController@edit');
+$router->setPostRoute('/admin/movies/edit/:id', 'App\controllers\Admin\MovieController@edit');
+$router->setGetRoute('/admin/movies/delete/:id', 'App\controllers\Admin\MovieController@destroy');
+$router->setGetRoute('/admin/songs', 'App\controllers\Admin\SongController@index');
+$router->setGetRoute('/admin/songs/create', 'App\controllers\Admin\SongController@create');
+$router->setPostRoute('/admin/songs/create', 'App\controllers\Admin\SongController@create');
+$router->setGetRoute('/admin/songs/edit/:id', 'App\controllers\Admin\SongController@edit');
+$router->setPostRoute('/admin/songs/edit/:id', 'App\controllers\Admin\SongController@edit');
+$router->setGetRoute('/admin/songs/delete/:id', 'App\controllers\Admin\SongController@destroy');
+
 $router->setGetRoute('/', 'App\controllers\ViewController@home');
 $router->setGetRoute('/music', 'App\controllers\ViewController@music');
 $router->setGetRoute('/characters', 'App\controllers\ViewController@characters');
@@ -30,9 +44,6 @@ $router->setGetRoute('/:movieUrl', 'App\controllers\ViewController@movie');
 $router->setGetRoute('/api/checkfavourite', 'App\controllers\ApiController@checkFavourite');
 $router->setGetRoute('/api/addfavourite', 'App\controllers\ApiController@addFavourite');
 $router->setGetRoute('/api/removefavourite', 'App\controllers\ApiController@removeFavourite');
-
-$router->setGetRoute('/admin/movies', 'App\controllers\Admin\MovieController@index');
-$router->setGetRoute('/admin/movies/delete/:id', 'App\controllers\Admin\MovieController@destroy');
 
 //On utilise la méthode urlCheck contenue dans Router.php
 $router->urlCheck();

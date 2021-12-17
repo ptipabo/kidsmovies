@@ -836,3 +836,107 @@ header{
         height: 50%;
     }
 }
+
+.deleteButton {
+    &.redVersion {
+        color: red;
+    }
+}
+
+.admin{
+    &-table {
+        margin: 2rem auto;
+        width: 80%;
+        border-collapse: collapse;
+
+        th, td {
+            border:1px solid rgb(100,100,100);
+            padding: .4rem;
+        }
+
+        .link {
+            &.editButton {
+                color: rgb(0,100,200);
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    &-form {
+        padding-top: 1rem;
+        text-align: left;
+
+        fieldset {
+            margin-bottom: 1rem;
+            padding: .7rem;
+
+            legend {
+                background-color: white;
+                padding-left: .4rem;
+                padding-right: .4rem;
+            }
+        }
+
+        .suiteChoice {
+            margin-bottom: .4rem;
+        }
+
+        input[type=radio] {
+            margin-right: .4rem;
+        }
+
+        #newMovieSuiteField {
+            display: none;
+        }
+
+        .mainInfo {
+            display: flex;
+            flex-flow: column nowrap;
+
+            label {
+                margin-top: .4rem;
+            }
+
+            textarea {
+                height: 6rem;
+            }
+        }
+    }
+
+    &-list {
+        text-align: left;
+
+        li {
+            list-style-type: square;
+        }
+    }
+}
+
+.linksBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.backLink:hover {
+    text-decoration: underline;
+}
+
+.btn{
+    font-size:.8rem;
+    padding: .2rem .4rem;
+    border-radius: .2rem;
+
+    &-green{
+        background-color: green;
+        color: white;
+    }
+
+    &-danger{
+        background-color: red;
+        color: white;
+    }
+}
