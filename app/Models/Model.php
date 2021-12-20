@@ -27,7 +27,7 @@ abstract class Model{
      */
     public function all(): array
     {
-        if($this->orderBy !== null){
+        if($this->orderBy != null){
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} ORDER BY {$this->orderBy} ASC");
         }
         else{
@@ -43,7 +43,7 @@ abstract class Model{
      * Get all the data from one entry in a table
      */
     public function findOneBy(array $column, array $orderBy = null){
-        if($orderBy !== null){
+        if($orderBy != null){
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE ". key($column) ." = '". reset($column) ."' ORDER BY ". key($orderBy) ." ". reset($orderBy) ." LIMIT 1");
         }
         else{
@@ -59,7 +59,7 @@ abstract class Model{
      * Get all the data from specified entries in a table
      */
     public function findBy(array $column, array $orderBy = null){
-        if($orderBy !== null){
+        if($orderBy != null){
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE ". key($column) ." = '". reset($column) ."' ORDER BY ". key($orderBy) ." ". reset($orderBy) .";");
         }
         else{
@@ -71,16 +71,16 @@ abstract class Model{
         return $stmt->fetchAll();
     }
 
-    public function findByMovie(string $movieId): array
+    /*public function findByMovie(string $movieId): array
     {
-        if($this->orderBy !== null){
+        if($this->orderBy != null){
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE {$this->findByMovie}={$movieId} ORDER BY {$this->orderBy} ASC");
         }
         else{
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} WHERE {$this->findByMovie}={$movieId}");
         }
         return $stmt->fetchAll();
-    }
+    }*/
 
     /* Voir fin de vidéo https://www.youtube.com/watch?v=BsHpNiDeB4w&list=PLeeuvNW2FHVgfbhZM3S8kqZOmnY7TEorW&index=12 + Créer méthode "query" (voir dans 2-3 vidéos précédentes comment faire)
     public function destroy(int $id): bool{

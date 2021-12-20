@@ -1,22 +1,23 @@
 <?php
     /** @var App\Entities\Song $song */
     $song = $params['song'];
+    $movieSongs = $params['movieSongs'];
     $movies = $params['movies'];
 ?>
 
 <section class="section whiteBG">
     <div class="section-container">
-        <h1 class="pageTitle">Ajouter une chanson</h1>
+        <h1 class="pageTitle">Modifier une chanson</h1>
         <a class="backLink" href="/admin/songs" title="Retour">Retour</a>
     </div>
 </section>
 
 <section class="section whiteBG">
     <div class="section-container">
-        <form method="post" action="/admin/songs/create" class="admin-form">
+        <form method="post" action="/admin/songs/edit/<?= $song->getId() ?>" class="admin-form">
             <fieldset>
                 <legend>Film lié à cette chanson</legend>
-                <select id="movieField" name="movie" required="required">
+                <select id="movieField" name="songMovie" required="required">
                     <?php
                     /** @var App\Entities\Movie $movie */
                     foreach ($movies as $movie): ?>
@@ -37,5 +38,18 @@
             </fieldset>
             <input type="submit" name="submitButton" value="Valider">
         </form>
+        <div id="movieSongsList">
+            <h2>Autres chansons liées à ce film :</h2>
+            <table class="admin-table">
+                <tr><th>Titre</th><th>Ordre</th></tr>
+                <?php foreach ($movieSongs as $movieSong): ?>
+                    <?php if($movieSong->getId() != $song->getId()): ?>
+                        <tr><td><?= $movieSong->getTitle() ?></td><td><?= $movieSong->getOrder() ?></td></tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </table>
+        </div>
     </div>
 </section>
+
+<script src="../../../public/scripts/admin.js"></script>

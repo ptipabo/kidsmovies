@@ -22,32 +22,7 @@ class MovieController extends Controller{
         $movieSuites = (new Moviesuite($this->getDB(), 'suite_title'))->all();
         
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
-            $newMovie = new MovieEntity();
-            $movieSuite = null;
-            if($_POST['suiteChoice'] == 0 && isset($_POST['movieSuite']) && !empty($_POST['movieSuite'])){
-                $newMovie->setSuite($_POST['movieSuite']);
-            }else if ($_POST['suiteChoice'] == 1 && isset($_POST['newMovieSuite']) && !empty($_POST['newMovieSuite'])){
-                $newMovieSuite = new Suite();
-                $newMovieSuite->setTitle($_POST['newMovieSuite']);
-                // Creates a new movie suite and associate it with this new movie
-                if((new MovieSuite($this->getDB()))->createSuite($newMovieSuite)){
-                    $movieSuite =  (new Moviesuite($this->getDB()))->findOneByTitle($newMovieSuite->getTitle());
-                    $newMovie->setSuite($movieSuite->suite_id);
-                }
-            }
-            if(isset($_POST['movieImg']) && !empty($_POST['movieImg']) 
-                && isset($_POST['movieTitle']) && !empty($_POST['movieTitle'])
-                && isset($_POST['movieStory']) && !empty($_POST['movieStory'])
-                && isset($_POST['movieLength']) && !empty($_POST['movieLength'])
-                && isset($_POST['movieDate']) && !empty($_POST['movieDate'])
-                && isset($_POST['movieSlug']) && !empty($_POST['movieSlug'])){
-                $newMovie->setImg(addslashes($_POST['movieImg']));
-                $newMovie->setTitle(addslashes($_POST['movieTitle']));
-                $newMovie->setStory(addslashes($_POST['movieStory']));
-                $newMovie->setLength($_POST['movieLength']);
-                $newMovie->setDate($_POST['movieDate']);
-                $newMovie->setSlug(addslashes($_POST['movieSlug']));
-            }
+            $newMovie = $this->fetchData($_POST);
 
             if((new Movie($this->getDB()))->createMovie($newMovie)){
                 header('Location: /admin/movies');
@@ -64,34 +39,7 @@ class MovieController extends Controller{
         $movieSuites = (new Moviesuite($this->getDB(), 'suite_title'))->all();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
-            $newMovie = new MovieEntity();
-            $movieSuite = null;
-            var_dump($_POST);
-            if($_POST['suiteChoice'] == 0 && isset($_POST['movieSuite']) && !empty($_POST['movieSuite'])){
-                $newMovie->setSuite($_POST['movieSuite']);
-            }else if ($_POST['suiteChoice'] == 1 && isset($_POST['newMovieSuite']) && !empty($_POST['newMovieSuite'])){
-                $newMovieSuite = new Suite();
-                $newMovieSuite->setTitle($_POST['newMovieSuite']);
-                // Creates a new movie suite and associate it with this new movie
-                if((new MovieSuite($this->getDB()))->createSuite($newMovieSuite)){
-                    $movieSuite =  (new Moviesuite($this->getDB()))->findOneByTitle($newMovieSuite->getTitle());
-                    $newMovie->setSuite($movieSuite->suite_id);
-                }
-            }
-            if(isset($_POST['movieImg']) && !empty($_POST['movieImg']) 
-                && isset($_POST['movieTitle']) && !empty($_POST['movieTitle'])
-                && isset($_POST['movieStory']) && !empty($_POST['movieStory'])
-                && isset($_POST['movieLength']) && !empty($_POST['movieLength'])
-                && isset($_POST['movieDate']) && !empty($_POST['movieDate'])
-                && isset($_POST['movieSlug']) && !empty($_POST['movieSlug'])){
-                $newMovie->setId($id);
-                $newMovie->setImg(addslashes($_POST['movieImg']));
-                $newMovie->setTitle(addslashes($_POST['movieTitle']));
-                $newMovie->setStory(addslashes($_POST['movieStory']));
-                $newMovie->setLength($_POST['movieLength']);
-                $newMovie->setDate($_POST['movieDate']);
-                $newMovie->setSlug(addslashes($_POST['movieSlug']));
-            }
+            $newMovie = $this->fetchData($_POST, $id);
 
             if((new Movie($this->getDB()))->updateMovie($newMovie)){
                 header('Location: /admin/movies');
@@ -108,5 +56,43 @@ class MovieController extends Controller{
         if($result){
             return header('Location: /admin/movies');
         }
+    }
+
+    /**
+     * Store all the data from a form to a Movie object
+     */
+    private function fetchData($request, int $id = null): MovieEntity
+    {
+        $newMovie = new MovieEntity();
+        $movieSuite = null;
+        if($request['suiteChoice'] == 0 && isset($request['movieSuite']) && !empty($request['movieSuite'])){
+            $newMovie->setSuite($request['movieSuite']);
+        }else if ($request['suiteChoice'] == 1 && isset($request['newMovieSuite']) && !empty($request['newMovieSuite'])){
+            $newMovieSuite = new Suite();
+            $newMovieSuite->setTitle($request['newMovieSuite']);
+            // Creates a new movie suite and associate it with this new movie
+            if((new MovieSuite($this->getDB()))->createSuite($newMovieSuite)){
+                $movieSuite =  (new Moviesuite($this->getDB()))->findOneByTitle($newMovieSuite->getTitle());
+                $newMovie->setSuite($movieSuite->suite_id);
+            }
+        }
+        if(isset($request['movieImg']) && !empty($request['movieImg']) 
+            && isset($request['movieTitle']) && !empty($request['movieTitle'])
+            && isset($request['movieStory']) && !empty($request['movieStory'])
+            && isset($request['movieLength']) && !empty($request['movieLength'])
+            && isset($request['movieDate']) && !empty($request['movieDate'])
+            && isset($request['movieSlug']) && !empty($request['movieSlug'])){
+            if($id){
+                $newMovie->setId($id);
+            }
+            $newMovie->setImg(addslashes($request['movieImg']));
+            $newMovie->setTitle(addslashes($request['movieTitle']));
+            $newMovie->setStory(addslashes($request['movieStory']));
+            $newMovie->setLength($request['movieLength']);
+            $newMovie->setDate($request['movieDate']);
+            $newMovie->setSlug(addslashes($request['movieSlug']));
+        }
+
+        return $newMovie;
     }
 }

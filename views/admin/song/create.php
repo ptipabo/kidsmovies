@@ -14,7 +14,7 @@
         <form method="post" action="/admin/songs/create" class="admin-form">
             <fieldset>
                 <legend>Film lié à cette chanson</legend>
-                <select id="movieField" name="movie" required="required">
+                <select id="movieField" name="songMovie" required="required">
                     <?php
                     /** @var App\Entities\Movie $movie */
                     foreach ($movies as $movie): ?>
@@ -35,5 +35,12 @@
             </fieldset>
             <input type="submit" name="submitButton" value="Valider">
         </form>
+        <div id="movieSongsList">
+            <h2>Autres chansons liées à ce film :</h2>
+            <table class="admin-table">
+            </table>
+        </div>
     </div>
 </section>
+
+<script src="../../../public/scripts/admin.js"></script>

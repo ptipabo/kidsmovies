@@ -3,6 +3,7 @@
 namespace App\controllers;
 
 use App\Models\Song;
+use App\Entities\Song as SongEntity;
 use App\Models\Movie;
 use App\Models\Character;
 use App\Models\Favourite;
@@ -78,7 +79,32 @@ class ApiController extends Controller{
             }
         }else{
             header('Content-type: application/json');
-                echo json_encode( ['success' => false, 'error' => 'Missing GET data : userId and/or songId not defined.'] );
+            echo json_encode( ['success' => false, 'error' => 'Missing GET data : userId and/or songId not defined.'] );
+        }
+    }
+
+    public function getMovieSongs(){
+        if(isset($_GET['movieId'])){
+            $songsList = (new Song($this->getDB()))->findBy(['song_movie' => $_GET['movieId']], ['song_order' => 'ASC']);
+
+            $songsListFinal = [];
+
+            /** @var SongEntity $song */
+            foreach($songsList as $song){
+                $newSong = [];
+                $newSong['id'] = $song->getId();
+                $newSong['title'] = $song->getTitle();
+                $newSong['video'] = $song->getVideo();
+                $newSong['censored'] = $song->isCensored();
+                $newSong['order'] = $song->getOrder();
+                $songsListFinal[] = $newSong;
+            }
+            
+            header('Content-type: application/json');
+            echo json_encode( ['success' => true, 'songsList' => $songsListFinal, 'error' => ''] );
+        }else{
+            header('Content-type: application/json');
+            echo json_encode( ['success' => false, 'error' => 'Missing GET data : movieId not defined.'] );
         }
     }
 }

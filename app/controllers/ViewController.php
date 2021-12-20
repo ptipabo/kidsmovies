@@ -86,8 +86,8 @@ class ViewController extends Controller{
         //$suiteList = json_encode($jsonConstruct);
 
         //On récupère la liste de toutes les musiques liées à ce film
-        $songs = new Song($this->getDB(), 'song_order');
-        $songs = $songs->findBy(['song_movie' => $movie->getId()]);
+        $songs = new Song($this->getDB());
+        $songs = $songs->findBy(['song_movie' => $movie->getId()], ['song_order' => 'ASC']);
 
         //On stock la liste des musiques liées à ce film dans un tableau
         $movieSongs = [];
@@ -105,8 +105,8 @@ class ViewController extends Controller{
         //$songs = json_encode($jsonConstruct);
 
         //On récupère la liste de tous les personnages liés à ce film
-        $charactersTable = new Character($this->getDB(), 'char_name');
-        $characters = $charactersTable->findBy(['char_movie' => $movie->getId()]);
+        $charactersTable = new Character($this->getDB());
+        $characters = $charactersTable->findBy(['char_movie' => $movie->getId()], ['char_name' => 'ASC']);
 
         //On stock la liste des personnages liés à ce film dans un tableau
         $movieCharacters = [];
