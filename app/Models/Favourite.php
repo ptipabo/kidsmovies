@@ -3,10 +3,63 @@
 namespace App\Models;
 
 use PDO;
+use App\Entities\Favourite as FavouriteEntity;
 
 class Favourite extends Model{
     
     protected $table = 'favourites';
+
+    /**
+     * @inheritdoc
+     */
+    public function all(): array
+    {
+        $rawData = parent::all();
+        
+        $favourites = [];
+        foreach($rawData as $data){
+            $favourite = $this->favouriteBuilder($data);
+            $favourites[] = $favourite;
+        }
+        return $favourites;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findOneBy(array $column, array $orderBy = null){
+        $rawData = parent::findOneBy($column, $orderBy);
+
+        $favourite = $this->favouriteBuilder($rawData);
+        return $favourite;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findBy(array $column, array $orderBy = null){
+        $rawData = parent::findBy($column, $orderBy);
+
+        $favourites = [];
+        foreach($rawData as $data){
+            $favourite = $this->favouriteBuilder($data);
+            $favourites[] = $favourite;
+        }
+        return $favourites;
+    }
+
+    /**
+     * Builds a Song object
+     */
+    private function favouriteBuilder($data): FavouriteEntity
+    {
+        $favourite = new FavouriteEntity;
+        $favourite->setId($data->favourite_id);
+        $favourite->setSong($data->song_id);
+        $favourite->setUser($data->user_id);
+
+        return $favourite;
+    }
 
     public function checkFavourite(string $songId, string $userId): int{
         //prepare() permet simplement d'éviter les injections sql
