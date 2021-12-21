@@ -42,9 +42,11 @@
             <h2>Autres chansons liées à ce film :</h2>
             <table class="admin-table">
                 <tr><th>Titre</th><th>Ordre</th></tr>
-                <?php foreach ($movieSongs as $movieSong): ?>
+                <?php
+                /** @var App\Entities\Song $movieSong */
+                foreach ($movieSongs as $movieSong): ?>
                     <?php if($movieSong->getId() != $song->getId()): ?>
-                        <tr><td><?= $movieSong->getTitle() ?></td><td><?= $movieSong->getOrder() ?></td></tr>
+                        <tr><td><a href="/admin/songs/edit/<?= $movieSong->getId() ?>"><?= $movieSong->getTitle() ?></a></td><td><?= $movieSong->getOrder() ?></td></tr>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </table>

@@ -30,7 +30,7 @@
                 </select>
                 <input id="newMovieSuiteField" type="text" name="newMovieSuite" placeholder="Titre de la série" value="">
             </fieldset>
-            <fieldset class="movieInfo">
+            <fieldset class="mainInfo">
                 <legend>Infos concernant le film</legend>
                 <label for="movieImg">Affiche</label>
                 <input type="text" id="movieImg" name="movieImg" placeholder="Affiche" value="<?= $movie->getImg() ? $movie->getImg() : '' ?>" required="required">
@@ -48,14 +48,15 @@
             <input type="submit" name="submitButton" value="Valider">
         </form>
         <?php if(count($songs) > 0): ?>
-        <h2>Liste des musiques</h2>
-        <ul class="admin-list">
-            <?php
-            /** @var App\Entities\Song $song */
-            foreach ($songs as $song): ?>
-                <li><?= $song->getTitle() ?></li>
-            <?php endforeach; ?>
-        </ul>
+            <h2>Liste des musiques de ce film :</h2>
+            <table class="admin-table">
+                <tr><th>Titre</th><th>Ordre</th></tr>
+                <?php
+                /** @var App\Entities\Song $song */
+                foreach ($songs as $song): ?>
+                    <tr><td><a href="/admin/songs/edit/<?= $song->getId() ?>"><?= $song->getTitle() ?></a></td><td><?= $song->getOrder() ?></td></tr>
+                <?php endforeach; ?>
+            </table>
         <?php endif; ?>
     </div>
 </section>

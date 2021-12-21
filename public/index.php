@@ -34,6 +34,12 @@ $router->setPostRoute('/admin/songs/create', 'App\controllers\Admin\SongControll
 $router->setGetRoute('/admin/songs/edit/:id', 'App\controllers\Admin\SongController@edit');
 $router->setPostRoute('/admin/songs/edit/:id', 'App\controllers\Admin\SongController@edit');
 $router->setGetRoute('/admin/songs/delete/:id', 'App\controllers\Admin\SongController@destroy');
+$router->setGetRoute('/admin/characters', 'App\controllers\Admin\CharacterController@index');
+$router->setGetRoute('/admin/characters/create', 'App\controllers\Admin\CharacterController@create');
+$router->setPostRoute('/admin/characters/create', 'App\controllers\Admin\CharacterController@create');
+$router->setGetRoute('/admin/characters/edit/:id', 'App\controllers\Admin\CharacterController@edit');
+$router->setPostRoute('/admin/characters/edit/:id', 'App\controllers\Admin\CharacterController@edit');
+$router->setGetRoute('/admin/characters/delete/:id', 'App\controllers\Admin\CharacterController@destroy');
 
 $router->setGetRoute('/', 'App\controllers\ViewController@home');
 $router->setGetRoute('/music', 'App\controllers\ViewController@music');
@@ -45,6 +51,7 @@ $router->setGetRoute('/api/checkfavourite', 'App\controllers\ApiController@check
 $router->setGetRoute('/api/addfavourite', 'App\controllers\ApiController@addFavourite');
 $router->setGetRoute('/api/removefavourite', 'App\controllers\ApiController@removeFavourite');
 $router->setGetRoute('/api/getMovieSongs', 'App\controllers\ApiController@getMovieSongs');
+$router->setGetRoute('/api/getMovieCharacters', 'App\controllers\ApiController@getMovieCharacters');
 
 //On utilise la méthode urlCheck contenue dans Router.php
 $router->urlCheck();

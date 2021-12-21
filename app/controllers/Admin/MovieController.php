@@ -35,7 +35,7 @@ class MovieController extends Controller{
     public function edit(int $id){
         /** @var MovieEntity $movie */
         $movie = (new Movie($this->getDB()))->findOneBy(['movie_id' => $id]);
-        $songs = (new Song($this->getDB()))->findBy(['song_movie' => $id]);
+        $songs = (new Song($this->getDB()))->findBy(['song_movie' => $id], ['song_order' => 'ASC']);
         $movieSuites = (new Moviesuite($this->getDB(), 'suite_title'))->all();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){

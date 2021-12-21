@@ -39,13 +39,46 @@ function getMovieSongs(movieId, currentSongId){
  * @param {*} songsList 
  */
 function updateSongsList(songsList, currentSongId) {
-    console.log(songsList);
     $movieSongsList = $('#movieSongsList .admin-table');
     $movieSongsList.empty();
     $movieSongsList.html('<tr><th>Titre</th><th>Ordre</th></tr>');
     songsList.forEach(song => {
         if(song['id'] != currentSongId){
-            $movieSongsList.append('<tr><td>'+song['title']+'</td><td>'+song['order']+'</td></tr>');
+            $movieSongsList.append('<tr><td><a href="/admin/songs/edit/'+song['id']+'">'+song['title']+'</a></td><td>'+song['order']+'</td></tr>');
+        }
+    });
+}
+
+$('select[name="characterMovie"]').on("change", function(e) {
+    let pageUrl = window.location.pathname;
+    let urlSplit = pageUrl.split('/');
+    let currentCharacterId = parseInt(urlSplit[urlSplit.length-1]);
+    getMovieCharacters(e.target.value, currentCharacterId);
+});
+
+function getMovieCharacters(movieId, currentCharacterId){
+    $.ajax({url: '/api/getMovieCharacters', 
+        data: {
+            'movieId': movieId
+        },
+        success: (res) => {
+            updateCharactersList(res['charactersList'], currentCharacterId);
+        }
+    });
+}
+
+/**
+ * Update the movie characters list on the edit and creation page of the amdin panel
+ * 
+ * @param {*} charactersList 
+ */
+function updateCharactersList(charactersList, currentCharacterId) {
+    $movieCharactersList = $('#movieCharactersList .admin-table');
+    $movieCharactersList.empty();
+    $movieCharactersList.html('<tr><th>Nom</th></tr>');
+    charactersList.forEach(character => {
+        if(character['id'] != currentCharacterId){
+            $movieCharactersList.append('<tr><td><a href="/admin/characters/edit/'+character['id']+'">'+character['name']+'</a></td></tr>');
         }
     });
 }
