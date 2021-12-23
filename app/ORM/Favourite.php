@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\ORM;
 
 use PDO;
 use App\Entities\Favourite as FavouriteEntity;
@@ -9,59 +9,7 @@ class Favourite extends Model{
     
     protected $table = 'favourites';
 
-    /**
-     * @inheritdoc
-     */
-    public function all(): array
-    {
-        $rawData = parent::all();
-        
-        $favourites = [];
-        foreach($rawData as $data){
-            $favourite = $this->favouriteBuilder($data);
-            $favourites[] = $favourite;
-        }
-        return $favourites;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function findOneBy(array $column, array $orderBy = null){
-        $rawData = parent::findOneBy($column, $orderBy);
-
-        $favourite = $this->favouriteBuilder($rawData);
-        return $favourite;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function findBy(array $column, array $orderBy = null){
-        $rawData = parent::findBy($column, $orderBy);
-
-        $favourites = [];
-        foreach($rawData as $data){
-            $favourite = $this->favouriteBuilder($data);
-            $favourites[] = $favourite;
-        }
-        return $favourites;
-    }
-
-    /**
-     * Builds a Song object
-     */
-    private function favouriteBuilder($data): FavouriteEntity
-    {
-        $favourite = new FavouriteEntity;
-        $favourite->setId($data->favourite_id);
-        $favourite->setSong($data->song_id);
-        $favourite->setUser($data->user_id);
-
-        return $favourite;
-    }
-
-    public function checkFavourite(string $songId, string $userId): int{
+    public function checkFavourite(int $songId, int $userId): int{
         //prepare() permet simplement d'éviter les injections sql
         $stmt = $this->db->getConnection()->prepare("SELECT * FROM $this->table WHERE song_id=? AND user_id=?");
         //On indique ensuite au statement qu'il doit remplacer le "?" par la variable $id
@@ -71,7 +19,7 @@ class Favourite extends Model{
         return count($stmt->fetchAll(\PDO::FETCH_ASSOC));
     }
 
-    public function addFavourite(string $songId, string $userId): bool{
+    public function addFavourite(int $songId, int $userId): bool{
         //prepare() permet simplement d'éviter les injections sql
         $stmt = $this->db->getConnection()->prepare("INSERT INTO $this->table (song_id, user_id) VALUES (?, ?)");
         //On indique ensuite au statement qu'il doit remplacer le "?" par la variable $id
@@ -81,7 +29,7 @@ class Favourite extends Model{
         return true;
     }
 
-    public function removeFavourite(string $songId, string $userId): bool{
+    public function removeFavourite(int $songId, int $userId): bool{
         //prepare() permet simplement d'éviter les injections sql
         $stmt = $this->db->getConnection()->prepare("DELETE FROM $this->table WHERE song_id=? AND user_id=?");
         //On indique ensuite au statement qu'il doit remplacer le "?" par la variable $id

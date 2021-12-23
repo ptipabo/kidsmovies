@@ -2,13 +2,13 @@
 
 namespace App\controllers;
 
-use App\Models\Song;
+use App\ORM\Song;
 use App\Entities\Song as SongEntity;
-use App\Models\Movie;
-use App\Models\Character;
+use App\ORM\Movie;
+use App\ORM\Character;
 use App\Entities\Character as CharacterEntity;
-use App\Models\Favourite;
-use App\Models\User;
+use App\ORM\Favourite;
+use App\ORM\User;
 
 class ApiController extends Controller{
 

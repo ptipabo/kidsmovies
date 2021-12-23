@@ -2,11 +2,11 @@
 
 namespace App\controllers\Admin;
 
-use App\Models\Song;
+use App\ORM\Song;
 use App\Entities\Song as SongEntity;
-use App\Models\Movie;
+use App\ORM\Movie;
 use App\controllers\Controller;
-use App\Models\Character;
+use App\ORM\Character;
 use App\Entities\Character as CharacterEntity;
 
 class CharacterController extends Controller{
