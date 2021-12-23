@@ -51,7 +51,7 @@
                                 $userDetected = true;
                             }
                         } ?>
-                        <li class="<?= $userDetected ? 'songUser' : 'notSongUser' ?> border favourite userColor_<?= $user['color'] ?>" id="favData_<?= $songs[$i]['id'] ?>_<?= $user['id'][0] ?>" title="<?= $userDetected ? 'Retirer des' : 'Ajouter aux' ?> favoris de <?= $user['name'] ?>"><?= $user['name'][0] ?></li>
+                        <li class="<?= $userDetected ? 'songUser' : 'notSongUser' ?> border favourite userColor_<?= $user['color'] ?>" id="favData_<?= $songs[$i]['id'] ?>_<?= $user['id'] ?>" title="<?= $userDetected ? 'Retirer des' : 'Ajouter aux' ?> favoris de <?= $user['name'] ?>"><?= $user['name'][0] ?></li>
                     <?php endforeach; ?>
                 </ul>
             </div>

@@ -2,12 +2,12 @@
 
 namespace App\controllers\Admin;
 
-use App\Models\Movie;
+use App\ORM\Movie;
 use App\Entities\Movie as MovieEntity;
 use App\controllers\Controller;
-use App\Models\Moviesuite;
+use App\ORM\Moviesuite;
 use App\Entities\Moviesuite as Suite;
-use App\Models\Song;
+use App\ORM\Song;
 
 class MovieController extends Controller{
 

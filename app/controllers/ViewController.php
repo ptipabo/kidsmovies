@@ -2,15 +2,15 @@
 
 namespace App\controllers;
 
-use App\Models\Song;
+use App\ORM\Song;
 use App\Entities\Song as SongEntity;
-use App\Models\Movie;
+use App\ORM\Movie;
 use App\Entities\Movie as MovieEntity;
-use App\Models\Character;
+use App\ORM\Character;
 use App\Entities\Character as CharacterEntity;
-use App\Models\Favourite;
+use App\ORM\Favourite;
 use App\Entities\Favourite as FavouriteEntity;
-use App\Models\User;
+use App\ORM\User;
 use App\Entities\User as UserEntity;
 
 class ViewController extends Controller{
@@ -134,7 +134,7 @@ class ViewController extends Controller{
         $favourites = new Favourite($this->getDB());
         $favourites = $favourites->all();
 
-        //On récupère la liste de toutes les users
+        //On récupère la liste de tous les users
         $users = new User($this->getDB());
         $users = $users->all();
 
