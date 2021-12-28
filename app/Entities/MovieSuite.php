@@ -2,25 +2,8 @@
 
 namespace App\Entities;
 
-class MovieSuite {
-    private $id;
+class MovieSuite extends BaseEntity {
     private $title;
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
 
     /**
      * @return string

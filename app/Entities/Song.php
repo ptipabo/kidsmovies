@@ -2,29 +2,12 @@
 
 namespace App\Entities;
 
-class Song {
-    private $id;
+class Song extends BaseEntity {
     private $movie;  
     private $title;
     private $video;
     private $censored;
-    private $order; 
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
+    private $order;
 
     /**
      * @return int

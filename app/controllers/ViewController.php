@@ -2,16 +2,18 @@
 
 namespace App\controllers;
 
+use App\ORM\Game;
 use App\ORM\Song;
-use App\Entities\Song as SongEntity;
-use App\ORM\Movie;
-use App\Entities\Movie as MovieEntity;
-use App\ORM\Character;
-use App\Entities\Character as CharacterEntity;
-use App\ORM\Favourite;
-use App\Entities\Favourite as FavouriteEntity;
 use App\ORM\User;
+use App\ORM\Movie;
+use App\ORM\Character;
+use App\ORM\Favourite;
+use App\Entities\Song as SongEntity;
 use App\Entities\User as UserEntity;
+use App\Entities\Movie as MovieEntity;
+use App\Entities\Character as CharacterEntity;
+use App\Entities\Favourite as FavouriteEntity;
+use App\Entities\Game as GameEntity;
 
 class ViewController extends Controller{
 
@@ -64,7 +66,6 @@ class ViewController extends Controller{
             "length" => $movie->getLength(),
             "slug" => $movie->getSlug()
         ];
-        //$movieDetails = json_encode($jsonConstruct);
 
         //On récupère la liste des films liés à celui-ci (s'il y en a)
         $suiteMovies = $movieTable->findBy(['movie_suite' => $movie->getSuite()]);
@@ -83,7 +84,6 @@ class ViewController extends Controller{
                 "slug" => $suiteMovie->getSlug()
             ];
         }
-        //$suiteList = json_encode($jsonConstruct);
 
         //On récupère la liste de toutes les musiques liées à ce film
         $songs = new Song($this->getDB());
@@ -102,7 +102,6 @@ class ViewController extends Controller{
                 "censored" => $song->isCensored(),
              ];
         }
-        //$songs = json_encode($jsonConstruct);
 
         //On récupère la liste de tous les personnages liés à ce film
         $charactersTable = new Character($this->getDB());
@@ -121,7 +120,6 @@ class ViewController extends Controller{
                 "slug" => $movieSlug
             ];
         }
-        //$characters = json_encode($jsonConstruct);
 
         $this->view('content.movie', compact('movieDetails', 'movieSuiteList', 'movieSongs', 'movieCharacters'));
     }
@@ -190,7 +188,7 @@ class ViewController extends Controller{
                 }
             }
 
-            $jsonConstruct[] = [
+            $songs[] = [
                 "id" => $song->getId(),
                 "movie" => str_replace('"', '\"', $songMovie),
                 "movieImg" => $songMovieImg,
@@ -247,8 +245,12 @@ class ViewController extends Controller{
      * Display the games page of the application
      */
     public function games(){
+        // Fetch the list of games
+        $gamesTable = new Game($this->getDB(), 'game_title');
+        $games = $gamesTable->all();
+        
         //On récupère la liste de toutes les musiques
-        $songs = new Song($this->getDB(), 'song_movie');
+        /*$songs = new Song($this->getDB(), 'song_movie');
         $songs = $songs->all();
 
         //On récupère le titre du film correspondant à chaque musique
@@ -256,11 +258,11 @@ class ViewController extends Controller{
         $movies = $movies->all();
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
-        $jsonConstruct = array();
+        $jsonConstruct = array();*/
         /** @var SongEntity $song */
-        foreach($songs as $song){
+        //foreach($songs as $song){
             /** @var MovieEntity $movie */
-            foreach($movies as $movie){
+            /*foreach($movies as $movie){
                 if($movie->getId() === $song->getMovie()){
                     $songMovie = $movie->getTitle();
                     $songMovieImg = $movie->getImg();
@@ -276,8 +278,61 @@ class ViewController extends Controller{
                 "censored" => $song->isCensored(),
             );
         }
-        $songs = $jsonConstruct;
+        $songs = $jsonConstruct;*/
 
-        $this->view('content.games', compact('songs'));
+        //On crée un fichier Json via PHP d'après le résultat de la requête
+        $jsonConstruct = array();
+        /** @var GameEntity $game */
+        foreach($games as $game){
+            $jsonConstruct[] = array(
+                "id" => $game->getId(),
+                "title" => str_replace('"', '\"', $game->getTitle()),
+                "img" => $game->getImg(),
+                "desc" => str_replace('"', '\"', $game->getDesc()),
+            );
+        }
+        $games = $jsonConstruct;
+
+        $this->view('content.games', compact('games'));
+    }
+
+    /**
+     * Display the single game page of the application
+     */
+    public function game(int $gameId){
+        /** @var GameEntity $game */
+        $game = (new Game($this->getDB()))->findOneBy(['game_id' => $gameId]);
+
+        $users = (new User($this->getDB()))->all();
+
+        // Create a json object containing the query's results
+        $jsonConstruct = array();
+        /** @var UserEntity $user */
+        foreach($users as $user){
+            $jsonConstruct[] = array(
+                "id" => $user->getId(),
+                "name" => str_replace('"', '\"', $user->getName()),
+                "color" => str_replace('"', '\"', $user->getColor()),
+            );
+        }
+        $users = $jsonConstruct;
+
+        $characters = (new Character($this->getDB()))->all();
+
+        // Create a json object containing the query's results
+        $jsonConstruct = array();
+        /** @var CharacterEntity $character */
+        foreach($characters as $character){
+            $jsonConstruct[] = array(
+                "id" => $character->getId(),
+                "movie" => str_replace('"', '\"', $character->getMovie()),
+                "name" => str_replace('"', '\"', $character->getName()),
+                "img" => $character->getImg(),
+                "desc" => str_replace('"', '\"', $character->getDesc()),
+            );
+        }
+        $characters = $jsonConstruct;
+
+        $this->view('content.game', compact('game', 'users', 'characters'));
     }
 }

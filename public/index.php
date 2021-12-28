@@ -45,6 +45,7 @@ $router->setGetRoute('/', 'App\controllers\ViewController@home');
 $router->setGetRoute('/music', 'App\controllers\ViewController@music');
 $router->setGetRoute('/characters', 'App\controllers\ViewController@characters');
 $router->setGetRoute('/games', 'App\controllers\ViewController@games');
+$router->setGetRoute('/games/:gameId', 'App\controllers\ViewController@game');
 $router->setGetRoute('/:movieUrl', 'App\controllers\ViewController@movie');
 
 $router->setGetRoute('/api/checkfavourite', 'App\controllers\ApiController@checkFavourite');

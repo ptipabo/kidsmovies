@@ -2,26 +2,9 @@
 
 namespace App\Entities;
 
-class Favourite {
-    private $id;
+class Favourite extends BaseEntity {
     private $song;
     private $user;
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
 
     /**
      * @return int

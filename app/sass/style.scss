@@ -538,6 +538,26 @@ header{
     }
 }
 
+.gameBlock {
+    background-color: rgb(85, 85, 85);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+
+    * {
+        color: white;
+    }
+
+    img {
+        margin: 1rem;
+        height: 6rem;
+    }
+
+    &:hover {
+        background-color: rgb(184, 184, 184);
+    }
+}
+
 .section{
     width:100%;
     display:flex;

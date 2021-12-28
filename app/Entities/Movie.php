@@ -2,8 +2,7 @@
 
 namespace App\Entities;
 
-class Movie {
-    private $id;
+class Movie extends BaseEntity {
     private $suite; 
     private $img; 
     private $title;
@@ -11,22 +10,6 @@ class Movie {
     private $length;
     private $date; 
     private $slug;
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
 
     /**
      * @return int

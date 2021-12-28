@@ -2,42 +2,25 @@
 
 namespace App\Entities;
 
-class Character extends BaseEntity {
-    private $movie;  
-    private $name;
+class Game extends BaseEntity {
+    private $title;
     private $img;
     private $desc;
 
     /**
-     * @return int
-     */
-    public function getMovie(): int
-    {
-        return $this->movie;
-    }
-
-    /**
-     * @param int $movie
-     */
-    public function setMovie(int $movie): void
-    {
-        $this->movie = $movie;
-    }
-
-    /**
      * @return string
      */
-    public function getName(): string
+    public function getTitle(): string
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**
-     * @param string $name
+     * @param string $title
      */
-    public function setName(string $name): void
+    public function setTitle(string $title): void
     {
-        $this->name = $name;
+        $this->title = $title;
     }
 
     /**

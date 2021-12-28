@@ -4,7 +4,7 @@
 ?>
 <script type="module">
     import {setCharactersList} from '../../public/scripts/characters.js';
-    // For the video player to work, we need to pass the songs data to JS
+    // In order to make the character's sheet work, we need to pass the characters data to JS
     setCharactersList(<?= $jsonCharactersList ?>);
 </script>
 

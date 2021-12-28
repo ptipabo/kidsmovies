@@ -10,6 +10,7 @@ use App\Entities\Song as SongEntity;
 use App\Entities\Favourite as FavouriteEntity;
 use App\Entities\MovieSuite as MovieSuiteEntity;
 use App\Entities\User as UserEntity;
+use App\Entities\Game as GameEntity;
 
 abstract class Model{
 
@@ -144,6 +145,13 @@ abstract class Model{
                 $object->setId($data->user_id);
                 $object->setName($data->user_name);
                 $object->setColor($data->user_color);
+                break;
+            case 'games':
+                $object = new GameEntity;
+                $object->setId($data->game_id);
+                $object->setTitle($data->game_title);
+                $object->setImg($data->game_img);
+                $object->setDesc($data->game_desc);
                 break;
             default:
                 $object = null;
