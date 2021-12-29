@@ -609,6 +609,75 @@ header {
   cursor: pointer;
 }
 
+.games-stepA h4 {
+  margin-bottom: 1rem;
+}
+
+.gameLevels {
+  margin: 0 0.5rem;
+}
+.gameResults {
+  background-color: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  top: 40%;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+  border-top: 6px solid red;
+  border-bottom: 6px solid red;
+  padding: 3rem 0;
+}
+.gameResults p {
+  margin-bottom: 1rem;
+}
+.gameResults-list {
+  margin-bottom: 2rem;
+}
+
+.player-field {
+  opacity: 0;
+}
+.player-selection {
+  font-size: 2rem;
+  border: 1px solid grey;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  line-height: 2.8rem;
+}
+.player-selection:hover {
+  cursor: pointer;
+}
+.player-info {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.color-green {
+  color: #45c971;
+}
+.color-blue {
+  color: #2c71f0;
+}
+.color-red {
+  color: #f34242;
+}
+.color-yellow {
+  color: #fcc120;
+}
+.color-orange {
+  color: #fa7537;
+}
+.color-pink {
+  color: #f02ca5;
+}
+.color-grey {
+  color: #646464;
+}
+
 .userColor_green {
   border-color: #45c971;
 }
@@ -618,7 +687,6 @@ header {
 .userColor_green.isActive {
   border: 3px solid #45c971;
 }
-
 .userColor_blue {
   border-color: #2c71f0;
 }
@@ -628,7 +696,6 @@ header {
 .userColor_blue.isActive {
   border: 3px solid #2c71f0;
 }
-
 .userColor_red {
   border-color: #f34242;
 }
@@ -638,7 +705,6 @@ header {
 .userColor_red.isActive {
   border: 3px solid #f34242;
 }
-
 .userColor_yellow {
   border-color: #fcc120;
 }
@@ -648,7 +714,6 @@ header {
 .userColor_yellow.isActive {
   border: 3px solid #fcc120;
 }
-
 .userColor_orange {
   border-color: #fa7537;
 }
@@ -658,7 +723,6 @@ header {
 .userColor_orange.isActive {
   border: 3px solid #fa7537;
 }
-
 .userColor_pink {
   border-color: #f02ca5;
 }
@@ -668,15 +732,14 @@ header {
 .userColor_pink.isActive {
   border: 3px solid #f02ca5;
 }
-
 .userColor_grey {
-  border-color: #727272;
+  border-color: #646464;
 }
 .userColor_grey.songUser {
-  background-color: #727272;
+  background-color: #646464;
 }
 .userColor_grey.isActive {
-  border: 3px solid #727272;
+  border: 3px solid #646464;
 }
 
 .longText {
@@ -721,6 +784,11 @@ header {
 
 .kidsMoviesBtn.redBG:hover {
   background-color: #ff3e0e;
+}
+
+.kidsMoviesBtn:disabled:hover {
+  background-color: #c8c8c8;
+  cursor: initial;
 }
 
 #videoPlayerContainer > iframe {
@@ -806,6 +874,9 @@ header {
   align-items: center;
 }
 
+.backLink {
+  margin-bottom: 1rem;
+}
 .backLink:hover {
   text-decoration: underline;
 }
@@ -822,6 +893,59 @@ header {
 .btn-danger {
   background-color: red;
   color: white;
+}
+
+.memory-stepB-container {
+  text-align: center;
+  position: relative;
+  margin-top: 1rem;
+}
+.memory-disabler {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  opacity: 0;
+  display: none;
+}
+.memory-table {
+  margin-left: auto;
+  margin-right: auto;
+}
+.memory-cell {
+  border-collapse: collapse;
+  position: relative;
+}
+.memory-cell.levelA {
+  width: 150px;
+}
+.memory-cell.levelB {
+  width: 130px;
+}
+.memory-cell.levelC {
+  width: 110px;
+}
+.memory-cell.levelD {
+  width: 90px;
+}
+.memory-backCard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 5000;
+  border-radius: 0.5rem;
+}
+.memory-backCard:hover {
+  cursor: pointer;
+  filter: brightness(1.1);
+}
+.memory-card {
+  width: 100%;
+  border-radius: 0.5rem;
 }
 
 /*# sourceMappingURL=style.css.map */

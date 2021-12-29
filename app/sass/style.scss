@@ -3,10 +3,17 @@ $mediumColor:rgb(170,170,170);
 $medLightColor:rgb(200,200,200);
 $lightColor:rgb(240,240,240);
 $testColor:rgba(255,0,0,0.5);
+
 $blueKids:rgb(100,200,255);
 $redKids:rgb(255, 62, 14);
 $greenKids:rgb(69, 201, 113);
 $yellowKids:rgb(255, 223, 40);
+
+$blueUser:rgb(44, 113, 240);
+$redUser:rgb(243, 66, 66);
+$yellowUser:rgb(252, 193, 32);
+$orangeUser:rgb(250, 117, 55);
+$pinkUser:rgb(240, 44, 165);
 
 @function adaptHeight(){
     $newHeight: (100vw/16)*9;
@@ -708,87 +715,174 @@ header{
     }
 }
 
-.userColor_green{
-    border-color:rgb(69, 201, 113);
-
-    &.songUser{
-        background-color: rgb(69, 201, 113);
-    }
-
-    &.isActive{
-        border:3px solid rgb(69, 201, 113);
+.games{
+    &-stepA {
+        h4 {
+            margin-bottom: 1rem;
+        }
     }
 }
 
-.userColor_blue{
-    border-color:rgb(44, 113, 240);
-
-    &.songUser{
-        background-color: rgb(44, 113, 240);
+.game{
+    &Levels {
+        margin: 0 .5rem;
     }
 
-    &.isActive{
-        border:3px solid rgb(44, 113, 240);
-    }
-}
+    &Results {
+        background-color: rgba(255, 255, 255, 0.8);
+        position: absolute;
+        top: 40%;
+        left: 0;
+        width: 100%;
+        z-index: 10000;
+        border-top: 6px solid red;
+        border-bottom: 6px solid red;
+        padding: 3rem 0;
 
-.userColor_red{
-    border-color:rgb(243, 66, 66);
+        p {
+            margin-bottom: 1rem;
+        }
 
-    &.songUser{
-        background-color: rgb(243, 66, 66);
-    }
-
-    &.isActive{
-        border:3px solid rgb(243, 66, 66);
-    }
-}
-
-.userColor_yellow{
-    border-color:rgb(252, 193, 32);
-
-    &.songUser{
-        background-color: rgb(252, 193, 32);
-    }
-
-    &.isActive{
-        border:3px solid rgb(252, 193, 32);
+        &-list {
+            margin-bottom: 2rem;
+        }
     }
 }
 
-.userColor_orange{
-    border-color:rgb(250, 117, 55);
-
-    &.songUser{
-        background-color: rgb(250, 117, 55);
+.player {
+    &-field {
+        opacity: 0;
     }
 
-    &.isActive{
-        border:3px solid rgb(250, 117, 55);
+    &-selection {
+        font-size: 2rem;
+        border: 1px solid grey;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        line-height: 2.8rem;
+    
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &-info {
+        font-size: 1.3rem;
+        font-weight: 700;
     }
 }
 
-.userColor_pink{
-    border-color:rgb(240, 44, 165);
-
-    &.songUser{
-        background-color: rgb(240, 44, 165);
+.color {
+    &-green {
+        color: $greenKids;
     }
-
-    &.isActive{
-        border:3px solid rgb(240, 44, 165);
+    &-blue {
+        color: $blueUser;
+    }
+    &-red {
+        color: $redUser;
+    }
+    &-yellow {
+        color: $yellowUser;
+    }
+    &-orange {
+        color: $orangeUser;
+    }
+    &-pink {
+        color: $pinkUser;
+    }
+    &-grey {
+        color: $darkColor;
     }
 }
 
-.userColor_grey{
-    border-color:rgb(114, 114, 114);
+.userColor {
+    &_green{
+        border-color:$greenKids;
 
-    &.songUser{
-        background-color: rgb(114, 114, 114);
+        &.songUser{
+            background-color: $greenKids;
+        }
+
+        &.isActive{
+            border:3px solid $greenKids;
+        }
     }
 
-    &.isActive{
-        border:3px solid rgb(114, 114, 114);
+    &_blue{
+        border-color:$blueUser;
+
+        &.songUser{
+            background-color: $blueUser;
+        }
+
+        &.isActive{
+            border:3px solid $blueUser;
+        }
+    }
+
+    &_red{
+        border-color:$redUser;
+    
+        &.songUser{
+            background-color: $redUser;
+        }
+    
+        &.isActive{
+            border:3px solid $redUser;
+        }
+    }
+
+    &_yellow{
+        border-color:$yellowUser;
+    
+        &.songUser{
+            background-color: $yellowUser;
+        }
+    
+        &.isActive{
+            border:3px solid $yellowUser;
+        }
+    }
+
+    &_orange{
+        border-color:$orangeUser;
+    
+        &.songUser{
+            background-color: $orangeUser;
+        }
+    
+        &.isActive{
+            border:3px solid $orangeUser;
+        }
+    }
+
+    &_pink{
+        border-color:$pinkUser;
+    
+        &.songUser{
+            background-color: $pinkUser;
+        }
+    
+        &.isActive{
+            border:3px solid $pinkUser;
+        }
+    }
+
+    &_grey{
+        border-color:$darkColor;
+    
+        &.songUser{
+            background-color: $darkColor;
+        }
+    
+        &.isActive{
+            border:3px solid $darkColor;
+        }
     }
 }
 
@@ -835,6 +929,15 @@ header{
 
 .kidsMoviesBtn.redBG:hover{
     background-color: $redKids;
+}
+
+.kidsMoviesBtn {
+    &:disabled {
+        &:hover {
+            background-color: $medLightColor;
+            cursor: initial;
+        }
+    }
 }
 
 #videoPlayerContainer>iframe{
@@ -941,8 +1044,11 @@ header{
     align-items: center;
 }
 
-.backLink:hover {
-    text-decoration: underline;
+.backLink {
+    margin-bottom: 1rem;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 .btn{
@@ -958,5 +1064,70 @@ header{
     &-danger{
         background-color: red;
         color: white;
+    }
+}
+
+.memory{
+    &-stepB-container{
+        text-align: center;
+        position: relative;
+        margin-top: 1rem;
+    }
+
+    &-disabler {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 9999;
+        opacity: 0;
+        display: none;
+    }
+
+    &-table {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &-cell {
+        border-collapse: collapse;
+        position: relative;
+
+        &.levelA {
+            width: 150px;
+        }
+
+        &.levelB {
+            width: 130px;
+        }
+
+        &.levelC {
+            width: 110px;
+        }
+
+        &.levelD {
+            width: 90px;
+        }
+    }
+
+    &-backCard {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 5000;
+        border-radius: .5rem;
+
+        &:hover {
+            cursor: pointer;
+            filter: brightness(1.1);
+        }
+    }
+
+    &-card {
+        width: 100%;
+        border-radius: .5rem;
     }
 }
