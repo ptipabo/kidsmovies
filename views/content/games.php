@@ -13,13 +13,14 @@
         <?php
         foreach ($games as $game): ?>
             <div class="gameBlock">
-                <h3 class="game-title"><a href="/games/<?= $game['id'] ?>" title="<?= $game['title'] ?>"><?= $game['title'] ?></a></h3>
+                <h3 class="game-title"><?= $game['title'] ?></h3>
                 <img src="./img/<?= $game['img'] ?>" alt="<?= $game['title'] ?>">
                 <?php if($game['desc']): ?>
                     <div class="game-desc">
                         <?= $game['desc'] ?>
                     </div>
                 <?php endif; ?>
+                <a href="/games/<?= $game['id'] ?>" title="<?= $game['title'] ?>" class="gameOpenLink">.</a>
             </div>
         <?php endforeach; ?>
     </div>

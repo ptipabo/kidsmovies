@@ -20,7 +20,7 @@
             <!-- Contient la liste des personnages -->
             <?php for($i=0;$i<count($characters);$i++) : ?>
                 <div class="listElement">
-                    <h3><span><?= $characters[$i]['movie'] ?></span><br/><?= $characters[$i]['name'] ?></h3>
+                    <h3><span><?= $characters[$i]['suite'] ?></span><br/><?= $characters[$i]['name'] ?></h3>
                     <img class="elementImg" id="char-<?= $i ?>" title="<?= $characters[$i]['name'] ?>" src="./img/characters/<?= $characters[$i]['img'] ?>" alt="<?= $characters[$i]['name'] ?>" />
                 </div>
             <?php endfor; ?>
@@ -29,7 +29,7 @@
             <img id="charInfoImg" />
             <h3 id="charName"></h3>
             <img id="closeInfo" src="./img/close.png" title="Fermer" onclick="closeInfo()" />
-            <p id="charMovie">Film : <a id="charMovieLink"></a></p>
+            <p id="charMovie">Série de films : <span id="charMovieLink"></span></p>
             <p id="charDesc"></p>
         </div>
     </div>

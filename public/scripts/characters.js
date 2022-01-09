@@ -3,7 +3,7 @@ const $charListDiv = $('#charactersList');
 const $divChar = $('#charInfo');
 const $charImg = $('#charInfoImg');
 const $charName = $('#charName');
-const $movieLink = $('#charMovieLink');
+const $movieSuite = $('#charMovieLink');
 const $charDesc = $('#charDesc');
 
 // Events
@@ -41,9 +41,7 @@ function openInfo(charInfo){
         $charImg.attr('src', './img/characters/'+charInfo.img);
         $charImg.attr('alt', charInfo.name);
         $charName.text(charInfo.name);
-        $movieLink.attr('href', './'+charInfo.slug);
-        $movieLink.attr('title', charInfo.movie);
-        $movieLink.text(charInfo.movie);
+        $movieSuite.text(charInfo.suite);
         $charDesc.text(charInfo.desc);
 
         // Add a class to the characters list div to check if a character's sheet is already open or not
@@ -70,9 +68,7 @@ function closeInfo(){
     $charImg.src = '';
     $charImg.removeAttr('alt');
     $charName.innerHTML = '';
-    $movieLink.innerHTML = '';
-    $movieLink.removeAttr('href');
-    $movieLink.removeAttr('title');
+    $movieSuite.innerHTML = '';
     $charDesc.innerHTML = '';
 }
 

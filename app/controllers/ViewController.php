@@ -8,12 +8,14 @@ use App\ORM\User;
 use App\ORM\Movie;
 use App\ORM\Character;
 use App\ORM\Favourite;
+use App\ORM\Moviesuite;
 use App\Entities\Song as SongEntity;
 use App\Entities\User as UserEntity;
 use App\Entities\Movie as MovieEntity;
 use App\Entities\Character as CharacterEntity;
 use App\Entities\Favourite as FavouriteEntity;
 use App\Entities\Game as GameEntity;
+use App\Entities\MovieSuite as MovieSuiteEntity;
 
 class ViewController extends Controller{
 
@@ -67,6 +69,9 @@ class ViewController extends Controller{
             "slug" => $movie->getSlug()
         ];
 
+        $suiteTable = new MovieSuite($this->getDB(), 'movie_title');
+        $movieSuite = $suiteTable->findOneBy(['suite_id' => $movie->getSuite()]);
+
         //On récupère la liste des films liés à celui-ci (s'il y en a)
         $suiteMovies = $movieTable->findBy(['movie_suite' => $movie->getSuite()]);
 
@@ -105,15 +110,15 @@ class ViewController extends Controller{
 
         //On récupère la liste de tous les personnages liés à ce film
         $charactersTable = new Character($this->getDB());
-        $characters = $charactersTable->findBy(['char_movie' => $movie->getId()], ['char_name' => 'ASC']);
+        $characters = $charactersTable->findBy(['char_suite' => $movie->getSuite()], ['char_name' => 'ASC']);
 
         //On stock la liste des personnages liés à ce film dans un tableau
-        $movieCharacters = [];
+        $suiteCharacters = [];
         /** @var CharacterEntity $character */
         foreach($characters as $character){
-            $movieCharacters[] = [
+            $suiteCharacters[] = [
                 "id" => $character->getId(),
-                "movie" => str_replace('"', '\"', $movie->getTitle()),
+                "suite" => str_replace('"', '\"', $movieSuite->getTitle()),
                 "name" => str_replace('"', '\"', $character->getName()),
                 "img" => $character->getImg(),
                 "desc" => str_replace('"', '\"', $character->getDesc()),
@@ -121,7 +126,7 @@ class ViewController extends Controller{
             ];
         }
 
-        $this->view('content.movie', compact('movieDetails', 'movieSuiteList', 'movieSongs', 'movieCharacters'));
+        $this->view('content.movie', compact('movieDetails', 'movieSuiteList', 'movieSongs', 'suiteCharacters'));
     }
 
     /**
@@ -188,7 +193,7 @@ class ViewController extends Controller{
                 }
             }
 
-            $songs[] = [
+            $jsonConstruct[] = [
                 "id" => $song->getId(),
                 "movie" => str_replace('"', '\"', $songMovie),
                 "movieImg" => $songMovieImg,
@@ -208,32 +213,30 @@ class ViewController extends Controller{
      */
     public function characters(){
         //On récupère la liste de tous les personnages
-        $charactersTable = new Character($this->getDB(), 'char_movie');
+        $charactersTable = new Character($this->getDB(), 'char_suite');
         $characters = $charactersTable->all();
 
-        //On récupère le titre du film correspondant à chaque musique
-        $movies = new Movie($this->getDB());
-        $movies = $movies->all();
+        //On récupère le titre de la série correspondant à chaque personnage
+        $suiteTable = new Moviesuite($this->getDB());
+        $movieSuites = $suiteTable->all();
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = array();
         /** @var CharacterEntity $character */
         foreach($characters as $character){
-            /** @var MovieEntity $movie */
-            foreach($movies as $movie){
-                if($movie->getId() === $character->getMovie()){
-                    $charMovie = $movie->getTitle();
-                    $movieSlug = $movie->getSlug();
+            /** @var MovieSuiteEntity $suite */
+            foreach($movieSuites as $suite){
+                if($suite->getId() === $character->getSuite()){
+                    $charSuite = $suite->getTitle();
                 }
             }
 
             $jsonConstruct[] = array(
                 "id" => $character->getId(),
-                "movie" => str_replace('"', '\"',$charMovie),
+                "suite" => str_replace('"', '\"',$charSuite),
                 "name" => str_replace('"', '\"', $character->getName()),
                 "img" => $character->getImg(),
-                "desc" => str_replace('"', '\"', $character->getDesc()),
-                "slug" => $movieSlug
+                "desc" => str_replace('"', '\"', $character->getDesc())
             );
         }
         $characters = $jsonConstruct;
@@ -325,7 +328,7 @@ class ViewController extends Controller{
         foreach($characters as $character){
             $jsonConstruct[] = array(
                 "id" => $character->getId(),
-                "movie" => str_replace('"', '\"', $character->getMovie()),
+                "suite" => str_replace('"', '\"', $character->getSuite()),
                 "name" => str_replace('"', '\"', $character->getName()),
                 "img" => $character->getImg(),
                 "desc" => str_replace('"', '\"', $character->getDesc()),

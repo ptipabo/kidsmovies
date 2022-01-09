@@ -3,8 +3,8 @@
     $movieSuiteList = $params['movieSuiteList'];
     $movieSongs = $params['movieSongs'];
     $jsonSongsList = json_encode($movieSongs);
-    $movieCharacters = $params['movieCharacters'];
-    $jsonCharactersList = json_encode($movieCharacters);
+    $suiteCharacters = $params['suiteCharacters'];
+    $jsonCharactersList = json_encode($suiteCharacters);
 ?>
 <script type="module">
     import {setMusicsList} from '../../public/scripts/songs.js';
@@ -79,7 +79,7 @@
 </section>
 <?php endif; ?>
 
-<?php if(count($movieCharacters) > 0): ?>
+<?php if(count($suiteCharacters) > 0): ?>
 <section class="section midGreyBG">
     <div class="section-container">
         <h3 class="sectionTitle">Personnages</h3>
@@ -89,10 +89,10 @@
     <div class="section-container d-flex fairSpread">
         <div id="charactersList">
             <!-- Contient la liste des personnages -->
-            <?php for($i=0;$i<count($movieCharacters);$i++) : ?>
+            <?php for($i=0;$i<count($suiteCharacters);$i++) : ?>
                 <div class="listElement">
-                    <h3><?= $movieCharacters[$i]['name'] ?></h3>
-                    <img class="elementImg" id="char-<?= $i ?>" title="<?= $movieCharacters[$i]['name'] ?>" src="./img/characters/<?= $movieCharacters[$i]['img'] ?>" alt="<?= $movieCharacters[$i]['name'] ?>" />
+                    <h3><?= $suiteCharacters[$i]['name'] ?></h3>
+                    <img class="elementImg" id="char-<?= $i ?>" title="<?= $suiteCharacters[$i]['name'] ?>" src="./img/characters/<?= $suiteCharacters[$i]['img'] ?>" alt="<?= $suiteCharacters[$i]['name'] ?>" />
                 </div>
             <?php endfor; ?>
         </div>

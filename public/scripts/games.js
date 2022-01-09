@@ -16,6 +16,7 @@ let gameLevel = 0;
 let firstCardSelected = null;
 let playerScores = [];
 let playerTurn = 0;
+let comboBonus = 1;
 
 usersFields.forEach((userField) => {
     userField.addEventListener('click', () => {
@@ -83,27 +84,27 @@ function initGame(){
         switch(gameLevel){
             case '1':
                 colsNumber = 4;
-                rowsNumber = 4;
+                rowsNumber = 3;
                 cellWidth = 'A';
                 break;
             case '2':
-                colsNumber = 8;
-                rowsNumber = 4;
+                colsNumber = 6;
+                rowsNumber = 5;
                 cellWidth = 'B';
                 break;
             case '3':
-                colsNumber = 8;
-                rowsNumber = 8;
+                colsNumber = 9;
+                rowsNumber = 6;
                 cellWidth = 'C';
                 break;
             case '4':
                 colsNumber = 10;
-                rowsNumber = 10;
+                rowsNumber = 9;
                 cellWidth = 'D';
                 break;
             case '5':
-                colsNumber = 16;
-                rowsNumber = 9;
+                colsNumber = 12;
+                rowsNumber = 11;
                 cellWidth = 'D';
                 break;
             default:
@@ -167,7 +168,8 @@ function initGame(){
                         if(firstCardSelected != cardId){
                             // if the characters are the same on both cards, the player obtain 1 point
                             if(gameCards[firstCardSelected]['id'] == gameCards[cardId]['id']){
-                                playerScores[playerTurn]++;
+                                playerScores[playerTurn] = playerScores[playerTurn]+(1*comboBonus);
+                                comboBonus++;
                                 // if it's not the last player to play, it's the next player's turn
                                 /*
                                 if(playerNameLocation.classList.contains('color-'+usersList[playersList[playerTurn]]['color'])){
@@ -183,6 +185,9 @@ function initGame(){
                                     playerNameLocation.classList.add('color-'+usersList[playersList[playerTurn]]['color']);
                                 }*/
 
+                                playerScoreLocation.innerHTML = playerScores[playerTurn];
+
+                                // Check if these cards were the last ones to be found
                                 let remainingCards = 0;
                                 for(let card of gameCells){
                                     if(card.style.display != 'none'){
@@ -216,10 +221,10 @@ function initGame(){
                                     endMessage.innerHTML = endMsgContent;
                                     stepBSection.appendChild(endMessage);
                                 }else{
-                                    playerScoreLocation.innerHTML = playerScores[playerTurn];
                                     firstCardSelected = null;
                                 }
                             }else{
+                                comboBonus = 1;
                                 let disabler = document.getElementsByClassName('memory-disabler')[0];
                                 disabler.style.display = 'block';
                                 // Wait 2 seconds then hide the cards again

@@ -115,7 +115,7 @@ abstract class Model{
             case 'characters':
                 $object = new CharacterEntity;
                 $object->setId($data->char_id);
-                $object->setMovie($data->char_movie);
+                $object->setSuite($data->char_suite);
                 $object->setName($data->char_name);
                 $object->setImg($data->char_img);
                 $object->setDesc($data->char_desc);
