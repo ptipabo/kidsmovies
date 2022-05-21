@@ -66,6 +66,14 @@ function openPlayer(){
  */
 let player;
 function onYouTubePlayerAPIReady() {
+    if(playList[videoToPlay].censored){
+        console.log('testB');
+        let censoredBlock = addElement('div', ['className'], ['censoredBlock random']);
+        let moviePicture = addElement('img', ['src'], [playList[videoToPlay].movieImg]);
+        censoredBlock.append(moviePicture);
+        $videoPlayerContainer.append(censoredBlock);
+    }
+
     player = new YT.Player('videoPlayer-jukeBox', {
         'videoId': playList[videoToPlay].youtubeId,
         'events': {

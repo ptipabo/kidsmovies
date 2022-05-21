@@ -4,6 +4,7 @@ const startBtn = document.getElementById('startGame');
 const stepASection = document.getElementById('games-stepA');
 const stepBSection = document.getElementById('games-stepB');
 const playerNameLocation = document.getElementById('playerName');
+const roundCounterLocation = document.getElementById('roundCounter');
 const playerScoreLocation = document.getElementById('playerScore');
 const pathName = window.location.pathname;
 const gameId = pathName.split('/').at(-1);
@@ -142,7 +143,7 @@ function initGame(){
             for(let i=0; i<rowsNumber; i++){
                 tableContent += '<tr>';
                 for(let y=0; y<colsNumber; y++){
-                    tableContent += '<td id="card_'+charCounter+'" class="memory-cell level'+cellWidth+'"><img class="memory-backCard" src="/img/memory-backCard.jpg"><img id="character_'+charCounter+'" class="memory-card" src="/img/characters/'+gameCards[charCounter]['img']+'" alt="Image not found"></td>';
+                    tableContent += '<td id="card_'+charCounter+'" class="memory-cell level'+cellWidth+'"><img class="memory-backCard" src="/img/games/memory-backCard.jpg"><img id="character_'+charCounter+'" class="memory-card" src="/img/characters/'+gameCards[charCounter]['img']+'" alt="Image not found"></td>';
                     charCounter++;
                 }
                 tableContent += '</tr>';
@@ -150,6 +151,7 @@ function initGame(){
 
             gameDisabler.innerHTML = '.';
             gameArea.innerHTML = tableContent;
+            let roundCounter = 1;
             
             gameContainer.appendChild(gameDisabler);
             gameContainer.appendChild(gameArea);
@@ -207,7 +209,7 @@ function initGame(){
                                     });
                                     finalResults = finalResults.reverse();
                                     
-                                    let endMsgContent = '<p>GAGANT : <span class="player-info color-'+usersList[finalResults[0][0]]['color']+'">'+usersList[finalResults[0][0]]['name']+'</span> avec <span class="player-info">'+finalResults[0][1]+'</span> points, Félicitations!</p>';
+                                    let endMsgContent = '<p>GAGANT : <span class="player-info color-'+usersList[finalResults[0][0]]['color']+'">'+usersList[finalResults[0][0]]['name']+'</span> avec <span class="player-info">'+finalResults[0][1]+'</span> points en '+roundCounter+' tours, Félicitations!</p>';
                                     if(playersList.length > 1){
                                         endMsgContent += '<p>Scores des autres joueurs :</p>';
                                         endMsgContent += '<ul class="gameResults-list">';
@@ -239,8 +241,10 @@ function initGame(){
                                     if(playerTurn < playersList.length-1){
                                         playerTurn++;
                                     }else{// else it's the first player to play
+                                        roundCounter++;
                                         playerTurn = 0;
                                     }
+                                    roundCounterLocation.innerHTML = roundCounter+'<sup>'+(roundCounter === 1?'er':'ème')+'</sup>';
                                     playerNameLocation.innerHTML = usersList[playersList[playerTurn]]['name'];
                                     if(!playerNameLocation.classList.contains('color-'+usersList[playersList[playerTurn]]['color'])){
                                         playerNameLocation.classList.add('color-'+usersList[playersList[playerTurn]]['color']);

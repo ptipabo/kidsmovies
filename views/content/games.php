@@ -14,7 +14,7 @@
         foreach ($games as $game): ?>
             <div class="gameBlock">
                 <h3 class="game-title"><?= $game['title'] ?></h3>
-                <img src="./img/<?= $game['img'] ?>" alt="<?= $game['title'] ?>">
+                <img src="./img/games/<?= $game['img'] ?>" alt="<?= $game['title'] ?>">
                 <?php if($game['desc']): ?>
                     <div class="game-desc">
                         <?= $game['desc'] ?>

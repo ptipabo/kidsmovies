@@ -562,6 +562,10 @@ header {
   width: 40px;
   height: 30px;
   font-weight: bolder;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: rgba(255, 255, 255, 0);
 }
 .usersList_user:hover {
   border: 1px solid #646464;
@@ -660,6 +664,10 @@ header {
   padding: 1rem;
   margin-bottom: 1rem;
   line-height: 2.8rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: rgba(255, 255, 255, 0);
 }
 .player-selection:hover {
   cursor: pointer;
@@ -804,6 +812,11 @@ header {
   cursor: initial;
 }
 
+#videoPlayerContainer.random {
+  position: relative;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 #videoPlayerContainer > iframe {
   margin-bottom: 20px;
 }
@@ -817,6 +830,15 @@ header {
   left: 0;
   z-index: 5000;
   text-align: center;
+}
+.censoredBlock.random {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+.censoredBlock.random img {
+  margin-top: 0rem;
+  height: 100%;
 }
 .censoredBlock img {
   margin-top: 10rem;

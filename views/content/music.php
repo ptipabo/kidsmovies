@@ -17,7 +17,7 @@
         <ul class="usersList">
             <?php
                 foreach($users as $user){
-                    echo '<li class="usersList_user user_'.$user['id'].' userColor_'.strToLower($user['color']).'" title="'.$user['name'].'">'.strToUpper($user['name'][0]).'</li>';
+                    echo '<li class="usersList_user user_'.$user['id'].' userColor_'.strToLower($user['color']).'" title="'.$user['name'].'" style="background-image:url(\'/img/users/'.strToLower($user['name']).'.jpg\');">'.strToUpper($user['name'][0]).'</li>';
                 }
             ?>   
         </ul>
@@ -28,7 +28,7 @@
     <div id="videoPlayerSection" class="section-container">
         <button id="randomJukeboxBtn" class="kidsMoviesBtn yellowBG">Random jukebox</button>
         <button id="randowJukeboxBtnStop" class="kidsMoviesBtn redBG hidden">Arrêter le Jukebox</button>
-        <div id="videoPlayerContainer">
+        <div id="videoPlayerContainer" class="random">
             <div id="videoPlayer-jukeBox"></div>
         </div>
     </div>

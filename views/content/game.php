@@ -25,7 +25,7 @@
                 <div>
                     <h4>Qui va jouer ?</h4>
                     <?php foreach($users as $key => $user): ?>
-                        <input type="checkbox" id="players-<?= $key ?>" value="<?= $key ?>" name="playersList" class="player-field"><label class="player-selection userColor_<?= $user['color'] ?>" for="players-<?= $key ?>"><?= substr(strtoupper($user['name']), 0, 1) ?></label>
+                        <input type="checkbox" id="players-<?= $key ?>" value="<?= $key ?>" name="playersList" class="player-field"><label class="player-selection userColor_<?= $user['color'] ?>" for="players-<?= $key ?>" style="background-image:url('/img/users/<?= strToLower($user['name']) ?>.jpg');"><?= substr(strtoupper($user['name']), 0, 1) ?></label>
                     <?php endforeach; ?>
                 </div>
                 <div>
@@ -49,7 +49,7 @@
         <?php elseif($game->getTitle() == 'Memory'): ?>
             <div id="games-stepB" class="memory-stepB hidden">
                 <a href="/games/<?= $game->getId() ?>" class="backLink">Retour</a>
-                <p>Au tour de <span id="playerName" class="player-info"></span></p>
+                <p>Au tour de <span id="playerName" class="player-info"></span> (<span id="roundCounter">1<sup>er</sup></span> tour)</p>
                 <p>Score actuel : <span id="playerScore" class="player-info">0</span> point(s)</p>
                 <div id="memory-stepB-container" class="memory-stepB-container"></div>
             </div>

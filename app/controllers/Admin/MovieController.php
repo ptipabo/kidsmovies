@@ -73,7 +73,7 @@ class MovieController extends Controller{
             // Creates a new movie suite and associate it with this new movie
             if((new MovieSuite($this->getDB()))->createSuite($newMovieSuite)){
                 $movieSuite =  (new Moviesuite($this->getDB()))->findOneBy(['suite_title' => $newMovieSuite->getTitle()]);
-                $newMovie->setSuite($movieSuite->suite_id);
+                $newMovie->setSuite($movieSuite->getId());
             }
         }
         if(isset($request['movieImg']) && !empty($request['movieImg']) 
