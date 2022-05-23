@@ -7,8 +7,11 @@ use App\Entities\Song as SongEntity;
 use App\ORM\Movie;
 use App\ORM\Character;
 use App\Entities\Character as CharacterEntity;
+use App\Entities\MemoryScore as MemoryScoreEntity;
 use App\ORM\Favourite;
+use App\ORM\MemoryScore;
 use App\ORM\User;
+use DateTime;
 
 class ApiController extends Controller{
 
@@ -19,7 +22,7 @@ class ApiController extends Controller{
         if(isset($_GET['userId']) && isset($_GET['songId'])){
             $songId = $_GET['songId'];
             $userId = $_GET['userId'];
-            //On récupère la liste de tous les favoris
+            //Connexion to the "favourites" table
             $favourites = new Favourite($this->getDB());
             $favouriteFound = $favourites->checkFavourite($songId, $userId);
 
@@ -31,8 +34,7 @@ class ApiController extends Controller{
                 echo json_encode( ['success' => false, 'error' => 'No data found for these parameters.'] );
             }
         }else{
-            header('Content-type: application/json');
-                echo json_encode( ['success' => false, 'error' => 'Missing GET data : userId and/or songId not defined.'] );
+            $this->sendMissingDataResponse();
         }
     }
 
@@ -43,20 +45,13 @@ class ApiController extends Controller{
         if(isset($_GET['userId']) && isset($_GET['songId'])){
             $songId = $_GET['songId'];
             $userId = $_GET['userId'];
-            //On récupère la liste de tous les favoris
+            //Connexion to the "favourites" table
             $favourites = new Favourite($this->getDB());
             $favouriteFound = $favourites->addFavourite($songId, $userId);
 
-            if($favouriteFound == true){
-                header('Content-type: application/json');
-                echo json_encode( ['success' => true, 'error' => ''] );
-            }else{
-                header('Content-type: application/json');
-                echo json_encode( ['success' => false, 'error' => 'Operation failed.'] );
-            }
+            $this->sendResponse($favouriteFound);
         }else{
-            header('Content-type: application/json');
-                echo json_encode( ['success' => false, 'error' => 'Missing GET data : userId and/or songId not defined.'] );
+            $this->sendMissingDataResponse();
         }
     }
 
@@ -67,20 +62,13 @@ class ApiController extends Controller{
         if(isset($_GET['userId']) && isset($_GET['songId'])){
             $songId = $_GET['songId'];
             $userId = $_GET['userId'];
-            //On récupère la liste de tous les favoris
+            //Connexion to the "favourites" table
             $favourites = new Favourite($this->getDB());
             $favouriteFound = $favourites->removeFavourite($songId, $userId);
 
-            if($favouriteFound == true){
-                header('Content-type: application/json');
-                echo json_encode( ['success' => true, 'error' => ''] );
-            }else{
-                header('Content-type: application/json');
-                echo json_encode( ['success' => false, 'error' => 'Operation failed.'] );
-            }
+            $this->sendResponse($favouriteFound);
         }else{
-            header('Content-type: application/json');
-            echo json_encode( ['success' => false, 'error' => 'Missing GET data : userId and/or songId not defined.'] );
+            $this->sendMissingDataResponse();
         }
     }
 
@@ -104,8 +92,7 @@ class ApiController extends Controller{
             header('Content-type: application/json');
             echo json_encode( ['success' => true, 'songsList' => $songsListFinal, 'error' => ''] );
         }else{
-            header('Content-type: application/json');
-            echo json_encode( ['success' => false, 'error' => 'Missing GET data : movieId not defined.'] );
+            $this->sendMissingDataResponse();
         }
     }
 
@@ -128,8 +115,54 @@ class ApiController extends Controller{
             header('Content-type: application/json');
             echo json_encode( ['success' => true, 'charactersList' => $charactersListFinal, 'error' => ''] );
         }else{
-            header('Content-type: application/json');
-            echo json_encode( ['success' => false, 'error' => 'Missing GET data : movieId not defined.'] );
+            $this->sendMissingDataResponse();
         }
+    }
+
+    /**
+     * Add the score of a player to the memory game scores
+     */
+    public function addMemoryScore(){
+        if(isset($_GET['userId']) && isset($_GET['score']) && isset($_GET['numberOfTurns']) && isset($_GET['difficultyMode']) && isset($_GET['numberOfPlayers'])){
+            $newScore = new MemoryScoreEntity();
+            $newScore->setUser($_GET['userId']);
+            $newScore->setDate(new DateTime());
+            $newScore->setScore($_GET['score']);
+            $newScore->setNumberOfTurns($_GET['numberOfTurns']);
+            $newScore->setDifficultyMode($_GET['difficultyMode']);
+            $newScore->setNumberOfPlayers($_GET['numberOfPlayers']);
+
+            //Connexion to the "memory_score" table
+            $memoryScore = new MemoryScore($this->getDB());
+            $scoreSaved = $memoryScore->addScore($newScore);
+
+            $this->sendResponse($scoreSaved);
+            
+        }else{
+            $this->sendMissingDataResponse();
+        }
+    }
+
+    /**
+     * Send a response in json format
+     */
+    private function sendResponse(bool $response)
+    {
+        if($response == true){
+            header('Content-type: application/json');
+            echo json_encode( ['success' => true, 'error' => ''] );
+        }else{
+            header('Content-type: application/json');
+            echo json_encode( ['success' => false, 'error' => 'Operation failed.'] );
+        }
+    }
+
+    /**
+     * Send a "Missing data" response in json format
+     */
+    private function sendMissingDataResponse()
+    {
+        header('Content-type: application/json');
+        echo json_encode( ['success' => false, 'error' => 'Missing GET data.'] );
     }
 }

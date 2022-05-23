@@ -51,6 +51,7 @@ $router->setGetRoute('/:movieUrl', 'App\controllers\ViewController@movie');
 $router->setGetRoute('/api/checkfavourite', 'App\controllers\ApiController@checkFavourite');
 $router->setGetRoute('/api/addfavourite', 'App\controllers\ApiController@addFavourite');
 $router->setGetRoute('/api/removefavourite', 'App\controllers\ApiController@removeFavourite');
+$router->setGetRoute('/api/addmemoryscore', 'App\controllers\ApiController@addMemoryScore');
 $router->setGetRoute('/api/getMovieSongs', 'App\controllers\ApiController@getMovieSongs');
 $router->setGetRoute('/api/getMovieCharacters', 'App\controllers\ApiController@getMovieCharacters');
 

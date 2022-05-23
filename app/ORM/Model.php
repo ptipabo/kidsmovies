@@ -11,6 +11,7 @@ use App\Entities\Favourite as FavouriteEntity;
 use App\Entities\MovieSuite as MovieSuiteEntity;
 use App\Entities\User as UserEntity;
 use App\Entities\Game as GameEntity;
+use App\Entities\MemoryScore as MemoryScoreEntity;
 
 abstract class Model{
 
@@ -152,6 +153,16 @@ abstract class Model{
                 $object->setTitle($data->game_title);
                 $object->setImg($data->game_img);
                 $object->setDesc($data->game_desc);
+                break;
+            case 'memory_score':
+                $object = new MemoryScoreEntity;
+                $object->setId($data->memory_score_id);
+                $object->setUser($data->memory_score_user);
+                $object->setDate($data->memory_score_date);
+                $object->setScore($data->memory_score_score);
+                $object->setNumberOfTurns($data->memory_score_numberofturns);
+                $object->setDifficultyMode($data->memory_score_difficultymode);
+                $object->setNumberOfTurns($data->memory_score_numberofplayers);
                 break;
             default:
                 $object = null;

@@ -210,10 +210,12 @@ function initGame(){
                                     finalResults = finalResults.reverse();
                                     
                                     let endMsgContent = '<p>GAGANT : <span class="player-info color-'+usersList[finalResults[0][0]]['color']+'">'+usersList[finalResults[0][0]]['name']+'</span> avec <span class="player-info">'+finalResults[0][1]+'</span> points en '+roundCounter+' tours, Félicitations!</p>';
+                                    saveScore(usersList[finalResults[0][0]]['id'], finalResults[0][1], roundCounter, gameLevel, playersList.length);
                                     if(playersList.length > 1){
                                         endMsgContent += '<p>Scores des autres joueurs :</p>';
                                         endMsgContent += '<ul class="gameResults-list">';
                                         for(let i=1;i<finalResults.length;i++){
+                                            saveScore(usersList[finalResults[i][0]]['id'], finalResults[i][1], roundCounter, gameLevel, playersList.length);
                                             endMsgContent += '<li>'+usersList[finalResults[i][0]]['name']+' => '+finalResults[i][1]+'</li>'
                                         }
                                         endMsgContent += '</ul>';
@@ -295,4 +297,16 @@ function shuffleArray(array) {
     }
 
     return array;
+}
+
+function saveScore(userId, score, turnsNbr, difficultyMode, playersNbr) {
+    $.ajax({url: '/api/addmemoryscore', 
+    data: {
+        'userId': userId,
+        'score': score,
+        'numberOfTurns': turnsNbr,
+        'difficultyMode': difficultyMode,
+        'numberOfPlayers': playersNbr
+    }
+});
 }
