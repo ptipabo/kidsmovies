@@ -16,6 +16,8 @@ use App\Entities\Character as CharacterEntity;
 use App\Entities\Favourite as FavouriteEntity;
 use App\Entities\Game as GameEntity;
 use App\Entities\MovieSuite as MovieSuiteEntity;
+use App\Entities\MemoryScore as MemoryScoreEntity;
+use App\ORM\MemoryScore;
 
 class ViewController extends Controller{
 
@@ -251,7 +253,9 @@ class ViewController extends Controller{
         // Fetch the list of games
         $gamesTable = new Game($this->getDB(), 'game_title');
         $games = $gamesTable->all();
-        
+        $memoryScoresTable = new MemoryScore($this->getDB(), 'memory_score_score', 'DESC');
+        $memoryScores = $memoryScoresTable->all();
+
         //On récupère la liste de toutes les musiques
         /*$songs = new Song($this->getDB(), 'song_movie');
         $songs = $songs->all();
@@ -287,12 +291,34 @@ class ViewController extends Controller{
         $jsonConstruct = array();
         /** @var GameEntity $game */
         foreach($games as $game){
-            $jsonConstruct[] = array(
-                "id" => $game->getId(),
-                "title" => str_replace('"', '\"', $game->getTitle()),
-                "img" => $game->getImg(),
-                "desc" => str_replace('"', '\"', $game->getDesc()),
-            );
+            if($game->getTitle() == "Memory"){
+                $highScores = [];
+                /** @var MemoryScoreEntity */
+                foreach ($memoryScores as $score){
+                    $highScores[] = [
+                        "player" => $score->getUser(),
+                        "level" => $score->getDifficultyMode(),
+                        "score" => $score->getScore(),
+                        "roundsNumber" => $score->getNumberOfTurns(),
+                        "playersNumber" => $score->getNumberOfPlayers()
+                    ];
+                }
+                $jsonConstruct[] = [
+                    "id" => $game->getId(),
+                    "title" => str_replace('"', '\"', $game->getTitle()),
+                    "img" => $game->getImg(),
+                    "desc" => str_replace('"', '\"', $game->getDesc()),
+                    "highScores" => $highScores
+                ];
+            }else{
+                $jsonConstruct[] = [
+                    "id" => $game->getId(),
+                    "title" => str_replace('"', '\"', $game->getTitle()),
+                    "img" => $game->getImg(),
+                    "desc" => str_replace('"', '\"', $game->getDesc()),
+                ];
+            }
+
         }
         $games = $jsonConstruct;
 

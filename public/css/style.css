@@ -600,22 +600,36 @@ header {
   margin-bottom: 1rem;
 }
 
-.gameBlock {
+.gameBlock__btn {
   position: relative;
   background-color: #555555;
   border-radius: 1rem;
   padding: 1rem;
   margin: 1rem;
 }
-.gameBlock * {
+.gameBlock__btn * {
   color: white;
 }
-.gameBlock img {
+.gameBlock__btn img {
   margin: 1rem;
   height: 6rem;
 }
-.gameBlock:hover {
+.gameBlock__btn:hover {
   background-color: #b8b8b8;
+}
+.gameBlock__highScores-table {
+  border-collapse: collapse;
+  width: auto;
+  margin: 0.3rem auto 0.6rem;
+}
+.gameBlock__highScores-table-cell {
+  border: 1px solid #646464;
+  padding: 0.3rem;
+}
+.gameBlock__highScores-table-cell--head {
+  color: white;
+  font-weight: 700;
+  background-color: #646464;
 }
 .gameLevels {
   margin: 0 0.5rem;

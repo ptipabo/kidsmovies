@@ -12,6 +12,7 @@ use App\Entities\MovieSuite as MovieSuiteEntity;
 use App\Entities\User as UserEntity;
 use App\Entities\Game as GameEntity;
 use App\Entities\MemoryScore as MemoryScoreEntity;
+use DateTime;
 
 abstract class Model{
 
@@ -20,7 +21,7 @@ abstract class Model{
     protected $orderBy = null;
     protected $findByMovie = null;
 
-    public function __construct(ServerConnection $db = null, string $orderBy = null){
+    public function __construct(ServerConnection $db = null, string $orderBy = null, string $orderDirection = 'ASC'){
         //On stock la connection à la base de données
         $this->db = $db;
         
@@ -28,6 +29,8 @@ abstract class Model{
         if($orderBy !== null){
             $this->orderBy = $orderBy;
         }
+
+        $this->orderDirection = $orderDirection;
     }
 
     /**
@@ -36,7 +39,7 @@ abstract class Model{
     public function all(): array
     {
         if($this->orderBy != null){
-            $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} ORDER BY {$this->orderBy} ASC");
+            $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} ORDER BY {$this->orderBy} {$this->orderDirection}");
         }
         else{
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table}");
@@ -157,12 +160,13 @@ abstract class Model{
             case 'memory_score':
                 $object = new MemoryScoreEntity;
                 $object->setId($data->memory_score_id);
-                $object->setUser($data->memory_score_user);
-                $object->setDate($data->memory_score_date);
+                $object->setUser($data->user_id);
+                $newDateTime = new DateTime();
+                $object->setDate($newDateTime->setTimestamp(strtotime($data->memory_score_date)));
                 $object->setScore($data->memory_score_score);
                 $object->setNumberOfTurns($data->memory_score_numberofturns);
                 $object->setDifficultyMode($data->memory_score_difficultymode);
-                $object->setNumberOfTurns($data->memory_score_numberofplayers);
+                $object->setNumberOfPlayers($data->memory_score_numberofplayers);
                 break;
             default:
                 $object = null;
