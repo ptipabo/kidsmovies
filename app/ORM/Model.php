@@ -18,19 +18,17 @@ abstract class Model{
 
     protected $db;
     protected $table;
-    protected $orderBy = null;
+    protected $orderBy = [];
     protected $findByMovie = null;
 
-    public function __construct(ServerConnection $db = null, string $orderBy = null, string $orderDirection = 'ASC'){
+    public function __construct(ServerConnection $db = null, array $orderBy = []){
         //On stock la connection à la base de données
         $this->db = $db;
         
         //Si on le souhaite, on peut trier les résultats selon les besoins
-        if($orderBy !== null){
+        if(count($orderBy) > 0){
             $this->orderBy = $orderBy;
         }
-
-        $this->orderDirection = $orderDirection;
     }
 
     /**
@@ -38,8 +36,20 @@ abstract class Model{
      */
     public function all(): array
     {
-        if($this->orderBy != null){
-            $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table} ORDER BY {$this->orderBy} {$this->orderDirection}");
+        if(count($this->orderBy) > 0){
+            $orderNumber = count($this->orderBy);
+            $query = "SELECT * FROM {$this->table} ORDER BY ";
+            $orderCounter = 0;
+            foreach ($this->orderBy as $orderBy => $orderDirection){
+                if($orderCounter < $orderNumber){
+                    $query .= $orderBy." ".$orderDirection;
+                }
+                $orderCounter++;
+                if($orderCounter < $orderNumber){
+                    $query .= ", ";
+                }
+            }
+            $stmt = $this->db->getConnection()->query($query);
         }
         else{
             $stmt = $this->db->getConnection()->query("SELECT * FROM {$this->table}");
@@ -119,7 +129,7 @@ abstract class Model{
             case 'characters':
                 $object = new CharacterEntity;
                 $object->setId($data->char_id);
-                $object->setSuite($data->char_suite);
+                $object->setMovie($data->char_movie);
                 $object->setName($data->char_name);
                 $object->setImg($data->char_img);
                 $object->setDesc($data->char_desc);

@@ -10,14 +10,14 @@ use App\controllers\Controller;
 class SongController extends Controller{
 
     public function index(){
-        $songs = (new Song($this->getDB(), 'song_title'))->all();
-        $movies = (new Movie($this->getDB(), 'movie_title'))->all();
+        $songs = (new Song($this->getDB(), ['song_title' => 'ASC']))->all();
+        $movies = (new Movie($this->getDB(), ['movie_title' => 'ASC']))->all();
 
         return $this->view('admin.song.index', compact('songs', 'movies'));
     }
 
     public function create(){
-        $movies = (new Movie($this->getDB(), 'movie_title'))->all();
+        $movies = (new Movie($this->getDB(), ['movie_title' => 'ASC']))->all();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
             $newSong = $this->fetchData($_POST);
@@ -35,7 +35,7 @@ class SongController extends Controller{
         /** @var SongEntity $song */
         $song = $songsTable->findOneBy(['song_id' => $id]);
         $movieSongs = $songsTable->findBy(['song_movie' => $song->getMovie()], ['song_order' => 'ASC']);
-        $movies = (new Movie($this->getDB(), 'movie_title'))->all();
+        $movies = (new Movie($this->getDB(), ['movie_title' => 'ASC']))->all();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
            $newSong = $this->fetchData($_POST, $id);

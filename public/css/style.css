@@ -617,6 +617,11 @@ header {
 .gameBlock__btn:hover {
   background-color: #b8b8b8;
 }
+.gameBlock__highScores {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #aaaaaa;
+}
 .gameBlock__highScores-table {
   border-collapse: collapse;
   width: auto;
@@ -630,6 +635,9 @@ header {
   color: white;
   font-weight: 700;
   background-color: #646464;
+}
+.gameBlock__highScores-table-cell--highlight {
+  font-weight: bold;
 }
 .gameLevels {
   margin: 0 0.5rem;

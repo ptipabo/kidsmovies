@@ -3,7 +3,7 @@
 namespace App\Entities;
 
 class Character extends BaseEntity {
-    private $suite;  
+    private $movie;  
     private $name;
     private $img;
     private $desc;
@@ -11,17 +11,17 @@ class Character extends BaseEntity {
     /**
      * @return int
      */
-    public function getSuite(): int
+    public function getMovie(): int
     {
-        return $this->suite;
+        return $this->movie;
     }
 
     /**
-     * @param int $suite
+     * @param int $movie
      */
-    public function setSuite(int $suite): void
+    public function setMovie(int $movie): void
     {
-        $this->suite = $suite;
+        $this->movie = $movie;
     }
 
     /**

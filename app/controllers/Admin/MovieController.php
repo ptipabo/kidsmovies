@@ -12,14 +12,14 @@ use App\ORM\Song;
 class MovieController extends Controller{
 
     public function index(){
-        $movies = (new Movie($this->getDB(), 'movie_title'))->all();
-        $movieSuites = (new MovieSuite($this->getDB(), 'suite_title'))->all();
+        $movies = (new Movie($this->getDB(), ['movie_title' => 'ASC']))->all();
+        $movieSuites = (new MovieSuite($this->getDB(), ['suite_title' => 'ASC']))->all();
         
         return $this->view('admin.movie.index', compact('movies', 'movieSuites'));
     }
 
     public function create(){
-        $movieSuites = (new Moviesuite($this->getDB(), 'suite_title'))->all();
+        $movieSuites = (new Moviesuite($this->getDB(), ['suite_title' => 'ASC']))->all();
         
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
             $newMovie = $this->fetchData($_POST);
@@ -36,7 +36,7 @@ class MovieController extends Controller{
         /** @var MovieEntity $movie */
         $movie = (new Movie($this->getDB()))->findOneBy(['movie_id' => $id]);
         $songs = (new Song($this->getDB()))->findBy(['song_movie' => $id], ['song_order' => 'ASC']);
-        $movieSuites = (new Moviesuite($this->getDB(), 'suite_title'))->all();
+        $movieSuites = (new Moviesuite($this->getDB(), ['suite_title' => 'ASC']))->all();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
             $newMovie = $this->fetchData($_POST, $id);

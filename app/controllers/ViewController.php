@@ -26,7 +26,7 @@ class ViewController extends Controller{
      */
     public function home(){
         //On récupère la liste de tous les films triés par titre
-        $movies = new Movie($this->getDB(), 'movie_title');
+        $movies = new Movie($this->getDB(), ['movie_title' => 'ASC']);
         $movies = $movies->all();
         
         //On crée un array d'après le résultat de la requête qui sera ensuite converti en JSON pour passer les données au JS
@@ -54,7 +54,7 @@ class ViewController extends Controller{
      */
     public function movie(string $movieSlug){
         //On se connecte à la table des films via un objet de type film (auquel on indique qu'on voudra récupèrer les films triés d'après leurs titres)
-        $movieTable = new Movie($this->getDB(), 'movie_title');
+        $movieTable = new Movie($this->getDB(), ['movie_title' => 'ASC']);
         //On récupère les infos concernant le film indiqué dans l'url
         /** @var MovieEntity $movie */
         $movie = $movieTable->findOneBy(['movie_url' => $movieSlug]);
@@ -71,7 +71,7 @@ class ViewController extends Controller{
             "slug" => $movie->getSlug()
         ];
 
-        $suiteTable = new MovieSuite($this->getDB(), 'movie_title');
+        $suiteTable = new MovieSuite($this->getDB(), ['movie_title' => 'ASC']);
         $movieSuite = $suiteTable->findOneBy(['suite_id' => $movie->getSuite()]);
 
         //On récupère la liste des films liés à celui-ci (s'il y en a)
@@ -110,11 +110,11 @@ class ViewController extends Controller{
              ];
         }
 
-        //On récupère la liste de tous les personnages liés à ce film
+        //On récupère la liste de tous les personnages liés à cette série de films
         $charactersTable = new Character($this->getDB());
-        $characters = $charactersTable->findBy(['char_suite' => $movie->getSuite()], ['char_name' => 'ASC']);
+        $characters = $charactersTable->findBySuite($movieSuite);
 
-        //On stock la liste des personnages liés à ce film dans un tableau
+        //On stock la liste des personnages liés à cette série de films dans un tableau
         $suiteCharacters = [];
         /** @var CharacterEntity $character */
         foreach($characters as $character){
@@ -144,7 +144,7 @@ class ViewController extends Controller{
         $users = $users->all();
 
         //On récupère la liste de toutes les musiques
-        $songs = new Song($this->getDB(), 'song_title');
+        $songs = new Song($this->getDB(), ['song_title' => 'ASC']);
         $songs = $songs->all();
 
         //On récupère le titre du film correspondant à chaque musique
@@ -215,21 +215,37 @@ class ViewController extends Controller{
      */
     public function characters(){
         //On récupère la liste de tous les personnages
-        $charactersTable = new Character($this->getDB(), 'char_suite');
+        $charactersTable = new Character($this->getDB(), ['char_movie' => 'ASC']);
         $characters = $charactersTable->all();
 
         //On récupère le titre de la série correspondant à chaque personnage
         $suiteTable = new Moviesuite($this->getDB());
         $movieSuites = $suiteTable->all();
 
+        //On récupère le titre de la série correspondant à chaque personnage
+        $movieTable = new Movie($this->getDB());
+        $movies = $movieTable->all();
+
         //On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = array();
         /** @var CharacterEntity $character */
         foreach($characters as $character){
+            
+            $charMovie = '';
+            /** @var MovieEntity $movie */
+            foreach($movies as $movie){
+                if($movie->getId() === $character->getMovie()){
+                    $charMovie = $movie->getTitle();
+                    break;
+                }
+            }
+
+            $charSuite = '';
             /** @var MovieSuiteEntity $suite */
             foreach($movieSuites as $suite){
-                if($suite->getId() === $character->getSuite()){
+                if($movie->getSuite() === $suite->getId()){
                     $charSuite = $suite->getTitle();
+                    break;
                 }
             }
 
@@ -251,10 +267,12 @@ class ViewController extends Controller{
      */
     public function games(){
         // Fetch the list of games
-        $gamesTable = new Game($this->getDB(), 'game_title');
+        $gamesTable = new Game($this->getDB(), ['game_title' => 'ASC']);
         $games = $gamesTable->all();
-        $memoryScoresTable = new MemoryScore($this->getDB(), 'memory_score_score', 'DESC');
+        $memoryScoresTable = new MemoryScore($this->getDB(), ['memory_score_score' => 'DESC', 'memory_score_numberofturns' => 'ASC']);
         $memoryScores = $memoryScoresTable->all();
+        $usersTable = new User($this->getDB());
+        $users = $usersTable->all();
 
         //On récupère la liste de toutes les musiques
         /*$songs = new Song($this->getDB(), 'song_movie');
@@ -295,8 +313,16 @@ class ViewController extends Controller{
                 $highScores = [];
                 /** @var MemoryScoreEntity */
                 foreach ($memoryScores as $score){
+                    $playerName = '';
+                    /** @var UserEntity $user */
+                    foreach($users as $user){
+                        if($user->getId() == $score->getUser()){
+                            $playerName = $user->getName();
+                            break;
+                        }
+                    }
                     $highScores[] = [
-                        "player" => $score->getUser(),
+                        "player" => $playerName,
                         "level" => $score->getDifficultyMode(),
                         "score" => $score->getScore(),
                         "roundsNumber" => $score->getNumberOfTurns(),
@@ -354,7 +380,7 @@ class ViewController extends Controller{
         foreach($characters as $character){
             $jsonConstruct[] = array(
                 "id" => $character->getId(),
-                "suite" => str_replace('"', '\"', $character->getSuite()),
+                "suite" => str_replace('"', '\"', $character->getMovie()),
                 "name" => str_replace('"', '\"', $character->getName()),
                 "img" => $character->getImg(),
                 "desc" => str_replace('"', '\"', $character->getDesc()),

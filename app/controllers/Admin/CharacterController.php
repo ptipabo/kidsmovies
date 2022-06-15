@@ -12,14 +12,14 @@ use App\Entities\Character as CharacterEntity;
 class CharacterController extends Controller{
 
     public function index(){
-        $characters = (new Character($this->getDB(), 'char_name'))->all();
-        $movies = (new Movie($this->getDB(), 'movie_title'))->all();
+        $characters = (new Character($this->getDB(), ['char_name' => 'ASC']))->all();
+        $movies = (new Movie($this->getDB(), ['movie_title' => 'ASC']))->all();
 
         return $this->view('admin.character.index', compact('characters', 'movies'));
     }
 
     public function create(){
-        $movies = (new Movie($this->getDB(), 'movie_title'))->all();
+        $movies = (new Movie($this->getDB(), ['movie_title' => 'ASC']))->all();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
             $newCharacter = $this->fetchData($_POST);
@@ -37,7 +37,7 @@ class CharacterController extends Controller{
         /** @var CharacterEntity $character */
         $character = $charactersTable->findOneBy(['char_id' => $id]);
         $movieCharacters = $charactersTable->findBy(['char_movie' => $character->getMovie()], ['char_name' => 'ASC']);
-        $movies = (new Movie($this->getDB(), 'movie_title'))->all();
+        $movies = (new Movie($this->getDB(), ['movie_title' => 'ASC']))->all();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submitButton'])){
            $newCharacter = $this->fetchData($_POST, $id);
