@@ -73,12 +73,13 @@ function initGame(){
         playerScores.push(0);
     }
 
-    if(gameId == 2){
-        playerNameLocation.innerHTML = usersList[playersList[playerTurn]]['name'];
-        if(!playerNameLocation.classList.contains('color-'+usersList[playersList[playerTurn]]['color'])){
-            playerNameLocation.classList.add('color-'+usersList[playersList[playerTurn]]['color']);
-        }
-
+    if(gameId == 1){
+        showInDevError();
+    } else if(gameId == 2){
+        // First we update the player's name and its color
+        updatePlayerName(usersList[playersList[playerTurn]]);
+        
+        // Then we build the memory grid based on the parameters selected by the user
         let colsNumber;
         let rowsNumber;
         let cellWidth;
@@ -120,12 +121,7 @@ function initGame(){
         if(charList.length < minCharNeeded){
             alert('Erreur : Pas assez de personnages enregistrés pour pouvoir jouer à ce jeu! Il faut un minimum de '+minCharNeeded+' personnages pour que ce jeu puisse fonctionner correctement. Veuillez donc ajouter de nouveaux personnages puis réessayer.')
         }else{
-            if(!stepASection.classList.contains('hidden')){
-                stepASection.classList.add('hidden');
-            }
-            if(stepBSection.classList.contains('hidden')){
-                stepBSection.classList.remove('hidden');
-            }
+            goToStepB();
 
             let randomCharList = shuffleArray(charList);
             let slicedArray = randomCharList.slice(0, minCharNeeded);
@@ -182,10 +178,8 @@ function initGame(){
                                 }else{// else it's the first player to play
                                     playerTurn = 0;
                                 }
-                                playerNameLocation.innerHTML = usersList[playersList[playerTurn]]['name'];
-                                if(!playerNameLocation.classList.contains('color-'+usersList[playersList[playerTurn]]['color'])){
-                                    playerNameLocation.classList.add('color-'+usersList[playersList[playerTurn]]['color']);
-                                }*/
+                                updatePlayerName(usersList[playersList[playerTurn]]);
+                                */
 
                                 playerScoreLocation.innerHTML = playerScores[playerTurn];
 
@@ -247,10 +241,7 @@ function initGame(){
                                         playerTurn = 0;
                                     }
                                     roundCounterLocation.innerHTML = roundCounter+'<sup>'+(roundCounter === 1?'er':'ème')+'</sup>';
-                                    playerNameLocation.innerHTML = usersList[playersList[playerTurn]]['name'];
-                                    if(!playerNameLocation.classList.contains('color-'+usersList[playersList[playerTurn]]['color'])){
-                                        playerNameLocation.classList.add('color-'+usersList[playersList[playerTurn]]['color']);
-                                    }
+                                    updatePlayerName(usersList[playersList[playerTurn]]);
                                     playerScoreLocation.innerHTML = playerScores[playerTurn];
                                     firstCardSelected = null;
                                 }, 2000)
@@ -260,6 +251,100 @@ function initGame(){
                 });
             }
         }
+    }else if(gameId == 3){
+        //showInDevError();
+        // First we update the player's name and its color
+        updatePlayerName(usersList[playersList[playerTurn]]);
+
+        let rowsNumber = 7;
+        let colsNumber = 7;
+
+        let cornerImg = 'corner';
+        let cornerIds = {
+            tl : 0,
+            tr : 6,
+            bl : 42,
+            br : 48
+        };
+        let cornerWalls = 20;
+        let straightWalls = 12;
+        let threeWaysWalls = 18;
+        let walls = [];
+
+        // We generate all the wall pieces
+        for(let i=0;i<straightWalls;i++){
+            walls.push('straight');
+        }
+        for(let i=0;i<cornerWalls;i++){
+            walls.push(cornerImg); 
+        }
+        for(let i=0;i<threeWaysWalls;i++){
+            walls.push('three-ways');
+        }
+
+        shuffleArray(walls);
+
+        let firstCorner = walls[cornerIds.tl];
+        let secondCorner = walls[cornerIds.tr];
+        let thirdCorner = walls[cornerIds.bl];
+        let fourthCorner = walls[cornerIds.br];
+
+        walls[cornerIds.tl] = cornerImg;
+        walls[cornerIds.tr] = cornerImg;
+        walls[cornerIds.bl] = cornerImg;
+        walls[cornerIds.br] = cornerImg;
+
+        // for each image replaced by a corner, we replace 4 corner images by the four images that was removed to keep the good number of images of each type
+        let substitutionCounter = 0;
+        for(let i=0;i<walls.length;i++){
+            if(i != cornerIds.tl && i != cornerIds.tr && i != cornerIds.bl && i != cornerIds.br){
+                if(walls[i] == cornerImg){
+                    if(substitutionCounter == 0){
+                        walls[i] = firstCorner;
+                    }else if(substitutionCounter == 1){
+                        walls[i] = secondCorner;
+                    }else if(substitutionCounter == 2){
+                        walls[i] = thirdCorner;
+                    }else if(substitutionCounter == 3){
+                        walls[i] = fourthCorner;
+                    }
+                    substitutionCounter++;
+                }
+            }
+        }
+
+        let tableContent = '';
+
+        let slotId = 0;
+        let sides = [
+            'turnRight',
+            'turnLeft',
+            'turnUp',
+            'turnDown',
+        ];
+        let turnSide;
+        let sideSelected = 0;
+        for(let i=0; i<rowsNumber; i++){
+            tableContent += '<tr>';
+            for(let y=0; y<colsNumber; y++){
+                sideSelected = Math.round(Math.random()*3);
+                console.log(sideSelected);
+                turnSide = sides[sideSelected];
+                tableContent += '<td id="card_'+slotId+'" class="labyrinth-cell'+(slotId == cornerIds.tl ? ' boardCorner topLeft' : slotId == cornerIds.tr ? ' boardCorner topRight' : slotId == cornerIds.bl ? ' boardCorner bottomLeft' : slotId == cornerIds.br ? ' boardCorner bottomRight': '')+'"><img class="labyrinth-walls'+(slotId == cornerIds.tl ? ' turnRight' : slotId == cornerIds.tr ? ' turnDown' : slotId == cornerIds.bl ? ' turnUp' : slotId == cornerIds.br ? ' turnLeft': ' '+turnSide)+'" src="/img/games/'+walls[slotId]+'.png"></td>';
+                slotId++;
+            }
+            tableContent += '</tr>';
+        }
+
+        let gameArea = document.createElement('table');
+        gameArea.classList.add('labyrinth-grid');
+        gameArea.innerHTML = tableContent;
+
+        let gameContainer = document.getElementById('labyrinth-stepB-container');
+
+        gameContainer.appendChild(gameArea);
+
+        goToStepB();
     }
 }
 
@@ -309,4 +394,31 @@ function saveScore(userId, score, turnsNbr, difficultyMode, playersNbr) {
         'numberOfPlayers': playersNbr
     }
 });
+}
+
+/**
+ * Hide the step A's elements and show the step B's content of the selected game
+ */
+function goToStepB(){
+    if(!stepASection.classList.contains('hidden')){
+        stepASection.classList.add('hidden');
+    }
+    if(stepBSection.classList.contains('hidden')){
+        stepBSection.classList.remove('hidden');
+    }
+}
+
+/**
+ * Update the player's name and its color on a game
+ */
+function updatePlayerName(currentPlayer){
+    playerNameLocation.innerHTML = currentPlayer['name'];
+    if(!playerNameLocation.classList.contains('color-'+currentPlayer['color'])){
+        playerNameLocation.classList.add('color-'+currentPlayer['color']);
+    }
+}
+
+function showInDevError(){
+    alert('Ce jeu est toujours en cours de développement, veuillez réessayer plus tard!');
+    stop;
 }
