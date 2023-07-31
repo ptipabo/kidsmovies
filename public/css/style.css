@@ -880,6 +880,9 @@ header {
   border: 1px solid #646464;
   padding: 0.4rem;
 }
+.admin-table tr:hover {
+  background-color: #ececec;
+}
 .admin-table .link.editButton {
   color: #0064c8;
 }

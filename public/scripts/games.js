@@ -116,22 +116,22 @@ function initGame(){
         }
 
         // count the minimum number of characters needed to make the game work
-        let minCharNeeded = Math.ceil((colsNumber * rowsNumber)/2);
+        const minCharNeeded = Math.ceil((colsNumber * rowsNumber)/2);
 
         if(charList.length < minCharNeeded){
             alert('Erreur : Pas assez de personnages enregistrés pour pouvoir jouer à ce jeu! Il faut un minimum de '+minCharNeeded+' personnages pour que ce jeu puisse fonctionner correctement. Veuillez donc ajouter de nouveaux personnages puis réessayer.')
         }else{
             goToStepB();
 
-            let randomCharList = shuffleArray(charList);
-            let slicedArray = randomCharList.slice(0, minCharNeeded);
+            const randomCharList = shuffleArray(charList);
+            const slicedArray = randomCharList.slice(0, minCharNeeded);
             let gameCards = slicedArray.concat(slicedArray);
             gameCards = shuffleArray(gameCards);
 
-            let gameContainer = document.getElementById('memory-stepB-container');
-            let gameDisabler = document.createElement('div');
+            const gameContainer = document.getElementById('memory-stepB-container');
+            const gameDisabler = document.createElement('div');
             gameDisabler.classList.add('memory-disabler');
-            let gameArea = document.createElement('table');
+            const gameArea = document.createElement('table');
             gameArea.classList.add('memory-table');
             let tableContent = '';
             let charCounter = 0;
@@ -155,8 +155,7 @@ function initGame(){
             gameCells = document.getElementsByClassName('memory-backCard');
             for(let cell of gameCells){
                 cell.addEventListener('click', (e) => {
-                    let cardId = e.path[1].id.split('_')[1];
-                    //let test = document.querySelector('#card_'+cardId)
+                    const cardId = e.currentTarget.parentNode.id.split('_')[1];
                     e.target.style.display = 'none';
                     // check if the first card already has been selected or not
                     if(!firstCardSelected){
