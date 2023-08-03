@@ -5,6 +5,18 @@
     $jsonSongsList = json_encode($movieSongs);
     $suiteCharacters = $params['suiteCharacters'];
     $jsonCharactersList = json_encode($suiteCharacters);
+
+    function check_url($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch , CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        $headers = curl_getinfo($ch);
+        curl_close($ch);
+
+        return $headers['http_code'];
+    }
 ?>
 <script type="module">
     import {setMusicsList} from '../../public/scripts/songs.js';
@@ -63,9 +75,32 @@
         <?php for($i=0;$i<count($movieSongs);$i++) : ?>
             <div class="listElement">
                 <h3><?= $movieSongs[$i]['title'] ?></h3>
-                <img class="songItem" id="song-<?= $i ?>" title="<?= $movieSongs[$i]['title'] ?>" src="https://img.youtube.com/vi/<?= $movieSongs[$i]['youtubeId'] ?>/1.jpg" alt="<?= $movieSongs[$i]['title'] ?>" />
+                <?php 
+                    $errorDetected = '';
+                    if(check_url('https://img.youtube.com/vi/'.$movieSongs[$i]['youtubeId'].'/1.jpg') !== 200){
+                        $errorDetected = ' imageNotFound';
+                    }
+                ?>
+                <img class="songItem<?= $errorDetected ?>" data-not-found="<?= $movieSongs[$i]['id'].'_/_'.$movieSongs[$i]['movie'].'_/_'.$movieSongs[$i]['youtubeId'] ?>" id="song-<?= $i ?>" title="<?= $movieSongs[$i]['title'] ?>" src="https://img.youtube.com/vi/<?= $movieSongs[$i]['youtubeId'] ?>/1.jpg" alt="<?= $movieSongs[$i]['title'] ?>" />
             </div>
         <?php endfor; ?>
+        <script>
+            function addLog(eventType, message) {
+                $.ajax({url: '/api/addlog', 
+                    data: {
+                        'event_type': eventType,
+                        'message': message
+                    }
+                });
+            }
+
+            const brokenVideos = Array.from(document.getElementsByClassName('imageNotFound'));
+            brokenVideos.forEach((item) => {
+                const songData = item.getAttribute('data-not-found').split('_/_');
+                const response = 'id : ' + songData[0] + ', Movie : ' + songData[1] + ', Title : ' + item.getAttribute('title') + ', Youtube ID : ' + songData[2];
+                addLog(1, response);
+            });
+        </script>
     </div>
 </section>
 <section id="videoPlayer" class="hidden">

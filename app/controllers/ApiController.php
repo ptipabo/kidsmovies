@@ -2,6 +2,8 @@
 
 namespace App\controllers;
 
+use App\ORM\Logs;
+use App\Entities\Logs as LogsEntity;
 use App\ORM\Song;
 use App\Entities\Song as SongEntity;
 use App\ORM\Movie;
@@ -23,8 +25,8 @@ class ApiController extends Controller{
             $songId = $_GET['songId'];
             $userId = $_GET['userId'];
             //Connexion to the "favourites" table
-            $favourites = new Favourite($this->getDB());
-            $favouriteFound = $favourites->checkFavourite($songId, $userId);
+            $favouritesRepo = new Favourite($this->getDB());
+            $favouriteFound = $favouritesRepo->checkFavourite($songId, $userId);
 
             if($favouriteFound > 0){
                 header('Content-type: application/json');
@@ -46,8 +48,8 @@ class ApiController extends Controller{
             $songId = $_GET['songId'];
             $userId = $_GET['userId'];
             //Connexion to the "favourites" table
-            $favourites = new Favourite($this->getDB());
-            $favouriteFound = $favourites->addFavourite($songId, $userId);
+            $favouritesRepo = new Favourite($this->getDB());
+            $favouriteFound = $favouritesRepo->addFavourite($songId, $userId);
 
             $this->sendResponse($favouriteFound);
         }else{
@@ -63,8 +65,8 @@ class ApiController extends Controller{
             $songId = $_GET['songId'];
             $userId = $_GET['userId'];
             //Connexion to the "favourites" table
-            $favourites = new Favourite($this->getDB());
-            $favouriteFound = $favourites->removeFavourite($songId, $userId);
+            $favouritesRepo = new Favourite($this->getDB());
+            $favouriteFound = $favouritesRepo->removeFavourite($songId, $userId);
 
             $this->sendResponse($favouriteFound);
         }else{
@@ -133,10 +135,28 @@ class ApiController extends Controller{
             $newScore->setNumberOfPlayers($_GET['numberOfPlayers']);
 
             //Connexion to the "memory_score" table
-            $memoryScore = new MemoryScore($this->getDB());
-            $scoreSaved = $memoryScore->addScore($newScore);
+            $memoryScoreRepo = new MemoryScore($this->getDB());
+            $scoreSaved = $memoryScoreRepo->addScore($newScore);
 
             $this->sendResponse($scoreSaved);
+            
+        }else{
+            $this->sendMissingDataResponse();
+        }
+    }
+
+    public function addLog(){
+        if(isset($_GET['event_type']) && isset($_GET['message'])){
+            $newLog = new LogsEntity();
+            $newLog->setEventType($_GET['event_type']);
+            $newLog->setMessage($_GET['message']);
+            $newLog->setTimestamp(new DateTime('now'));
+
+            //Connexion to the "memory_score" table
+            $logsRepo = new Logs($this->getDB());
+            $logSaved = $logsRepo->addLog($newLog);
+
+            $this->sendResponse($logSaved);
             
         }else{
             $this->sendMissingDataResponse();

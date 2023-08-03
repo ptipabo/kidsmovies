@@ -224,12 +224,12 @@ export function showSongs(musicList = null){
 
             document.getElementById('musicList').appendChild(songDiv)//On l'ajoute dans la page
             
-            let songTitle = addElement('h3')
-            songTitle.innerHTML = '<span>'+musicList[i].movie+'</span>'+'<br />'+musicList[i].title
-            songDiv.appendChild(songTitle)
+            let songTitle = addElement('h3');
+            songTitle.innerHTML = '<span>'+musicList[i].movie+'</span>'+'<br />'+musicList[i].title;
+            songDiv.appendChild(songTitle);
 
             let songImg = addElement('img',['className','id','title', 'src', 'alt'],['songItem', 'song-'+i, musicList[i].title, 'https://img.youtube.com/vi/'+musicList[i].youtubeId+'/1.jpg', musicList[i].title]);
-            songDiv.appendChild(songImg)
+            songDiv.appendChild(songImg);
 
             let usersList = addElement('ul',['className'], ['song_usersList']);
             songDiv.appendChild(usersList);

@@ -12,18 +12,22 @@ const $stopBtn = $('#randowJukeboxBtnStop');
 
 // Events
 $playBtn.on('click', ()=>{
-    changeVideo();
-    closePlayer();
-    openPlayer();
-    if($stopBtn.hasClass('hidden')){
-        $stopBtn.removeClass('hidden');
-    }
+    reloadRandomVideo();
 });
 
 $stopBtn.on('click', () => {
     closePlayer();
     $stopBtn.addClass('hidden');
 });
+
+function reloadRandomVideo() {
+    changeVideo();
+    closePlayer();
+    openPlayer();
+    if($stopBtn.hasClass('hidden')){
+        $stopBtn.removeClass('hidden');
+    }
+}
 
 /**
  * Select a number between a min and a max value
@@ -67,7 +71,6 @@ function openPlayer(){
 let player;
 function onYouTubePlayerAPIReady() {
     if(playList[videoToPlay].censored){
-        console.log('testB');
         let censoredBlock = addElement('div', ['className'], ['censoredBlock random']);
         let moviePicture = addElement('img', ['src'], [playList[videoToPlay].movieImg]);
         censoredBlock.append(moviePicture);
@@ -88,6 +91,16 @@ function onYouTubePlayerAPIReady() {
  */
 function onPlayerReady(event) {
     event.target.playVideo();
+    const newIframe = document.querySelector('#videoPlayer-jukeBox');
+    // On vérifie si la vidéo à bien été trouvée (si ce n'est pas le cas, le title de l'iframe indique "YouTube video player" sinon il contiendrait le titre de la vidéo)
+    if(newIframe.getAttribute('title') === 'YouTube video player'){
+        console.log('Error : video not found => reloading player...');
+        const missingVideo = playList[videoToPlay];
+        // On enregistre l'id de la vidéo manquante dans les logs
+        addLog(1, encodeURIComponent('Id : '+missingVideo.id+', Movie : '+missingVideo.movie+', Title : '+missingVideo.title+', Youtube ID : '+missingVideo.youtubeId));
+        // On passe directement à la chanson suivante
+        reloadRandomVideo();
+    }
 }
 
 /**
@@ -113,4 +126,13 @@ function changeVideo(){
     }
 
     videoToPlay = nextVideoId;
+}
+
+function addLog(eventType, message) {
+    $.ajax({url: '/api/addlog', 
+        data: {
+            'event_type': eventType,
+            'message': message
+        }
+    });
 }
