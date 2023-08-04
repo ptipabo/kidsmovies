@@ -1012,12 +1012,12 @@ header {
   border-collapse: collapse;
   background-color: #9b5645;
   border-radius: 20px;
-  width: 580px;
+  width: 670px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
 }
-.labyrinth-cell.boardCorner {
+.labyrinth-cell {
   position: relative;
 }
 .labyrinth-cell.boardCorner:before {
@@ -1056,6 +1056,7 @@ header {
   margin-bottom: -4px;
   width: 100%;
   height: auto;
+  opacity: 1;
 }
 .labyrinth-walls.turnRight {
   transform: rotate(180deg);
@@ -1068,6 +1069,12 @@ header {
 }
 .labyrinth-walls.turnLeft {
   transform: rotate(0deg);
+}
+.labyrinth-walls.outer:hover {
+  cursor: pointer;
+}
+.labyrinth-walls.displaced {
+  position: absolute;
 }
 
 /*# sourceMappingURL=style.css.map */
