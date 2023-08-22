@@ -493,13 +493,14 @@ function initLabyrinthGame(){
     let startPositions = shuffleArray(['1_1', '1_7', '7_1', '7_7']);// NB : the first number of each string is the Row number, second is the Column
 
     let startPosCounter = 0;
-    // We add the start and current position information to the players
+    // We add the start and current position information to the players and a variable that will help to know if the player has been moved by a wall displacement
     playersList.forEach((player) => {
         let startPos = startPositions[startPosCounter];
         labyrinthPlayersList.push({
                 ...usersList[player], 
                 startPos : startPos, 
-                currentPos : startPos
+                currentPos : startPos,
+                moved: false
             });
         const startSlot = $('#card_'+startPos);
         startSlot.parent().addClass(usersList[player].color+'StartSlot');
@@ -711,27 +712,24 @@ function initLabyrinthGame(){
                 for(let i = 0;i < currentLine.length;i++ ){
                     currentLineCopy.push({
                         source: JSON.parse(JSON.stringify(currentLine[i].src)),
+                        id: JSON.parse(JSON.stringify(currentLine[i].id)),
                         classes: JSON.parse(JSON.stringify(currentLine[i].classList))
                     });
                 }
 
                 let newOuterPieceId;
+                let currentLineFirstId;
                 if(side == 'left' || side == 'top'){
                     newOuterPieceId = currentLineCopy.length-2;
+                    currentLineFirstId = 1;
                 }else if(side == 'right' || side == 'bottom'){
                     newOuterPieceId = 1;
+                    currentLineFirstId = currentLineCopy.length-2;
                 }
                 
                 // We store the data of the card that has been ejected from the board and we save its direction
                 const newOuterPiece = currentLineCopy[newOuterPieceId];
                 const newOuterPieceDirection = getCardDirection(newOuterPiece);
-                
-                const playerMoved = {
-                    'blue': false, 
-                    'red': false,
-                    'green': false,
-                    'pink': false,
-                };
 
                 // We update the cards from the concerned row into the board (excluding the outerwalls)
                 $(slotLineClass).each((key, slot) => {
@@ -740,41 +738,51 @@ function initLabyrinthGame(){
                         const cardDirection = getCardDirection(currentLineCopy[key+keyToCopy]);
                         slot.firstChild.classList.remove('turnLeft', 'turnUp', 'turnRight', 'turnDown');
                         slot.firstChild.classList.add(cardDirection);
-                        
-                        let previousCardRow;
-                        let previousCardCol;
-                        for (const [classKey, singleClass] of Object.entries(currentLineCopy[key+keyToCopy].classes)) {
-                            if(singleClass.substring(0,8) === 'cardRow_'){
-                                previousCardRow = singleClass.substring(8,9);
-                            }else if (singleClass.substring(0,8) === 'cardCol_'){
-                                previousCardCol = singleClass.substring(8,9);
-                            }
-                        }
 
-                        const oldSlot = $('#slot_'+previousCardRow+'_'+previousCardCol);
-                        
-                        const playerColors = ['blue', 'red', 'green', 'pink'];
+                        const previousCardPosition = currentLineCopy[key+keyToCopy].id.substring(5);
+                        const previousSlot = $('#slot_'+previousCardPosition);
+
                         // If one or more players were on the slots that moved, place them on their new slots and remove them from their old slots
-                        playerColors.forEach(playerColor => {
-                            if(oldSlot.hasClass(playerColor+'Player') && playerMoved[playerColor] == false){
+                        labyrinthPlayersList.forEach(player => {
+                            const playerColor = player.color;
+                            if(previousSlot.hasClass(playerColor+'Player') && player.moved === false){
                                 slot.classList.add(playerColor+'Player');
-                                oldSlot.removeClass(playerColor+'Player');
-                                labyrinthPlayersList.forEach(player => {
-                                    if(player.color === playerColor){
-                                        if(lineDirection === 'row'){
-                                            player.currentPos = rowSelected+'_'+key;
-                                        }else if(lineDirection === 'col'){
-                                            player.currentPos = key+'_'+colSelected;
-                                        }
-                                        playerMoved[playerColor] = true;
+                                previousSlot.removeClass(playerColor+'Player');
+                                if(lineDirection === 'row'){
+                                    player.currentPos = rowSelected+'_'+key;
+                                }else if(lineDirection === 'col'){
+                                    player.currentPos = key+'_'+colSelected;
+                                }
+                                player.moved = true;
+                            }else if(slot.classList.contains(playerColor+'Player') && player.moved === false){// If a player is ejected from the board, move him to the opposite side of the board, on the same line
+                                let index;
+                                if(lineDirection === 'row'){
+                                    index = 1;
+                                }else if(lineDirection === 'col'){
+                                    index = 0;
+                                }
+                                if((previousCardPosition.split('_')[index] == 2 && keyToCopy == 1) || (previousCardPosition.split('_')[index] == 6 && keyToCopy == -1)){
+                                    currentLine[currentLineFirstId].closest('.labyrinth-cell').classList.add(playerColor+'Player');
+
+                                    slot.classList.remove(playerColor+'Player');
+                                    if(lineDirection === 'row'){
+                                        player.currentPos = rowSelected+'_'+currentLineFirstId;
+                                    }else if(lineDirection === 'col'){
+                                        player.currentPos = currentLineFirstId+'_'+colSelected;
                                     }
-                                });
+                                    player.moved = true;
+                                }
                             }
                         });
                     }
                 });
+
+                // We reset the moved attribute of each player to avoid them to be displaced again
+                labyrinthPlayersList.forEach(player => {
+                    player.moved = false;
+                });
         
-                // update of all the outer pieces with the new piece that has been ejected from the board
+                // Update of all the outer pieces with the new piece that has been ejected from the board
                 $('.labyrinth-cell.labyrinth-outer.enabled').each((key, slot) => {
                     slot.firstChild.src = newOuterPiece.source;
                     slot.firstChild.classList.remove('turnLeft', 'turnUp', 'turnRight', 'turnDown');
