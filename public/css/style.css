@@ -15,7 +15,7 @@ header {
 }
 
 #titleLetterA {
-  color: #64c8ff;
+  color: #36b9ff;
 }
 
 #titleLetterB {
@@ -386,7 +386,7 @@ header {
 }
 
 .blueBG {
-  background-color: #64c8ff;
+  background-color: #36b9ff;
 }
 
 .greenBG {
@@ -434,7 +434,7 @@ header {
 }
 
 .navMovie:hover {
-  background-color: #64c8ff;
+  background-color: #36b9ff;
 }
 .navMovie::before {
   content: url("../../img/movieIcon.png");
@@ -467,6 +467,9 @@ header {
 .section-container {
   width: 70%;
   text-align: center;
+}
+.section-container.memoryExtension {
+  width: 90%;
 }
 
 .pageTitle {
@@ -818,7 +821,7 @@ header {
 }
 
 .kidsMoviesBtn.blueBG:hover {
-  background-color: #64c8ff;
+  background-color: #36b9ff;
 }
 
 .kidsMoviesBtn.greenBG:hover {
@@ -1019,38 +1022,81 @@ header {
 }
 .labyrinth-cell {
   position: relative;
+  --playerTopPosition: 25px;
+  --playerLeftPosition: 25px;
 }
-.labyrinth-cell.boardCorner:before {
+.labyrinth-cell:before {
   content: ".";
   position: absolute;
   z-index: 10000;
-  display: block;
   width: 25px;
   height: 25px;
-  top: 35%;
-  left: 35%;
+  top: var(--playerTopPosition);
+  left: var(--playerLeftPosition);
   border-radius: 50%;
   border: 1px solid black;
+  opacity: 0;
+  display: none;
 }
-.labyrinth-cell.boardCorner.topLeft:before {
-  top: 36%;
-  left: 37%;
+.labyrinth-cell.bluePlayer:before {
   background-color: #2c71f0;
+  opacity: 1;
+  display: block;
 }
-.labyrinth-cell.boardCorner.topRight:before {
-  top: 36%;
-  left: 32%;
+.labyrinth-cell.bluePlayer.ghost:before {
+  background-color: #2c71f0;
+  opacity: 1;
+}
+.labyrinth-cell.redPlayer:before {
   background-color: #f34242;
+  opacity: 1;
+  display: block;
 }
-.labyrinth-cell.boardCorner.bottomLeft:before {
-  top: 32%;
-  left: 37%;
+.labyrinth-cell.redPlayer.ghost:before {
+  background-color: #f34242;
+  opacity: 1;
+}
+.labyrinth-cell.greenPlayer:before {
   background-color: #45c971;
+  opacity: 1;
+  display: block;
 }
-.labyrinth-cell.boardCorner.bottomRight:before {
-  top: 32%;
-  left: 32%;
+.labyrinth-cell.greenPlayer.ghost:before {
+  background-color: #45c971;
+  opacity: 1;
+}
+.labyrinth-cell.pinkPlayer:before {
   background-color: #f02ca5;
+  opacity: 1;
+  display: block;
+}
+.labyrinth-cell.pinkPlayer.ghost:before {
+  background-color: #f02ca5;
+  opacity: 1;
+}
+.labyrinth-cell.ghost:before {
+  background-color: #aaaaaa;
+  opacity: 0.4;
+  display: block;
+}
+.labyrinth-cell.ghost:hover {
+  cursor: pointer;
+}
+.labyrinth-cell.ghost:hover:before {
+  background-color: #ffffff;
+  opacity: 0.7;
+}
+.labyrinth-cell.boardCorner.blueStartSlot:before {
+  border: 2px solid #2c71f0;
+}
+.labyrinth-cell.boardCorner.redStartSlot:before {
+  border: 2px solid #f34242;
+}
+.labyrinth-cell.boardCorner.greenStartSlot:before {
+  border: 2px solid #45c971;
+}
+.labyrinth-cell.boardCorner.pinkStartSlot:before {
+  border: 2px solid #f02ca5;
 }
 .labyrinth-walls {
   margin-bottom: -4px;
@@ -1075,6 +1121,26 @@ header {
 }
 .labyrinth-walls.displaced {
   position: absolute;
+}
+
+#endTurnBtn {
+  position: fixed;
+  right: 100px;
+  bottom: 100px;
+  padding: 1rem 3rem;
+  font-weight: 700;
+  font-size: 2rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  background-color: #45c971;
+  color: #0e993c;
+  border: none;
+  border-bottom: 4px solid #0e993c;
+}
+#endTurnBtn:hover {
+  background-color: #76f09f;
+  border-color: #0e993c;
+  border: none;
 }
 
 /*# sourceMappingURL=style.css.map */

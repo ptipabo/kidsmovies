@@ -56,8 +56,7 @@
         <?php elseif($game->getTitle() == 'Labyrinthe'): ?>
             <div id="games-stepB" class="labyrinthe-stepB hidden">
                 <a href="/games/<?= $game->getId() ?>" class="backLink">Retour</a>
-                <p>Au tour de <span id="playerName" class="player-info"></span> (<span id="roundCounter">1<sup>er</sup></span> tour)</p>
-                <p>Score actuel : <span id="playerScore" class="player-info">0</span> point(s)</p>
+                <p>Au tour de <span id="playerName" class="player-info"></p>
                 <div id="labyrinth-stepB-container" class="labyrinth-stepB-container"></div>
             </div>
         <?php endif; ?>

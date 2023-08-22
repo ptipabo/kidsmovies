@@ -100,13 +100,13 @@ function initGame(){
                 cellWidth = 'C';
                 break;
             case '4':
-                colsNumber = 10;
-                rowsNumber = 9;
-                cellWidth = 'D';
+                colsNumber = 15;
+                rowsNumber = 6;
+                cellWidth = 'C';
                 break;
             case '5':
-                colsNumber = 12;
-                rowsNumber = 11;
+                colsNumber = 22;
+                rowsNumber = 6;
                 cellWidth = 'D';
                 break;
             default:
@@ -117,6 +117,10 @@ function initGame(){
 
         // count the minimum number of characters needed to make the game work
         const minCharNeeded = Math.ceil((colsNumber * rowsNumber)/2);
+
+        // for the memory game (especially the "hard" and "extreme" difficulty levels), we need more space on the screen so we make it larger that the rest of the website
+        const mainContainer = $('.section-container');
+        mainContainer.addClass('memoryExtension');
 
         if(charList.length < minCharNeeded){
             alert('Erreur : Pas assez de personnages enregistrés pour pouvoir jouer à ce jeu! Il faut un minimum de '+minCharNeeded+' personnages pour que ce jeu puisse fonctionner correctement. Veuillez donc ajouter de nouveaux personnages puis réessayer.')
@@ -366,7 +370,7 @@ function initLabyrinthGame(){
         walls.push('three-ways');
     }
 
-    shuffleArray(walls);
+    walls = shuffleArray(walls);
 
     const firstCorner = walls[cornerIds.tl];
     const secondCorner = walls[cornerIds.tr];
@@ -420,19 +424,20 @@ function initLabyrinthGame(){
                     || (col == colsNumber-1 && row == rowsNumber-1)){
                     gridContent += '<td id="outer-slot_'+row+'_'+col+'" class="labyrinth-cell labyrinth-outer slotRow_'+row+' slotCol_'+col+'"></td>';
                 }else{
-                    gridContent += '<td id="outer-slot_'+row+'_'+col+'" class="labyrinth-cell labyrinth-outer enabled slotRow_'+row+' slotCol_'+col+'"><img id="outer-card_'+row+'_'+col+'" class="labyrinth-walls outer enabled turnLeft cardRow_'+row+' cardCol_'+col+'" src="/img/games/'+walls[walls.length-1]+'.png" style="opacity:0"></td>';
+                    gridContent += '<td id="outer-slot_'+row+'_'+col+'" class="labyrinth-cell labyrinth-outer enabled slotRow_'+row+' slotCol_'+col+'"><img id="outer-card_'+row+'_'+col+'" class="labyrinth-walls outer enabled turnLeft cardRow_'+row+' cardCol_'+col+'" src="/img/games/labyrinth/classic/'+walls[walls.length-1]+'.png" style="opacity:0"></td>';
                 }
             }
             else{
                 sideSelected = Math.round(Math.random()*3);
                 turnSide = sides[sideSelected];
-                gridContent += '<td id="slot_'+row+'_'+col+'" class="labyrinth-cell'+(slotId == cornerIds.tl ? ' boardCorner topLeft' : slotId == cornerIds.tr ? ' boardCorner topRight' : slotId == cornerIds.bl ? ' boardCorner bottomLeft' : slotId == cornerIds.br ? ' boardCorner bottomRight': '')+' slotRow_'+row+' slotCol_'+col+'"><img id="card_'+row+'_'+col+'" class="labyrinth-walls'+(slotId == cornerIds.tl ? ' turnRight' : slotId == cornerIds.tr ? ' turnDown' : slotId == cornerIds.bl ? ' turnUp' : slotId == cornerIds.br ? ' turnLeft': ' '+turnSide)+' cardRow_'+row+' cardCol_'+col+'" src="/img/games/'+walls[slotId]+'.png" style="opacity:1"></td>';
+                gridContent += '<td id="slot_'+row+'_'+col+'" class="labyrinth-cell'+(slotId == cornerIds.tl ? ' boardCorner topLeft' : slotId == cornerIds.tr ? ' boardCorner topRight' : slotId == cornerIds.bl ? ' boardCorner bottomLeft' : slotId == cornerIds.br ? ' boardCorner bottomRight': '')+' slotRow_'+row+' slotCol_'+col+'"><img id="card_'+row+'_'+col+'" class="labyrinth-walls'+(slotId == cornerIds.tl ? ' turnRight' : slotId == cornerIds.tr ? ' turnDown' : slotId == cornerIds.bl ? ' turnUp' : slotId == cornerIds.br ? ' turnLeft': ' '+turnSide)+' cardRow_'+row+' cardCol_'+col+'" src="/img/games/labyrinth/classic/'+walls[slotId]+'.png" style="opacity:1"></td>';
                 slotId++;
             }
         }
         gridContent += '</tr>';
     }
 
+    // Creation of the game area
     const gameArea = document.createElement('table');
     gameArea.classList.add('labyrinth-grid');
     gameArea.innerHTML = gridContent;
@@ -441,8 +446,26 @@ function initLabyrinthGame(){
 
     gameContainer.appendChild(gameArea);
 
-    // logic of the game
-    $('.labyrinth-walls').on('dragstart', function(event) { 
+    // Creation of the "End of turn" Button
+    const endTurnBtn = document.createElement('input');
+    endTurnBtn.id = 'endTurnBtn';
+    endTurnBtn.type = 'button';
+    endTurnBtn.value = 'Terminer le tour';
+    endTurnBtn.classList.add('hidden');
+    
+    gameContainer.appendChild(endTurnBtn);
+
+    $(endTurnBtn).on('click', () => {
+        if(!endTurnBtn.classList.contains('hidden')){
+            endTurnBtn.classList.add('hidden');
+        }
+        const ghostCardsImg = $('.ghost img');
+        ghostCardsImg.off('click');
+        $('.ghost').removeClass('ghost');
+        beginNewRound();
+    });
+
+    $('.labyrinth-walls').on('dragstart', event => { 
         event.preventDefault();
     });
     const outerPieces = $('.labyrinth-walls.outer');
@@ -462,115 +485,171 @@ function initLabyrinthGame(){
     let newLeftPosition;
     let dragActivated = false;
     let cardClicked = null;
+    let wallsMoveEnabled = true;
+    let previousCardsData = [];
+
+    // =====================> Rules and logic of the game
+    let labyrinthPlayersList = [];
+    let startPositions = shuffleArray(['1_1', '1_7', '7_1', '7_7']);// NB : the first number of each string is the Row number, second is the Column
+
+    let startPosCounter = 0;
+    // We add the start and current position information to the players
+    playersList.forEach((player) => {
+        let startPos = startPositions[startPosCounter];
+        labyrinthPlayersList.push({
+                ...usersList[player], 
+                startPos : startPos, 
+                currentPos : startPos
+            });
+        const startSlot = $('#card_'+startPos);
+        startSlot.parent().addClass(usersList[player].color+'StartSlot');
+        startPosCounter++;
+    });
     
+    // Shuffle randomly the players' list to not always begin by the same player
+    labyrinthPlayersList = shuffleArray(labyrinthPlayersList);
+
+    let currentPlayerKey = 0;
+    let currentPlayer;
+    // Contains the list of all the slots where the current player can go to
+    let availableSlots = [];
+
+    // We place all the players on the board
+    labyrinthPlayersList.forEach((player) => {    
+            const currentSlot = $('#card_'+player.currentPos);
+            currentSlot.parent().addClass(player.color+'Player');
+        }
+    );
+    
+    // =====================> Mechanics of the game
+
     // JS alternative to css "hover" because we need to have the "opacity" styling rule editable directly into the DOM
     $('.labyrinth-walls.outer.enabled').on("mouseenter", (e) => {
-        if(!dragActivated){
-            e.target.style.opacity = 1;
+        if(wallsMoveEnabled){
+            if(!dragActivated){
+                e.target.style.opacity = 1;
+            }
         }
     })
     $('.labyrinth-walls.outer.enabled').on("mouseleave", (e) => {
-        if(!dragActivated){
-            e.target.style.opacity = 0;
+        if(wallsMoveEnabled){
+            if(!dragActivated){
+                e.target.style.opacity = 0;
+            }
         }
     })
 
     // Init all the events that will be used during the game
     outerPieces.each((key, piece) => {
         piece.addEventListener('mousedown', (e) => {
-            mouseDown = true;
-            cardClicked = e.currentTarget; 
-            const cardId = cardClicked.id;
-            const rowId = cardId.split('_')[1];
-            const colId = cardId.split('_')[2];
-            rowSelected = rowId;
-            colSelected = colId;
-            
-            let direction = '';
-            let lineId = 0;
-            // The following lines are used to move the whole line or column when an outer wall from the same line/column is clicked
-            if(colId == 0 || colId == colsNumber-1){
-                direction = 'Row';
-                lineId = rowId;
-            }else if (rowId == 0 || rowId == rowsNumber-1){
-                direction = 'Col';
-                lineId = colId;
-            }
-            const cardsToMove = $('.card'+direction+'_'+lineId);
-            cardsToMove.each((key, card) => {
-                if(card.style.opacity != 0){
-                    card.style.position = 'relative';
-                    card.style.top = 0;
-                    card.style.left = 0;
+            if(wallsMoveEnabled){
+                mouseDown = true;
+                cardClicked = e.currentTarget; 
+                const cardId = cardClicked.id;
+                const rowId = cardId.split('_')[1];
+                const colId = cardId.split('_')[2];
+                rowSelected = rowId;
+                colSelected = colId;
+                
+                let direction = '';
+                let lineId = 0;
+                // The following lines are used to move the whole line or column when an outer wall from the same line/column is clicked
+                if(colId == 0 || colId == colsNumber-1){
+                    direction = 'Row';
+                    lineId = rowId;
+                }else if (rowId == 0 || rowId == rowsNumber-1){
+                    direction = 'Col';
+                    lineId = colId;
                 }
-            });
+                const cardsToMove = $('.card'+direction+'_'+lineId);
+                cardsToMove.each((key, card) => {
+                    if(card.style.opacity != 0){
+                        card.style.position = 'relative';
+                        card.style.top = 0;
+                        card.style.left = 0;
+                    }
+                });
+            }
         });
     });
     document.addEventListener('mouseup', () => {
-        mouseDown = false;
-
-        // If the mouse didn't move when it was down, consider it as a simple click
-        if(dragActivated){
-            dragActivated = false;
-
-            if(colSelected == 0){// If the selected card is an outer wall from the left side
-                runMovingLogic('left');
-            }else if(colSelected == 8){// If the selected card is an outer wall from the right side
-                runMovingLogic('right');
-            }else if(rowSelected == 0){// If the selected card is an outer wall from the top side
-                runMovingLogic('top');
-            }else if(rowSelected == 8){// If the selected card is an outer wall from the bottom side
-                runMovingLogic('bottom');
-            }
-        }else{
-            if(cardClicked.classList.contains('turnLeft')){
-                outerPieces.removeClass('turnLeft');
-                outerPieces.addClass('turnUp');
-            }else if(cardClicked.classList.contains('turnUp')){
-                outerPieces.removeClass('turnUp');
-                outerPieces.addClass('turnRight');
-            }else if(cardClicked.classList.contains('turnRight')){
-                outerPieces.removeClass('turnRight');
-                outerPieces.addClass('turnDown');
-            }else if(cardClicked.classList.contains('turnDown')){
-                outerPieces.removeClass('turnDown');
-                outerPieces.addClass('turnLeft');
+        if(wallsMoveEnabled){
+            mouseDown = false;
+    
+            // If the mouse didn't move when it was down, consider it as a simple click
+            if(dragActivated){
+                dragActivated = false;
+    
+                if(colSelected == 0){// If the selected card is an outer wall from the left side
+                    moveWalls('left');
+                }else if(colSelected == 8){// If the selected card is an outer wall from the right side
+                    moveWalls('right');
+                }else if(rowSelected == 0){// If the selected card is an outer wall from the top side
+                    moveWalls('top');
+                }else if(rowSelected == 8){// If the selected card is an outer wall from the bottom side
+                    moveWalls('bottom');
+                }
+            }else{
+                if(typeof cardClicked !== 'undefined' && cardClicked !== null){
+                    if(cardClicked.classList.contains('turnLeft')){
+                        outerPieces.removeClass('turnLeft');
+                        outerPieces.addClass('turnUp');
+                    }else if(cardClicked.classList.contains('turnUp')){
+                        outerPieces.removeClass('turnUp');
+                        outerPieces.addClass('turnRight');
+                    }else if(cardClicked.classList.contains('turnRight')){
+                        outerPieces.removeClass('turnRight');
+                        outerPieces.addClass('turnDown');
+                    }else if(cardClicked.classList.contains('turnDown')){
+                        outerPieces.removeClass('turnDown');
+                        outerPieces.addClass('turnLeft');
+                    }
+                    cardClicked = null;
+                }
             }
         }
     });
     // event triggered when an outer card is moving, the cards that are on the same row or column will make the same displacement
     document.addEventListener('mousemove', (e) => {
-        if(mouseDown){
-            dragActivated = true;
-            previousPointerX = pointerX;
-            previousPointerY = pointerY;
-            pointerX = e.pageX;
-	        pointerY = e.pageY;
-            pointerDifferenceX = pointerX < 0 && previousPointerX > 0 ? pointerX-previousPointerX : previousPointerX-pointerX;
-            pointerDifferenceY = pointerY < 0 && previousPointerY > 0 ? pointerY-previousPointerY : previousPointerY-pointerY;
-            
-            if(rowSelected == 0 || rowSelected == rowsNumber-1){
-                const colCards = $('.cardCol_'+colSelected);
-                colCards.each((key, card) => {
-                    if(card.style.opacity != 0){
-                        topValue = parseInt(card.style.top.split('px')[0]);
-                        newTopPosition = topValue - pointerDifferenceY;
-                        if((rowSelected == 0 && newTopPosition >= 0 && newTopPosition <= slotSize) || (rowSelected != 0 && newTopPosition <= 0 && newTopPosition >= slotSize*-1)){
-                            card.style.top = newTopPosition + 'px';
+        if(wallsMoveEnabled){
+            if(mouseDown){
+                dragActivated = true;
+                previousPointerX = pointerX;
+                previousPointerY = pointerY;
+                pointerX = e.pageX;
+                pointerY = e.pageY;
+                pointerDifferenceX = pointerX < 0 && previousPointerX > 0 ? pointerX-previousPointerX : previousPointerX-pointerX;
+                pointerDifferenceY = pointerY < 0 && previousPointerY > 0 ? pointerY-previousPointerY : previousPointerY-pointerY;
+                
+                if(rowSelected == 0 || rowSelected == rowsNumber-1){
+                    const colCards = $('.cardCol_'+colSelected);
+                    colCards.each((key, card) => {
+                        if(card.style.opacity != 0){
+                            topValue = parseInt(card.style.top.split('px')[0]);
+                            let playerTopValue = window.getComputedStyle(card).getPropertyValue('--playerTopPosition').split('px')[0];
+                            newTopPosition = topValue - pointerDifferenceY;
+                            let newPlayerTopPosition = playerTopValue - pointerDifferenceY;
+                            if((rowSelected == 0 && newTopPosition >= 0 && newTopPosition <= slotSize) || (rowSelected != 0 && newTopPosition <= 0 && newTopPosition >= slotSize*-1)){
+                                card.style.top = newTopPosition + 'px';
+                                card.parentNode.style.setProperty('--playerTopPosition', newPlayerTopPosition + 'px');
+                            }
                         }
-                    }
-                });
-            }else if(colSelected == 0 || colSelected == colsNumber-1){
-                const rowCards = $('.cardRow_'+rowSelected);
-                rowCards.each((key, card) => {
-                    if(card.style.opacity != 0){
-                        leftValue = parseInt(card.style.left.split('px')[0]);
-                        newLeftPosition = leftValue - pointerDifferenceX;
-                        if((colSelected == 0 && newLeftPosition >= 0 && newLeftPosition <= slotSize) || (colSelected != 0 && newLeftPosition <= 0 && newLeftPosition >= slotSize*-1)){
-                            card.style.left = newLeftPosition + 'px';
+                    });
+                }else if(colSelected == 0 || colSelected == colsNumber-1){
+                    const rowCards = $('.cardRow_'+rowSelected);
+                    rowCards.each((key, card) => {
+                        if(card.style.opacity != 0){
+                            leftValue = parseInt(card.style.left.split('px')[0]);
+                            let playerLeftValue = window.getComputedStyle(card).getPropertyValue('--playerLeftPosition').split('px')[0];
+                            newLeftPosition = leftValue - pointerDifferenceX;
+                            let newPlayerLeftPosition = playerLeftValue - pointerDifferenceX;
+                            if((colSelected == 0 && newLeftPosition >= 0 && newLeftPosition <= slotSize) || (colSelected != 0 && newLeftPosition <= 0 && newLeftPosition >= slotSize*-1)){
+                                card.style.left = newLeftPosition + 'px';
+                                card.parentNode.style.setProperty('--playerLeftPosition', newPlayerLeftPosition + 'px');
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     });
@@ -580,7 +659,7 @@ function initLabyrinthGame(){
      * 
      * @param {*} side 
      */
-    function runMovingLogic(side){
+    function moveWalls(side){
         if(side){
             let outerWallPostition;
             let currentLine;
@@ -588,7 +667,10 @@ function initLabyrinthGame(){
             let slotLineClass;
             let linesNumber;
             let keyToCopy;
+            let lineDirection;
+
             if(side == 'left'){
+                lineDirection = 'row';
                 currentLine = $('.cardRow_' + rowSelected);
                 outerWallPostition = parseInt(currentLine[0].style.left.split('px')[0]);
                 cardMaxMove = slotSize;
@@ -596,6 +678,7 @@ function initLabyrinthGame(){
                 linesNumber = colsNumber;
                 keyToCopy = -1;
             }else if (side == 'right'){
+                lineDirection = 'row';
                 currentLine = $('.cardRow_' + rowSelected);
                 outerWallPostition = parseInt(currentLine[8].style.left.split('px')[0]);
                 cardMaxMove = (-1*slotSize);
@@ -603,6 +686,7 @@ function initLabyrinthGame(){
                 linesNumber = colsNumber;
                 keyToCopy = 1;
             }else if (side == 'top'){
+                lineDirection = 'col';
                 currentLine = $('.cardCol_' + colSelected);
                 outerWallPostition = parseInt(currentLine[0].style.top.split('px')[0]);
                 cardMaxMove = slotSize;
@@ -610,6 +694,7 @@ function initLabyrinthGame(){
                 linesNumber = rowsNumber;
                 keyToCopy = -1;
             }else if (side == 'bottom'){
+                lineDirection = 'col';
                 currentLine = $('.cardCol_' + colSelected);
                 outerWallPostition = parseInt(currentLine[8].style.top.split('px')[0]);
                 cardMaxMove = (-1*slotSize);
@@ -641,13 +726,51 @@ function initLabyrinthGame(){
                 const newOuterPiece = currentLineCopy[newOuterPieceId];
                 const newOuterPieceDirection = getCardDirection(newOuterPiece);
                 
+                const playerMoved = {
+                    'blue': false, 
+                    'red': false,
+                    'green': false,
+                    'pink': false,
+                };
+
                 // We update the cards from the concerned row into the board (excluding the outerwalls)
                 $(slotLineClass).each((key, slot) => {
                     if(key > 0 && key < linesNumber-1){
                         slot.firstChild.src = currentLineCopy[key+keyToCopy].source;
-                        let cardDirection = getCardDirection(currentLineCopy[key+keyToCopy]);
+                        const cardDirection = getCardDirection(currentLineCopy[key+keyToCopy]);
                         slot.firstChild.classList.remove('turnLeft', 'turnUp', 'turnRight', 'turnDown');
                         slot.firstChild.classList.add(cardDirection);
+                        
+                        let previousCardRow;
+                        let previousCardCol;
+                        for (const [classKey, singleClass] of Object.entries(currentLineCopy[key+keyToCopy].classes)) {
+                            if(singleClass.substring(0,8) === 'cardRow_'){
+                                previousCardRow = singleClass.substring(8,9);
+                            }else if (singleClass.substring(0,8) === 'cardCol_'){
+                                previousCardCol = singleClass.substring(8,9);
+                            }
+                        }
+
+                        const oldSlot = $('#slot_'+previousCardRow+'_'+previousCardCol);
+                        
+                        const playerColors = ['blue', 'red', 'green', 'pink'];
+                        // If one or more players were on the slots that moved, place them on their new slots and remove them from their old slots
+                        playerColors.forEach(playerColor => {
+                            if(oldSlot.hasClass(playerColor+'Player') && playerMoved[playerColor] == false){
+                                slot.classList.add(playerColor+'Player');
+                                oldSlot.removeClass(playerColor+'Player');
+                                labyrinthPlayersList.forEach(player => {
+                                    if(player.color === playerColor){
+                                        if(lineDirection === 'row'){
+                                            player.currentPos = rowSelected+'_'+key;
+                                        }else if(lineDirection === 'col'){
+                                            player.currentPos = key+'_'+colSelected;
+                                        }
+                                        playerMoved[playerColor] = true;
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
         
@@ -662,6 +785,7 @@ function initLabyrinthGame(){
             currentLine.each((key, card) => {
                 if(side == 'left' || side == 'right'){
                     card.style.left = 0;
+                    card.parentNode.style.setProperty('--playerLeftPosition', '25px');
                     if(side == 'left'){
                         if(key == 0){
                             card.style.opacity = 0;
@@ -673,6 +797,7 @@ function initLabyrinthGame(){
                     }
                 }else if(side == 'top' || side == 'bottom'){
                     card.style.top = 0;
+                    card.parentNode.style.setProperty('--playerTopPosition', '25px');
                     if(side == 'top'){
                         if(key == 0){
                             card.style.opacity = 0;
@@ -684,6 +809,10 @@ function initLabyrinthGame(){
                     }
                 }
             });
+
+            if(outerWallPostition == cardMaxMove){
+                beginRoundSecondPart();
+            }
         }
     }
 
@@ -703,5 +832,432 @@ function initLabyrinthGame(){
             cardDirection = 'turnDown';
         }
         return cardDirection;
+    }
+
+    beginNewRound();
+
+    /**
+     * Begin a new round of the game
+     */
+    function beginNewRound(){
+        // First we remove the color of the previous player from the player's name
+        if(playerNameLocation.classList.contains('color-'+labyrinthPlayersList[currentPlayerKey]['color'])){
+            playerNameLocation.classList.remove('color-'+labyrinthPlayersList[currentPlayerKey]['color']);
+        }
+        if(currentPlayerKey+1 >= labyrinthPlayersList.length){
+            currentPlayerKey = 0;
+        }else{
+            currentPlayerKey++;
+        }
+        currentPlayer = labyrinthPlayersList[currentPlayerKey];
+
+        updatePlayerName(currentPlayer);
+        previousCardsData = [];
+
+        // We enable the displacement of the walls
+        wallsMoveEnabled = true;
+    }
+
+    function beginRoundSecondPart(){
+        // We disable the displacement of the walls
+        wallsMoveEnabled = false;
+        // Current direction of the card
+        const currentCard = $('#card_'+currentPlayer.currentPos);
+
+        availableSlots = [];
+        availableSlots.push(currentCard);
+        detectAvailableWays(currentCard);
+        availableSlots.forEach((card) => {
+            card.parent().addClass('ghost');
+        });
+        const ghostCardsImg = $('.ghost img');
+        ghostCardsImg.on('click', (cardClicked) => {
+            const ghostSlots = $('.ghost');
+            ghostSlots.each((key, ghostSlot) => {
+                ghostSlot.classList.remove(currentPlayer.color+'Player');
+            });
+            $(cardClicked.currentTarget).parent().addClass(currentPlayer.color+'Player');
+            const cardClickedIdParts = $(cardClicked.currentTarget).attr('id').split('_');
+            currentPlayer.currentPos = cardClickedIdParts[1]+'_'+cardClickedIdParts[2];
+        });
+        endTurnBtn.classList.remove('hidden');
+    }
+
+    function detectAvailableWays(currentCard){
+        const currentCardData = getCardData(currentCard);
+        const newAvailableSlots = [];
+        
+        if(currentCardData.type == 'straight'){
+            if(currentCard.hasClass('turnLeft')){
+                // We fetch the data from the cards at the left and at the right of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)-1)+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)+1));
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the left neighbour of the current slot of player
+                        if(neighbourData.colId < currentCardData.colId){
+                            addCard = pathIsOpen('left', neighbourData);
+                        }else if (neighbourData.colId > currentCardData.colId){// If it is the right neighbour of the current slot of player
+                            addCard = pathIsOpen('right', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnUp')){
+                // We fetch the data from the cards at the top and at the bottom of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+(parseInt(currentCardData.rowId)-1)+'_'+currentCardData.colId+', #card_'+(parseInt(currentCardData.rowId)+1)+'_'+currentCardData.colId);
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the top neighbour of the current slot of player
+                        if(neighbourData.rowId < currentCardData.rowId){
+                            addCard = pathIsOpen('top', neighbourData);
+                        }else if (neighbourData.rowId > currentCardData.rowId){// If it is the bottom neighbour of the current slot of player
+                            addCard = pathIsOpen('bottom', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnRight')){
+                // We fetch the data from the cards at the left and at the right of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)-1)+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)+1));
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the left neighbour of the current slot of player
+                        if(neighbourData.colId < currentCardData.colId){
+                            addCard = pathIsOpen('left', neighbourData);
+                        }else if (neighbourData.colId > currentCardData.colId){// If it is the right neighbour of the current slot of player
+                            addCard = pathIsOpen('right', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnDown')){
+                // We fetch the data from the cards at the top and at the bottom of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+(parseInt(currentCardData.rowId)-1)+'_'+currentCardData.colId+', #card_'+(parseInt(currentCardData.rowId)+1)+'_'+currentCardData.colId);
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the top neighbour of the current slot of player
+                        if(neighbourData.rowId < currentCardData.rowId){
+                            addCard = pathIsOpen('top', neighbourData);
+                        }else if (neighbourData.rowId > currentCardData.rowId){// If it is the bottom neighbour of the current slot of player
+                            addCard = pathIsOpen('bottom', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }
+        }else if(currentCardData.type == 'three-ways'){
+            if(currentCard.hasClass('turnLeft')){
+                // We fetch the data from the cards at the bottom, at the left and at the top of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+(parseInt(currentCardData.rowId)+1)+'_'+currentCardData.colId+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)-1)+', #card_'+(parseInt(currentCardData.rowId)-1)+'_'+currentCardData.colId);
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the bottom neighbour of the current slot of player
+                        if(neighbourData.rowId > currentCardData.rowId){
+                            addCard = pathIsOpen('bottom', neighbourData);
+                        }else if (neighbourData.colId < currentCardData.colId){// If it is the left neighbour of the current slot of player
+                            addCard = pathIsOpen('left', neighbourData);
+                        }else if (neighbourData.rowId < currentCardData.rowId){// If it is the top neighbour of the current slot of player
+                            addCard = pathIsOpen('top', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnUp')){
+                // We fetch the data from the cards at the left, at the top and at the right of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)-1)+', #card_'+(parseInt(currentCardData.rowId)-1)+'_'+currentCardData.colId+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)+1));
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the left neighbour of the current slot of player
+                        if(neighbourData.colId < currentCardData.colId){
+                            addCard = pathIsOpen('left', neighbourData);
+                        }else if (neighbourData.rowId < currentCardData.rowId){// If it is the top neighbour of the current slot of player
+                            addCard = pathIsOpen('top', neighbourData);
+                        }else if (neighbourData.colId > currentCardData.colId){// If it is the right neighbour of the current slot of player
+                            addCard = pathIsOpen('right', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnRight')){
+                // We fetch the data from the cards at the top, at the right and at the bottom of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+(parseInt(currentCardData.rowId)-1)+'_'+currentCardData.colId+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)+1)+', #card_'+(parseInt(currentCardData.rowId)+1)+'_'+currentCardData.colId);
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the top neighbour of the current slot of player
+                        if (neighbourData.rowId < currentCardData.rowId){
+                            addCard = pathIsOpen('top', neighbourData);
+                        }else if (neighbourData.colId > currentCardData.colId){// If it is the right neighbour of the current slot of player
+                            addCard = pathIsOpen('right', neighbourData);
+                        }else if(neighbourData.rowId > currentCardData.rowId){// If it is the bottom neighbour of the current slot of player
+                            addCard = pathIsOpen('bottom', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnDown')){
+                // We fetch the data from the cards at the right, at the bottom and at the left of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)+1)+', #card_'+(parseInt(currentCardData.rowId)+1)+'_'+currentCardData.colId+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)-1));
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the right neighbour of the current slot of player
+                        if (neighbourData.colId > currentCardData.colId){
+                            addCard = pathIsOpen('right', neighbourData);
+                        }else if (neighbourData.rowId > currentCardData.rowId){// If it is the bottom neighbour of the current slot of player
+                            addCard = pathIsOpen('bottom', neighbourData);
+                        }else if(neighbourData.colId < currentCardData.colId){// If it is the left neighbour of the current slot of player
+                            addCard = pathIsOpen('left', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }
+        }else if(currentCardData.type == 'corner'){
+            if(currentCard.hasClass('turnLeft')){
+                // We fetch the data from the cards at the left and at the top of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)-1)+', #card_'+(parseInt(currentCardData.rowId)-1)+'_'+currentCardData.colId);
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the left neighbour of the current slot of player
+                        if (neighbourData.colId < currentCardData.colId){
+                            addCard = pathIsOpen('left', neighbourData);
+                        }else if (neighbourData.rowId < currentCardData.rowId){// If it is the top neighbour of the current slot of player
+                            addCard = pathIsOpen('top', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnUp')){
+                // We fetch the data from the cards at the top and at the right of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+(parseInt(currentCardData.rowId)-1)+'_'+currentCardData.colId+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)+1));
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+                    
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the top neighbour of the current slot of player
+                        if (neighbourData.rowId < currentCardData.rowId){
+                            addCard = pathIsOpen('top', neighbourData);
+                        }else if (neighbourData.colId > currentCardData.colId){// If it is the right neighbour of the current slot of player
+                            addCard = pathIsOpen('right', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnRight')){
+                // We fetch the data from the cards at the right and at the bottom of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)+1)+', #card_'+(parseInt(currentCardData.rowId)+1)+'_'+currentCardData.colId);
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the right neighbour of the current slot of player
+                        if (neighbourData.colId > currentCardData.colId){
+                            addCard = pathIsOpen('right', neighbourData);
+                        }else if (neighbourData.rowId > currentCardData.rowId){// If it is the bottom neighbour of the current slot of player
+                            addCard = pathIsOpen('bottom', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }else if (currentCard.hasClass('turnDown')){
+                // We fetch the data from the cards at the bottom and at the left of the current card (doesn't take the outer walls)
+                const neighbourCards = $('#card_'+(parseInt(currentCardData.rowId)+1)+'_'+currentCardData.colId+', #card_'+currentCardData.rowId+'_'+(parseInt(currentCardData.colId)-1));
+                neighbourCards.each((key, neighbourCard) => {
+                    const neighbourData = getCardData($(neighbourCard));
+
+                    if(alreadyAvailable(neighbourData) === false){
+                        let addCard = false;
+                        
+                        // If it is the bottom neighbour of the current slot of player
+                        if (neighbourData.rowId > currentCardData.rowId){
+                            addCard = pathIsOpen('bottom', neighbourData);
+                        }else if (neighbourData.colId < currentCardData.colId){// If it is the left neighbour of the current slot of player
+                            addCard = pathIsOpen('left', neighbourData);
+                        }
+                        // If the current neighbour is not blocking the path, we add this neighbour to the available slots
+                        if(addCard){
+                            newAvailableSlots.push($(neighbourCard));
+                            availableSlots.push($(neighbourCard));
+                        }
+                    }
+                });
+            }
+        }
+
+        // We make this method recursive to take all the possible ways for the current player
+        newAvailableSlots.forEach(card => {
+            // We memorize the currentCard to not go backward in the next loops
+            previousCardsData.push(currentCardData);
+            detectAvailableWays(card);
+        });
+    }
+
+    function getCardData(card)
+    {
+        const cardSrcParts = card.attr('src').split('/');
+        const cardFileName = cardSrcParts[cardSrcParts.length-1].split('.');
+        const cardIdParts = card.attr('id').split('_');
+
+        let cardDirection;
+        if(card.hasClass('turnLeft')){
+            cardDirection = 'left';
+        }else if (card.hasClass('turnUp')){
+            cardDirection = 'up';
+        }else if (card.hasClass('turnRight')){
+            cardDirection = 'right';
+        }else if (card.hasClass('turnDown')){
+            cardDirection = 'down';
+        }
+
+        return {
+            'id' : cardIdParts[1]+'_'+cardIdParts[2],
+            'type' : cardFileName[0],
+            'rowId' : cardIdParts[1],
+            'colId' : cardIdParts[2],
+            'direction' : cardDirection
+        };
+    }
+
+    function pathIsOpen(sideConfig, cardData)
+    {
+        if(sideConfig == 'left'){
+            if((cardData.type == 'straight' && cardData.direction == 'left')
+                || (cardData.type == 'straight' && cardData.direction == 'right')
+                || (cardData.type == 'three-ways' && cardData.direction == 'up')
+                || (cardData.type == 'three-ways' && cardData.direction == 'right')
+                || (cardData.type == 'three-ways' && cardData.direction == 'down')
+                || (cardData.type == 'corner' && cardData.direction == 'up')
+                || (cardData.type == 'corner' && cardData.direction == 'right')
+                ){
+                return true;
+            }
+        }else if (sideConfig == 'top'){
+            if((cardData.type == 'straight' && cardData.direction == 'up')
+                || (cardData.type == 'straight' && cardData.direction == 'down')
+                || (cardData.type == 'three-ways' && cardData.direction == 'right')
+                || (cardData.type == 'three-ways' && cardData.direction == 'down')
+                || (cardData.type == 'three-ways' && cardData.direction == 'left')
+                || (cardData.type == 'corner' && cardData.direction == 'right')
+                || (cardData.type == 'corner' && cardData.direction == 'down')
+                ){
+                return true;
+            }
+        }else if (sideConfig == 'right'){
+            if((cardData.type == 'straight' && cardData.direction == 'left')
+                || (cardData.type == 'straight' && cardData.direction == 'right')
+                || (cardData.type == 'three-ways' && cardData.direction == 'down')
+                || (cardData.type == 'three-ways' && cardData.direction == 'left')
+                || (cardData.type == 'three-ways' && cardData.direction == 'up')
+                || (cardData.type == 'corner' && cardData.direction == 'down')
+                || (cardData.type == 'corner' && cardData.direction == 'left')
+                ){
+                return true;
+            }
+        }else if (sideConfig == 'bottom'){
+            if((cardData.type == 'straight' && cardData.direction == 'up')
+                || (cardData.type == 'straight' && cardData.direction == 'down')
+                || (cardData.type == 'three-ways' && cardData.direction == 'left')
+                || (cardData.type == 'three-ways' && cardData.direction == 'up')
+                || (cardData.type == 'three-ways' && cardData.direction == 'right')
+                || (cardData.type == 'corner' && cardData.direction == 'left')
+                || (cardData.type == 'corner' && cardData.direction == 'up')
+                ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function alreadyAvailable(cardToFind){
+        let cardFound = false;
+        previousCardsData.forEach((previousCard) => {
+            if(previousCard.id === cardToFind.id){
+                cardFound = true;
+            }
+        });
+        return cardFound;
     }
 }
