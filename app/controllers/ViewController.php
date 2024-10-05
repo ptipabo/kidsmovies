@@ -5,6 +5,7 @@ namespace App\controllers;
 use App\ORM\Game;
 use App\ORM\Song;
 use App\ORM\User;
+use App\ORM\Type;
 use App\ORM\Movie;
 use App\ORM\Character;
 use App\ORM\Favourite;
@@ -15,6 +16,7 @@ use App\Entities\Movie as MovieEntity;
 use App\Entities\Character as CharacterEntity;
 use App\Entities\Favourite as FavouriteEntity;
 use App\Entities\Game as GameEntity;
+use App\Entities\Type as TypeEntity;
 use App\Entities\MovieSuite as MovieSuiteEntity;
 use App\Entities\MemoryScore as MemoryScoreEntity;
 use App\ORM\MemoryScore;
@@ -68,7 +70,8 @@ class ViewController extends Controller{
             "suiteId" => $movie->getSuite(),
             "date" => $movie->getDate(),
             "length" => $movie->getLength(),
-            "slug" => $movie->getSlug()
+            "slug" => $movie->getSlug(),
+            "type" => $movie->getType()
         ];
 
         $suiteTable = new MovieSuite($this->getDB(), ['movie_title' => 'ASC']);
@@ -147,6 +150,10 @@ class ViewController extends Controller{
         $songs = new Song($this->getDB(), ['song_title' => 'ASC']);
         $songs = $songs->all();
 
+        //On récupère les différents types de contenu
+        $types = new Type($this->getDB());
+        $types = $types->all();
+
         //On récupère le titre du film correspondant à chaque musique
         $movies = new Movie($this->getDB());
         $movies = $movies->all();
@@ -165,6 +172,17 @@ class ViewController extends Controller{
 
         //On crée un fichier Json via PHP d'après le résultat de la requête
         $jsonConstruct = [];
+        /** @var TypeEntity $type */
+        foreach($types as $type){
+            $jsonConstruct[] = [
+                "id" => $type->getId(),
+                "name" => str_replace('"', '\"', $type->getName()),
+            ];
+        }
+        $types = $jsonConstruct;
+
+        //On crée un fichier Json via PHP d'après le résultat de la requête
+        $jsonConstruct = [];
         /** @var SongEntity $song */
         foreach($songs as $song){
             /** @var MovieEntity $movie */
@@ -172,6 +190,7 @@ class ViewController extends Controller{
                 if($movie->getId() === $song->getMovie()){
                     $songMovie = $movie->getTitle();
                     $songMovieImg = $movie->getImg();
+                    $songMovieType = $movie->getType();
                 }
             }
 
@@ -199,6 +218,7 @@ class ViewController extends Controller{
                 "id" => $song->getId(),
                 "movie" => str_replace('"', '\"', $songMovie),
                 "movieImg" => $songMovieImg,
+                "movieType" => $songMovieType,
                 "title" => str_replace('"', '\"', $song->getTitle()),
                 "youtubeId" => $song->getVideo(),
                 "users" => $usersFiltered,
@@ -207,7 +227,7 @@ class ViewController extends Controller{
         }
         $songs = $jsonConstruct;
 
-        $this->view('content.music', compact('songs', 'users'));
+        $this->view('content.music', compact('songs', 'users', 'types'));
     }
 
     /**

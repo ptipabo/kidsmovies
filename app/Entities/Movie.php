@@ -10,7 +10,8 @@ class Movie extends BaseEntity {
     private $length;
     private $date; 
     private $slug;
-
+    private $type;
+    
     /**
      * @return int
      */
@@ -121,5 +122,21 @@ class Movie extends BaseEntity {
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType(int $type): void
+    {
+        $this->type = $type;
     }
 }

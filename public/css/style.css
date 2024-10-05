@@ -546,6 +546,29 @@ header {
   box-shadow: 0 0 5px #000000dd;
 }
 
+.musicFilters {
+  display: flex;
+  justify-content: space-between;
+}
+
+.contentTypesList {
+  text-align: right;
+}
+
+.contentTypesList_type {
+  font-weight: bold;
+  cursor: pointer;
+  padding-bottom: .2rem;
+}
+
+.contentTypesList_type:hover {
+  color: grey;
+}
+
+.contentTypesList_type.isActive {
+  color: rgb(47, 179, 255);
+}
+
 .usersList {
   display: flex;
   flex-flow: row nowrap;

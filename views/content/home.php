@@ -4,7 +4,7 @@
 
 <section class="section whiteBG">
     <div class="section-container">
-        <h2 class="pageTitle">Films</h2>
+        <h2 class="pageTitle">Accueil</h2>
     </div>
 </section>
 
@@ -19,15 +19,15 @@
             <option value="dateDesc">Date de sortie (Récents > Anciens)</option>
             <option value="lengthAsc">Durée (Court > Longs)</option>
             <option value="lengthDesc">Durée (Longs > Court)</option>
-            <option value="suite">Suites</option>
+            <option value="suite">Collection</option>
         </select>
     </div>
     <div class="moviesListOptions">
-        <label for="filterBy">Rechercher un film : </label>
+        <label for="filterBy">Rechercher un élément : </label>
         <input type="text" name="filterBy" id="filterValue" value="" />
     </div>
     <div class="moviesListOptions">
-        <label for="hideSeries">Masquer les suites : </label>
+        <label for="hideSeries">Masquer collections identiques : </label>
         <input type="checkbox" name="hideSeries" id="hideSeries" />
     </div>
 </div>

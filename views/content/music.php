@@ -1,26 +1,38 @@
 <?php
     $songs = $params['songs'];
     $users = $params['users'];
+    $types = $params['types'];
     $jsonSongsList = json_encode($songs);
     $jsonUsersList = json_encode($users);
+    $jsonTypesList = json_encode($types);
 ?>
 <script type="module">
     import {setMusicsList, setUsersList} from '../../public/scripts/songs.js';
     // For the video player to work, we need to pass the songs data to JS
     setMusicsList(<?= $jsonSongsList ?>);
     setUsersList(<?= $jsonUsersList ?>);
+    setTypesList(<?= $jsonTypesList ?>);
 </script>
 
 <section class="section whiteBG">
     <div class="section-container">
         <h2 class="pageTitle">Musiques</h2>
-        <ul class="usersList">
-            <?php
-                foreach($users as $user){
-                    echo '<li class="usersList_user user_'.$user['id'].' userColor_'.strToLower($user['color']).'" title="'.$user['name'].'" style="background-image:url(\'/img/users/'.strToLower($user['name']).'.jpg\');">'.strToUpper($user['name'][0]).'</li>';
-                }
-            ?>   
-        </ul>
+        <div class="musicFilters">
+            <ul class="usersList">
+                <?php
+                    foreach($users as $user){
+                        echo '<li class="usersList_user user_'.$user['id'].' userColor_'.strToLower($user['color']).'" title="'.$user['name'].'" style="background-image:url(\'/img/users/'.strToLower($user['name']).'.jpg\');">'.strToUpper($user['name'][0]).'</li>';
+                    }
+                ?>   
+            </ul>
+            <ul class="contentTypesList">
+                <?php
+                    foreach($types as $type){
+                        echo '<li class="contentTypesList_type type_'.$type['id'].'">'.$type['name'].'</li>';
+                    }
+                ?>
+            </ul>
+        </div>
     </div>
 </section>
 

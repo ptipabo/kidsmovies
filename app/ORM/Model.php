@@ -9,6 +9,7 @@ use App\Entities\Character as CharacterEntity;
 use App\Entities\Song as SongEntity;
 use App\Entities\Favourite as FavouriteEntity;
 use App\Entities\MovieSuite as MovieSuiteEntity;
+use App\Entities\Type as TypeEntity;
 use App\Entities\User as UserEntity;
 use App\Entities\Game as GameEntity;
 use App\Entities\MemoryScore as MemoryScoreEntity;
@@ -125,6 +126,7 @@ abstract class Model{
                 $object->setImg($data->movie_img);
                 $object->setSuite($data->movie_suite);
                 $object->setSlug($data->movie_url);
+                $object->setType($data->movie_type);
                 break;
             case 'characters':
                 $object = new CharacterEntity;
@@ -177,6 +179,11 @@ abstract class Model{
                 $object->setNumberOfTurns($data->memory_score_numberofturns);
                 $object->setDifficultyMode($data->memory_score_difficultymode);
                 $object->setNumberOfPlayers($data->memory_score_numberofplayers);
+                break;
+            case 'types':
+                $object = new TypeEntity();
+                $object->setId($data->type_id);
+                $object->setName($data->type_name);
                 break;
             default:
                 $object = null;

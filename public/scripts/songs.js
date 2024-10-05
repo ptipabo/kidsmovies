@@ -2,6 +2,7 @@ import {addElement, removeElement} from './domElement.js';
 
 let playList;
 let users;
+let types;
 let currentPlayList;
 let youtubeApi;
 let currentVideoId;
@@ -9,10 +10,12 @@ let nextVideoId;
 let previousVideoId;
 let playListPosition;
 let filtersEnabled = [];
+let typeFiltersEnabled = [];
 const $previousArrow = $('#previousVid');
 const $nextArrow = $('#nextVid');
 const $divVideo = $('#videoPlayer');
 const $users = $('.usersList_user');
+const $types = $('.contentTypesList_type');
 
 // Events
 export function initSongsEvents(){
@@ -49,6 +52,12 @@ $users.on('click', (event) => {
     let classList = event.target.className.split(/\s+/);
     let userId = classList[1].split('_')[1];
     filterByUser(userId);
+});
+
+$types.on('click', (event) => {
+    let classList = event.target.className.split(/\s+/);
+    let typeId = classList[1].split('_')[1];
+    filterByType(typeId);
 });
 
 function checkFavourite(songId, userId){
@@ -89,6 +98,93 @@ function removeFavourite(songId, userId){
             document.location.reload();
         }
     });
+}
+
+/**
+ * Enable or disable the filter by type of content
+ * 
+ * @param {number} typeId 
+ */
+export function filterByType(typeId){
+    $('.type_'+typeId).toggleClass('isActive');
+    if($('.type_'+typeId).hasClass('isActive')){
+        // Add this filter to the list of active filters
+        typeFiltersEnabled.push(typeId);
+        
+        // Filter the current playlist to keep only the songs of this filter
+        let filteredPlayList = [];
+        playList.forEach(song => {
+            if(song.movieType == typeId){
+                filteredPlayList.push(song);
+            }
+        });
+
+        // Check and remove the doubles from the filteredPlayList if the songs are already into the current playList
+        let tempPlayList = [];
+        filteredPlayList.forEach(filteredSong => {
+            let doubleCounter = 0;
+            currentPlayList.forEach(playListSong => {
+                if(filteredSong.id == playListSong.id){
+                    doubleCounter++;
+                }
+            });
+
+            if(doubleCounter == 0){
+                tempPlayList.push(filteredSong);
+            }
+        });
+
+        // Adds the new songs to the current playList if no other filter is enabled
+        if(currentPlayList.length != playList.length){
+            currentPlayList = currentPlayList.concat(tempPlayList);
+        }else{
+            currentPlayList = filteredPlayList;
+        }
+
+        $('#musicList').empty();
+        showSongs(currentPlayList);
+    }else{
+        // Remove this filter from the list of active filters
+        let tempTypeFiltersEnabled = [];
+        typeFiltersEnabled.forEach(filter => {
+            if(filter != typeId){
+                tempTypeFiltersEnabled.push(filter);
+            }
+        });
+        typeFiltersEnabled = tempTypeFiltersEnabled;
+
+        let tempPlayList = [];
+        currentPlayList.forEach(song => {
+            let doubleFilteredSongCounter = 0;
+            
+            // Check if this song is the favourite of the user disabled only or is the favourite of another user
+            if(song.movieType == typeId){
+                doubleFilteredSongCounter++;
+            }else{
+                typeFiltersEnabled.forEach(filter => {
+                    // If another filter is active and this song is link to it, don't remove the song from the list
+                    if(filter == song.movieType){
+                        doubleFilteredSongCounter--;
+                    }
+                });
+            }
+
+            // "1" => this song must be removed from the list, "< 0" => must not be removed from the list
+            if(doubleFilteredSongCounter < 1){
+                tempPlayList.push(song);
+            }
+        });
+
+        if(typeFiltersEnabled.length < 1){
+            currentPlayList = playList;
+        }else{
+            currentPlayList = tempPlayList;
+        }
+
+        $('#musicList').empty();
+        //TODO: ne plus afficher la liste complete des chansons mais plutôt la liste en cours (pour que les filtres des autres users soient toujours pris en compte)
+        showSongs(currentPlayList);
+    }
 }
 
 /**
@@ -199,6 +295,15 @@ export function setMusicsList(musicList){
  */
  export function setUsersList(usersList){
     users = usersList;
+}
+
+/**
+ * Store the current types list
+ * 
+ * @param {[object]} typesList 
+ */
+export function setTypesList(typesList){
+    types = typesList;
 }
 
 /**

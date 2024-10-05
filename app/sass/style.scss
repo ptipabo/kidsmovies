@@ -687,6 +687,29 @@ header{
     }
 }
 
+.musicFilters {
+    display: flex;
+    justify-content: space-between;
+}
+
+.contentTypesList {
+    text-align: right;
+    
+    &_type{
+        font-weight: bold;
+        cursor: pointer;
+        padding-bottom: .2rem;
+
+        &:hover {
+            color: grey;
+        }
+
+        &.isActive {
+            color: rgb(47, 179, 255);
+        }
+    }
+}
+
 .border {
     border:1px solid rgb(200,200,200);
 }

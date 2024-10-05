@@ -35,17 +35,33 @@
                 <h3 class="movieHeader-info-details-title">Informations :</h3>
                 <p id="movieDate" class="movieHeader-info-details-text">Année de sortie : <?= $movieDetails['date']?></p>
                 <?php
+                    switch($movieDetails['type']){
+                        case 2:
+                            $customLength = ' d\'un épisode';
+                            break;
+                        case 3:
+                            $customLength = ' totale';
+                            break;
+                        default:
+                            $customLength = '';
+                    }
                     $hours = floor($movieDetails['length']/60);
                     $minutes = $movieDetails['length'] - ($hours*60);
+                    $minutesOnly = false;
+                    if($hours < 1){
+                        $minutesOnly = true;
+                    }
                 ?>
-                <p id="movieLength" class="movieHeader-info-details-text">Durée : <?= $hours ?>h<?= $minutes < 10 ? '0' : '' ?><?= $minutes ?></p>
+                <?php if($movieDetails['type'] != 4) :?>
+                    <p id="movieLength" class="movieHeader-info-details-text">Durée<?= $customLength ?> : <?= !$minutesOnly ? $hours .'h' : '' ?><?= $minutes < 10 && !$minutesOnly ? '0' : '' ?><?= $minutes ?><?= $minutesOnly ? ' minutes' : '' ?></p>
+                <?php endif; ?>
                 <?php if($movieDetails['story'] != "") :?>
-                    <h3 class="movieHeader-info-details-title">Synopsis :</h3>
+                    <h3 class="movieHeader-info-details-title">Description :</h3>
                     <p class="movieHeader-info-details-text longText"><?= $movieDetails['story'] ?></p>
                 <?php endif; ?>
                 <!-- Liste des suites éventuelles -->
                 <?php if(count($movieSuiteList) > 1) :?>
-                    <h3 id="movieSuiteTitle" class="movieHeader-info-details-title">Dans la même série de films :</h3>
+                    <h3 id="movieSuiteTitle" class="movieHeader-info-details-title">Dans la même collection :</h3>
                     <ul class="movieHeader-info-details-list">
                         <?php foreach($movieSuiteList as $suite) :?>
                             <?php if($suite['slug'] != $movieDetails['slug']) : ?>
@@ -66,7 +82,7 @@
 <?php if(count($movieSongs) > 0): ?>
 <section class="section midGreyBG">
     <div class="section-container">
-        <h3 class="sectionTitle">Musiques</h3>
+        <h3 class="sectionTitle">Extraits</h3>
     </div>
 </section>
 <section class="section greyBG">

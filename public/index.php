@@ -7,7 +7,7 @@ require '../vendor/autoload.php';
 use Routes\Router;
 use App\Controllers\Controller;
 
-//On définit quelques constantes importantes (Titre de l'application, répertoire des vues, répertoire des scripts et identifiants de la base de données)
+//On définit quelques constantes importantes (Titre de l'application, répertoire des vues (pages), répertoire des scripts et identifiants de la base de données)
 define('TITLE', 'Kids Movies');
 define('VIEWS', dirname(__DIR__).DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR);
 define('PUBLICFOLDER', dirname($_SERVER['SCRIPT_NAME']) . DIRECTORY_SEPARATOR);

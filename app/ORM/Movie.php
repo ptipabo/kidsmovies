@@ -16,9 +16,10 @@ class Movie extends Model{
     public $img = array();
     public $sequel = array();
     public $slug = array();
+    public $type = array();
 
     public function createMovie(\App\Entities\Movie $newMovie){
-        if($this->db->getConnection()->query("INSERT INTO {$this->table} (movie_img, movie_title, movie_story, movie_suite, movie_date, movie_length, movie_url) VALUES ('".$newMovie->getImg()."', '".$newMovie->getTitle()."', '".$newMovie->getStory()."', ".$newMovie->getSuite().", ".$newMovie->getDate().", ".$newMovie->getLength().", '".$newMovie->getSlug()."')")){
+        if($this->db->getConnection()->query("INSERT INTO {$this->table} (movie_img, movie_title, movie_story, movie_suite, movie_date, movie_length, movie_url) VALUES ('".$newMovie->getImg()."', '".$newMovie->getTitle()."', '".$newMovie->getStory()."', ".$newMovie->getSuite().", ".$newMovie->getDate().", ".$newMovie->getLength().", '".$newMovie->getSlug()."', '".$newMovie->getType()."')")){
             return true;
         }
 
@@ -26,7 +27,7 @@ class Movie extends Model{
     }
 
     public function updateMovie(\App\Entities\Movie $newMovie){
-        if($this->db->getConnection()->query("UPDATE {$this->table} SET movie_img = '".$newMovie->getImg()."', movie_title = '".$newMovie->getTitle()."', movie_story = '".$newMovie->getStory()."', movie_suite = ".$newMovie->getSuite().", movie_date = ".$newMovie->getDate().", movie_length = ".$newMovie->getLength().", movie_url = '".$newMovie->getSlug()."' WHERE movie_id = ".$newMovie->getId().";")){
+        if($this->db->getConnection()->query("UPDATE {$this->table} SET movie_img = '".$newMovie->getImg()."', movie_title = '".$newMovie->getTitle()."', movie_story = '".$newMovie->getStory()."', movie_suite = ".$newMovie->getSuite().", movie_date = ".$newMovie->getDate().", movie_length = ".$newMovie->getLength().", movie_url = '".$newMovie->getSlug()."', movie_type = ".$newMovie->getType()." WHERE movie_id = ".$newMovie->getId().";")){
             return true;
         }
         return false;
