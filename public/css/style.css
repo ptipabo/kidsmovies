@@ -546,6 +546,19 @@ header {
   box-shadow: 0 0 5px #000000dd;
 }
 
+.movieMusicListOptions {
+  padding-bottom: 1rem;
+}
+
+.movieMusicListOptions label {
+  color: white;
+  font-weight: bold;
+}
+
+.movieMusicListOptions input {
+  margin-left: 1rem;
+}
+
 .musicFilters {
   display: flex;
   justify-content: space-between;

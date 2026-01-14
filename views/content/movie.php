@@ -1,8 +1,10 @@
 <?php
     $movieDetails = $params['movieDetails'];
     $movieSuiteList = $params['movieSuiteList'];
+    $movieSuiteSongs = $params['movieSuiteSongs'];
     $movieSongs = $params['movieSongs'];
     $jsonSongsList = json_encode($movieSongs);
+    $jsonSuiteSongsList = json_encode($movieSuiteSongs);
     $suiteCharacters = $params['suiteCharacters'];
     $jsonCharactersList = json_encode($suiteCharacters);
 
@@ -21,9 +23,37 @@
 <script type="module">
     import {setMusicsList} from '../../public/scripts/songs.js';
     import {setCharactersList} from '../../public/scripts/characters.js';
+    let brokenVideos;// Variable that will contain all the link of broken songs
+    let movieSongsList = document.getElementsByClassName("movieMusicList")[0];
+    let suiteSongsList = document.getElementsByClassName("suiteMusicList")[0];
+
     // For the video player to work, we need to pass the songs data to JS
-    setMusicsList(<?= $jsonSongsList ?>);
+    // If there is at least one song in this specific movie, by default, we load only the songs from this movie
+    if (<?= $jsonSongsList ?>.length > 0){
+        setMusicsList(<?= $jsonSongsList ?>);
+    }else{// Otherwise, we load the musics from all the suites of this movie
+        setMusicsList(<?= $jsonSuiteSongsList ?>);
+    }
+    // Same thing for the characters except that all the characters of all the suites of this movie are directly loaded
     setCharactersList(<?= $jsonCharactersList ?>);
+
+    // This event is used to change the playlist (I had no other choice but to place it here...)
+    const $suiteSongsSwitch = $('#showFullSerie');
+    $suiteSongsSwitch.on('click', (event) => {
+        if(event.target.checked){
+            setMusicsList(<?= $jsonSuiteSongsList ?>);
+            suiteSongsList.classList.remove('hidden');
+            suiteSongsList.classList.add('d-flex');
+            movieSongsList.classList.remove('d-flex');
+            movieSongsList.classList.add('hidden');
+        }else{
+            setMusicsList(<?= $jsonSongsList ?>);
+            movieSongsList.classList.remove('hidden');
+            movieSongsList.classList.add('d-flex');
+            suiteSongsList.classList.remove('d-flex');
+            suiteSongsList.classList.add('hidden');
+        }
+    });
 </script>
 
 <section class="section whiteBG">
@@ -79,14 +109,21 @@
     </div>
 </section>
 
-<?php if(count($movieSongs) > 0): ?>
+<?php if(count($movieSuiteSongs) > 0): ?>
 <section class="section midGreyBG">
     <div class="section-container">
         <h3 class="sectionTitle">Extraits</h3>
+        <?php if(count($movieSongs) > 0 && count($movieSongs) != count($movieSuiteSongs)): ?>
+        <div class="movieMusicListOptions">
+            <label for="showFullSerie">Collection complète : </label>
+            <input type="checkbox" name="showFullSerie" id="showFullSerie" />
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 <section class="section greyBG">
-    <div id="musicList" class="section-container d-flex fairSpread">
+    <?php if(count($movieSongs) > 0): ?>
+    <div id="musicList" class="movieMusicList section-container d-flex fairSpread">
         <!-- Contient la liste des chansons -->
         <?php for($i=0;$i<count($movieSongs);$i++) : ?>
             <div class="listElement">
@@ -110,7 +147,7 @@
                 });
             }
 
-            const brokenVideos = Array.from(document.getElementsByClassName('imageNotFound'));
+            brokenVideos = Array.from(document.getElementsByClassName('imageNotFound'));
             brokenVideos.forEach((item) => {
                 const songData = item.getAttribute('data-not-found').split('_/_');
                 const response = 'id : ' + songData[0] + ', Movie : ' + songData[1] + ', Title : ' + item.getAttribute('title') + ', Youtube ID : ' + songData[2];
@@ -118,6 +155,41 @@
             });
         </script>
     </div>
+    <?php endif; ?>
+    <?php if(count($movieSuiteSongs) > 0): ?>
+    <div id="musicList" class="suiteMusicList section-container fairSpread<?= count($movieSongs) > 0?' hidden':' d-flex' ?>">
+        <!-- Contient la liste des chansons -->
+        <?php for($i=0;$i<count($movieSuiteSongs);$i++) : ?>
+            <div class="listElement">
+                <h3><?= $movieSuiteSongs[$i]['title'] ?></h3>
+                <?php 
+                    $errorDetected = '';
+                    if(check_url('https://img.youtube.com/vi/'.$movieSuiteSongs[$i]['youtubeId'].'/1.jpg') !== 200){
+                        $errorDetected = ' imageNotFound';
+                    }
+                ?>
+                <img class="songItem<?= $errorDetected ?>" data-not-found="<?= $movieSuiteSongs[$i]['id'].'_/_'.$movieSuiteSongs[$i]['movie'].'_/_'.$movieSuiteSongs[$i]['youtubeId'] ?>" id="song-<?= $i ?>" title="<?= $movieSuiteSongs[$i]['title'] ?>" src="https://img.youtube.com/vi/<?= $movieSuiteSongs[$i]['youtubeId'] ?>/1.jpg" alt="<?= $movieSuiteSongs[$i]['title'] ?>" />
+            </div>
+        <?php endfor; ?>
+        <script>
+            function addLog(eventType, message) {
+                $.ajax({url: '/api/addlog', 
+                    data: {
+                        'event_type': eventType,
+                        'message': message
+                    }
+                });
+            }
+
+            brokenVideos = Array.from(document.getElementsByClassName('imageNotFound'));
+            brokenVideos.forEach((item) => {
+                const songData = item.getAttribute('data-not-found').split('_/_');
+                const response = 'id : ' + songData[0] + ', Movie : ' + songData[1] + ', Title : ' + item.getAttribute('title') + ', Youtube ID : ' + songData[2];
+                addLog(1, response);
+            });
+        </script>
+    </div>
+    <?php endif; ?>
 </section>
 <section id="videoPlayer" class="hidden">
     <div id="videoNavBar">

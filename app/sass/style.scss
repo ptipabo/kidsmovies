@@ -687,6 +687,19 @@ header{
     }
 }
 
+.movieMusicListOptions {
+    padding-bottom: 1rem;
+
+    label {
+        color: white;
+        font-weight: bold;
+    }
+
+    input {
+        margin-left: 1rem;
+    }
+}
+
 .musicFilters {
     display: flex;
     justify-content: space-between;

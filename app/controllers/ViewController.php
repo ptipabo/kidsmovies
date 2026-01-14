@@ -80,6 +80,8 @@ class ViewController extends Controller{
         //On récupère la liste des films liés à celui-ci (s'il y en a)
         $suiteMovies = $movieTable->findBy(['movie_suite' => $movie->getSuite()]);
 
+        //On crée la variable qui stockera les chansons de toute cette série de films
+        $movieSuiteSongs = [];
         //On stock tous les films faisant partie de la même série que ce film dans un tableau
         $movieSuiteList = [];
         /** @var MovieEntity $suiteMovie */
@@ -93,6 +95,23 @@ class ViewController extends Controller{
                 "length" => $suiteMovie->getLength(),
                 "slug" => $suiteMovie->getSlug()
             ];
+
+            //On récupère la liste de toutes les musiques liées à cette suite
+            $suiteSongs = new Song($this->getDB());
+            $suiteSongs = $suiteSongs->findBy(['song_movie' => $suiteMovie->getId()], ['song_order' => 'ASC']);
+
+            // On ajoute les musiques de ce film à la liste de toutes les musiques de cette série de films
+            /** @var SongEntity $song */
+            foreach($suiteSongs as $suiteSong){
+                $movieSuiteSongs[] = [
+                    "id" => $suiteSong->getId(),
+                    "movie" => str_replace('"', '\"', $suiteMovie->getTitle()),
+                    "movieImg" => $suiteMovie->getImg(),
+                    "title" => str_replace('"', '\"', $suiteSong->getTitle()),
+                    "youtubeId" => $suiteSong->getVideo(),
+                    "censored" => $suiteSong->isCensored(),
+                ];
+            }
         }
 
         //On récupère la liste de toutes les musiques liées à ce film
@@ -131,7 +150,7 @@ class ViewController extends Controller{
             ];
         }
 
-        $this->view('content.movie', compact('movieDetails', 'movieSuiteList', 'movieSongs', 'suiteCharacters'));
+        $this->view('content.movie', compact('movieDetails', 'movieSuiteList', 'movieSuiteSongs', 'movieSongs', 'suiteCharacters'));
     }
 
     /**
