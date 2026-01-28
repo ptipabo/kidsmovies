@@ -582,6 +582,20 @@ header {
   color: rgb(47, 179, 255);
 }
 
+#randomModeButton {
+  font-weight: bold;
+  cursor: pointer;
+  padding-bottom: .2rem;
+}
+
+#randomModeButton:hover {
+  color: grey;
+}
+
+#randomModeButton.randomModeEnabled {
+  color: rgb(47, 179, 255);
+}
+
 .usersList {
   display: flex;
   flex-flow: row nowrap;

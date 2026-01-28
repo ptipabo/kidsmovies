@@ -7,7 +7,7 @@
     $jsonTypesList = json_encode($types);
 ?>
 <script type="module">
-    import {setMusicsList, setUsersList} from '../../public/scripts/songs.js';
+    import {setMusicsList, setUsersList, setTypesList} from '../../public/scripts/songs.js';
     // For the video player to work, we need to pass the songs data to JS
     setMusicsList(<?= $jsonSongsList ?>);
     setUsersList(<?= $jsonUsersList ?>);
@@ -31,6 +31,7 @@
                         echo '<li class="contentTypesList_type type_'.$type['id'].'">'.$type['name'].'</li>';
                     }
                 ?>
+                <li id="randomModeButton">Aléatoire</li>
             </ul>
         </div>
     </div>

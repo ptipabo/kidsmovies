@@ -1,6 +1,6 @@
 import {addElement, removeElement} from './domElement.js';
 
-let playList;
+let defaultPlayList;
 let users;
 let types;
 let currentPlayList;
@@ -9,11 +9,13 @@ let currentVideoId;
 let nextVideoId;
 let previousVideoId;
 let playListPosition;
-let filtersEnabled = [];
+let userFiltersEnabled = [];
 let typeFiltersEnabled = [];
+let randomModeEnabled = false;
 const $previousArrow = $('#previousVid');
 const $nextArrow = $('#nextVid');
 const $divVideo = $('#videoPlayer');
+const $randomModeButton = $('#randomModeButton');
 const $users = $('.usersList_user');
 const $types = $('.contentTypesList_type');
 
@@ -46,6 +48,29 @@ $previousArrow.on('click', () => {
 
 $nextArrow.on('click', () => {
     play(nextVideoId);
+});
+
+$randomModeButton.on('click', (event) => {
+    let classList = event.target.className.split(/\s+/);
+    let randomClassFound = false;
+    for (let classCounter = 0;classCounter < classList.length;classCounter++){
+        if(classList[classCounter] == 'randomModeEnabled'){
+            randomClassFound = true;
+            randomModeEnabled = false;
+            $randomModeButton.removeClass('randomModeEnabled');
+        }
+    }
+    if(randomClassFound == false){
+        randomModeEnabled = true;
+        $randomModeButton.addClass('randomModeEnabled');
+    }
+
+    $('#musicList').empty();
+    if(randomModeEnabled == true){
+        showSongs(shuffleArray(currentPlayList));
+    }else{
+        showSongs(sortArray(currentPlayList));
+    }
 });
 
 $users.on('click', (event) => {
@@ -103,7 +128,9 @@ function removeFavourite(songId, userId){
 /**
  * Enable or disable the filter by type of content
  * 
- * @param {number} typeId 
+ * @param {number} typeId
+ * @param {boolean} randomMode
+ * 
  */
 export function filterByType(typeId){
     $('.type_'+typeId).toggleClass('isActive');
@@ -113,7 +140,7 @@ export function filterByType(typeId){
         
         // Filter the current playlist to keep only the songs of this filter
         let filteredPlayList = [];
-        playList.forEach(song => {
+        defaultPlayList.forEach(song => {
             if(song.movieType == typeId){
                 filteredPlayList.push(song);
             }
@@ -135,14 +162,18 @@ export function filterByType(typeId){
         });
 
         // Adds the new songs to the current playList if no other filter is enabled
-        if(currentPlayList.length != playList.length){
+        if(currentPlayList.length != defaultPlayList.length){
             currentPlayList = currentPlayList.concat(tempPlayList);
         }else{
             currentPlayList = filteredPlayList;
         }
 
         $('#musicList').empty();
-        showSongs(currentPlayList);
+        if(randomModeEnabled == true){
+            showSongs(shuffleArray(currentPlayList));
+        }else{
+            showSongs(sortArray(currentPlayList));
+        }
     }else{
         // Remove this filter from the list of active filters
         let tempTypeFiltersEnabled = [];
@@ -175,16 +206,23 @@ export function filterByType(typeId){
             }
         });
 
+        // If no filter is enabled, the current playlist is set to the default playlist
         if(typeFiltersEnabled.length < 1){
-            currentPlayList = playList;
+            // If one or more users are selected, keep only the songs from these users
+            currentPlayList = defaultPlayList;
         }else{
             currentPlayList = tempPlayList;
         }
 
         $('#musicList').empty();
-        //TODO: ne plus afficher la liste complete des chansons mais plutôt la liste en cours (pour que les filtres des autres users soient toujours pris en compte)
-        showSongs(currentPlayList);
+        if(randomModeEnabled == true){
+            showSongs(shuffleArray(currentPlayList));
+        }else{
+            showSongs(sortArray(currentPlayList));
+        }
     }
+
+
 }
 
 /**
@@ -196,11 +234,11 @@ export function filterByUser(userId){
     $('.user_'+userId).toggleClass('isActive');
     if($('.user_'+userId).hasClass('isActive')){
         // Add this filter to the list of active filters
-        filtersEnabled.push(userId);
+        userFiltersEnabled.push(userId);
         
         // Filter the current playlist to keep only the songs of this filter
         let filteredPlayList = [];
-        playList.forEach(song => {
+        defaultPlayList.forEach(song => {
             song.users.forEach(user => {
                 if(user.userId == userId){
                     filteredPlayList.push(song);
@@ -224,23 +262,27 @@ export function filterByUser(userId){
         });
 
         // Adds the new songs to the current playList if no other filter is enabled
-        if(currentPlayList.length != playList.length){
+        if(currentPlayList.length != defaultPlayList.length){
             currentPlayList = currentPlayList.concat(tempPlayList);
         }else{
             currentPlayList = filteredPlayList;
         }
 
         $('#musicList').empty();
-        showSongs(currentPlayList);
+        if(randomModeEnabled == true){
+            showSongs(shuffleArray(currentPlayList));
+        }else{
+            showSongs(sortArray(currentPlayList));
+        }
     }else{
         // Remove this filter from the list of active filters
         let tempFiltersEnabled = [];
-        filtersEnabled.forEach(filter => {
+        userFiltersEnabled.forEach(filter => {
             if(filter != userId){
                 tempFiltersEnabled.push(filter);
             }
         });
-        filtersEnabled = tempFiltersEnabled;
+        userFiltersEnabled = tempFiltersEnabled;
 
         let tempPlayList = [];
         currentPlayList.forEach(song => {
@@ -250,7 +292,7 @@ export function filterByUser(userId){
                 if(user.userId == userId){
                     doubleFilteredSongCounter++;
                 }else{
-                    filtersEnabled.forEach(filter => {
+                    userFiltersEnabled.forEach(filter => {
                         // If another filter is active and this song is link to it, don't remove the song from the list
                         if(filter == user.userId){
                             doubleFilteredSongCounter--;
@@ -265,16 +307,64 @@ export function filterByUser(userId){
             }
         });
 
-        if(filtersEnabled.length < 1){
-            currentPlayList = playList;
+        if(userFiltersEnabled.length < 1){
+            currentPlayList = defaultPlayList;
         }else{
             currentPlayList = tempPlayList;
         }
 
         $('#musicList').empty();
-        //TODO: ne plus afficher la liste complete des chansons mais plutôt la liste en cours (pour que les filtres des autres users soient toujours pris en compte)
-        showSongs(currentPlayList);
+        
+        if(randomModeEnabled == true){
+            showSongs(shuffleArray(currentPlayList));
+        }else{
+            showSongs(sortArray(currentPlayList));
+        }
     }
+}
+
+/**
+ * Shuffle an array
+ * 
+ * 
+ * @param {*} array 
+ * @returns 
+ */
+function shuffleArray(array) {
+    let currentIndex = array.length,  randomIndex;
+
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+}
+
+/**
+ * Sort an array by alphabetical order from A to Z or Z to A
+ * 
+ * @param {*} array 
+ * @param {boolean} sortFromAToZ
+ * @returns 
+ */
+function sortArray(array, sortFromAToZ = true) {
+    let sortedArray;
+    
+    if(sortFromAToZ == true){
+        sortedArray = array.sort((a, b) => a.title.localeCompare(b.title));
+    }else{
+        sortedArray = array.sort((b, a) => a.title.localeCompare(b.title));
+    }
+
+    return sortedArray;
 }
 
 /**
@@ -283,7 +373,7 @@ export function filterByUser(userId){
  * @param {[object]} musicList 
  */
 export function setMusicsList(musicList){
-    playList = musicList;
+    defaultPlayList = musicList;
     currentPlayList = musicList;
     initSongsEvents();
 }
@@ -311,7 +401,7 @@ export function setTypesList(typesList){
  * 
  */
 export function getMusicsList(){
-    return playList;
+    return defaultPlayList;
 }
 
 /**
