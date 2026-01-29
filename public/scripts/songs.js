@@ -9,8 +9,8 @@ let currentVideoId;
 let nextVideoId;
 let previousVideoId;
 let playListPosition;
-let userFiltersEnabled = [];
-let typeFiltersEnabled = [];
+let enabledUserFilters = [];
+let enabledTypeFilters = [];
 let randomModeEnabled = false;
 const $previousArrow = $('#previousVid');
 const $nextArrow = $('#nextVid');
@@ -134,95 +134,72 @@ function removeFavourite(songId, userId){
  */
 export function filterByType(typeId){
     $('.type_'+typeId).toggleClass('isActive');
+    let filteredPlayList = [];
+
     if($('.type_'+typeId).hasClass('isActive')){
         // Add this filter to the list of active filters
-        typeFiltersEnabled.push(typeId);
-        
-        // Filter the current playlist to keep only the songs of this filter
-        let filteredPlayList = [];
-        defaultPlayList.forEach(song => {
-            if(song.movieType == typeId){
-                filteredPlayList.push(song);
-            }
-        });
-
-        // Check and remove the doubles from the filteredPlayList if the songs are already into the current playList
-        let tempPlayList = [];
-        filteredPlayList.forEach(filteredSong => {
-            let doubleCounter = 0;
-            currentPlayList.forEach(playListSong => {
-                if(filteredSong.id == playListSong.id){
-                    doubleCounter++;
-                }
-            });
-
-            if(doubleCounter == 0){
-                tempPlayList.push(filteredSong);
-            }
-        });
-
-        // Adds the new songs to the current playList if no other filter is enabled
-        if(currentPlayList.length != defaultPlayList.length){
-            currentPlayList = currentPlayList.concat(tempPlayList);
-        }else{
-            currentPlayList = filteredPlayList;
-        }
-
-        $('#musicList').empty();
-        if(randomModeEnabled == true){
-            showSongs(shuffleArray(currentPlayList));
-        }else{
-            showSongs(sortArray(currentPlayList));
-        }
+        enabledTypeFilters.push(typeId);
     }else{
         // Remove this filter from the list of active filters
         let tempTypeFiltersEnabled = [];
-        typeFiltersEnabled.forEach(filter => {
+        enabledTypeFilters.forEach(filter => {
             if(filter != typeId){
                 tempTypeFiltersEnabled.push(filter);
             }
         });
-        typeFiltersEnabled = tempTypeFiltersEnabled;
-
-        let tempPlayList = [];
-        currentPlayList.forEach(song => {
-            let doubleFilteredSongCounter = 0;
-            
-            // Check if this song is the favourite of the user disabled only or is the favourite of another user
-            if(song.movieType == typeId){
-                doubleFilteredSongCounter++;
-            }else{
-                typeFiltersEnabled.forEach(filter => {
-                    // If another filter is active and this song is link to it, don't remove the song from the list
-                    if(filter == song.movieType){
-                        doubleFilteredSongCounter--;
-                    }
-                });
-            }
-
-            // "1" => this song must be removed from the list, "< 0" => must not be removed from the list
-            if(doubleFilteredSongCounter < 1){
-                tempPlayList.push(song);
-            }
-        });
-
-        // If no filter is enabled, the current playlist is set to the default playlist
-        if(typeFiltersEnabled.length < 1){
-            // If one or more users are selected, keep only the songs from these users
-            currentPlayList = defaultPlayList;
-        }else{
-            currentPlayList = tempPlayList;
-        }
-
-        $('#musicList').empty();
-        if(randomModeEnabled == true){
-            showSongs(shuffleArray(currentPlayList));
-        }else{
-            showSongs(sortArray(currentPlayList));
-        }
+        enabledTypeFilters = tempTypeFiltersEnabled;
     }
 
+    // Filter the current playlist to keep only the songs of all the type filters that are enabled
+    enabledTypeFilters.forEach(type => {
+        defaultPlayList.forEach(song => {
+            if(song.movieType == type){
+                filteredPlayList.push(song);
+            }
+        });
+    });
 
+    // If at least 1 user filter is enabled
+    if(enabledUserFilters.length > 0){
+        let doubleFilteredPlayList = [];
+
+        let tempFilteredPlayList = [];
+        // If there is no type filter selected anymore, we apply the user filters on the default playlist because otherwise it would be empty
+        if(enabledTypeFilters.length == 0){
+            tempFilteredPlayList = defaultPlayList;
+        }else{
+            tempFilteredPlayList = filteredPlayList;
+        }
+
+        // Filter the filteredPlaylist a second time to apply the current user filters
+        for(let z = 0;z < tempFilteredPlayList.length;z++){
+            usersFilterLoop: {
+                for(let y = 0;y < enabledUserFilters.length;y++){
+                    for(let i = 0;i < tempFilteredPlayList[z].users.length;i++){
+                        if(tempFilteredPlayList[z].users[i].userId == enabledUserFilters[y]){
+                            doubleFilteredPlayList.push(tempFilteredPlayList[z]);
+                            break usersFilterLoop;
+                        }
+                    }
+                }
+            }
+        }
+
+        filteredPlayList = doubleFilteredPlayList;
+    }
+
+    if(enabledTypeFilters.length > 0 || enabledUserFilters.length > 0){
+        currentPlayList = filteredPlayList;
+    }else{
+        currentPlayList = defaultPlayList;
+    }
+
+    $('#musicList').empty();
+    if(randomModeEnabled == true){
+        showSongs(shuffleArray(currentPlayList));
+    }else{
+        showSongs(sortArray(currentPlayList));
+    }
 }
 
 /**
@@ -232,94 +209,71 @@ export function filterByType(typeId){
  */
 export function filterByUser(userId){
     $('.user_'+userId).toggleClass('isActive');
+    let filteredPlayList = [];
+
     if($('.user_'+userId).hasClass('isActive')){
         // Add this filter to the list of active filters
-        userFiltersEnabled.push(userId);
-        
-        // Filter the current playlist to keep only the songs of this filter
-        let filteredPlayList = [];
-        defaultPlayList.forEach(song => {
-            song.users.forEach(user => {
-                if(user.userId == userId){
-                    filteredPlayList.push(song);
-                }
-            });
-        });
-
-        // Check and remove the doubles from the filteredPlayList if the songs are already into the current playList
-        let tempPlayList = [];
-        filteredPlayList.forEach(filteredSong => {
-            let doubleCounter = 0;
-            currentPlayList.forEach(playListSong => {
-                if(filteredSong.id == playListSong.id){
-                    doubleCounter++;
-                }
-            });
-
-            if(doubleCounter == 0){
-                tempPlayList.push(filteredSong);
-            }
-        });
-
-        // Adds the new songs to the current playList if no other filter is enabled
-        if(currentPlayList.length != defaultPlayList.length){
-            currentPlayList = currentPlayList.concat(tempPlayList);
-        }else{
-            currentPlayList = filteredPlayList;
-        }
-
-        $('#musicList').empty();
-        if(randomModeEnabled == true){
-            showSongs(shuffleArray(currentPlayList));
-        }else{
-            showSongs(sortArray(currentPlayList));
-        }
+        enabledUserFilters.push(userId);
     }else{
         // Remove this filter from the list of active filters
         let tempFiltersEnabled = [];
-        userFiltersEnabled.forEach(filter => {
+        enabledUserFilters.forEach(filter => {
             if(filter != userId){
                 tempFiltersEnabled.push(filter);
             }
         });
-        userFiltersEnabled = tempFiltersEnabled;
+        enabledUserFilters = tempFiltersEnabled;
+    }
 
-        let tempPlayList = [];
-        currentPlayList.forEach(song => {
-            let doubleFilteredSongCounter = 0;
-            song.users.forEach(user => {
-                // Check if this song is the favourite of the user disabled only or is the favourite of another user
-                if(user.userId == userId){
-                    doubleFilteredSongCounter++;
-                }else{
-                    userFiltersEnabled.forEach(filter => {
-                        // If another filter is active and this song is link to it, don't remove the song from the list
-                        if(filter == user.userId){
-                            doubleFilteredSongCounter--;
-                        }
-                    });
+    // Filter the current playlist to keep only the songs of this filter
+    for(let z = 0;z < defaultPlayList.length;z++){
+        usersFilterLoop: {
+            for(let y = 0;y < enabledUserFilters.length;y++){
+                for(let i = 0;i < defaultPlayList[z].users.length;i++){
+                    if(defaultPlayList[z].users[i].userId == enabledUserFilters[y]){
+                        filteredPlayList.push(defaultPlayList[z]);
+                        break usersFilterLoop;
+                    }
+                }
+            }
+        }
+    }
+
+    // If at least 1 type filter is enabled
+    if(enabledTypeFilters.length > 0){
+        let doubleFilteredPlayList = [];
+
+        let tempFilteredPlayList = [];
+        // If there is no type filter selected anymore, we apply the user filters on the default playlist because otherwise it would be empty
+        if(enabledUserFilters.length == 0){
+            tempFilteredPlayList = defaultPlayList;
+        }else{
+            tempFilteredPlayList = filteredPlayList;
+        }
+
+        // Filter the current playlist to keep only the songs of all the type filters that are enabled
+        enabledTypeFilters.forEach(type => {
+            tempFilteredPlayList.forEach(song => {
+                if(song.movieType == type){
+                    doubleFilteredPlayList.push(song);
                 }
             });
-
-            // "1" => this song must be removed from the list, "< 0" => must not be removed from the list
-            if(doubleFilteredSongCounter < 1){
-                tempPlayList.push(song);
-            }
         });
 
-        if(userFiltersEnabled.length < 1){
-            currentPlayList = defaultPlayList;
-        }else{
-            currentPlayList = tempPlayList;
-        }
+        filteredPlayList = doubleFilteredPlayList;
+    }
 
-        $('#musicList').empty();
-        
-        if(randomModeEnabled == true){
-            showSongs(shuffleArray(currentPlayList));
-        }else{
-            showSongs(sortArray(currentPlayList));
-        }
+    if(enabledUserFilters.length > 0 || enabledTypeFilters.length > 0){
+        currentPlayList = filteredPlayList;
+    }else{
+        currentPlayList = defaultPlayList;
+    }
+
+    $('#musicList').empty();
+    if(randomModeEnabled == true){
+        showSongs(shuffleArray(currentPlayList));
+    }else{
+        showSongs(sortArray(currentPlayList));
     }
 }
 
